@@ -1,0 +1,27 @@
+apply plugin: 'com.android.application'
+
+android {
+    namespace 'com.dotswar.app'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.dotswar.app"
+        minSdk 21
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+
+    // The whole game lives in a single offline-capable HTML file loaded by
+    // the WebView, so no res/layout, no extra native libraries.
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+}
