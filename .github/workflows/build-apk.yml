@@ -20,11 +20,19 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          # AGP 9.3.0 (used in build.gradle) requires Gradle >= 9.5.0.
-          gradle-version: '9.5.0'
+      # gradle/actions/setup-gradle's `gradle-version` input didn't actually
+      # put 9.5.0 on PATH (the runner's pre-installed 8.4 kept winning), so
+      # instead of fighting that, download the exact distribution ourselves
+      # and prepend it to PATH — this is unambiguous and doesn't depend on
+      # any action's internal PATH-priority behavior.
+      - name: Install Gradle 9.5.1
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/gradle.zip" https://services.gradle.org/distributions/gradle-9.5.1-bin.zip
+          unzip -q -d "$RUNNER_TEMP" "$RUNNER_TEMP/gradle.zip"
+          echo "$RUNNER_TEMP/gradle-9.5.1/bin" >> "$GITHUB_PATH"
+
+      - name: Verify Gradle version
+        run: gradle -v
 
       - name: Build debug APK (quick sideload testing, unsigned)
         run: gradle assembleDebug --no-daemon
@@ -35,17 +43,30 @@ jobs:
           name: dots-war-debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
 
+      # `secrets.*` isn't a recognized context inside step `if:` conditions
+      # (GitHub only exposes it inside `env:`/`run:`), so we resolve
+      # presence here into a step output and branch on that instead.
+      - name: Check signing key presence
+        id: signing
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Decode release keystore
-        if: ${{ secrets.KEYSTORE_BASE64 != '' }}
+        if: steps.signing.outputs.present == 'true'
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
         run: |
           echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/dotswar-release.keystore"
 
       - name: Build signed release AAB (for Play Store)
-        if: ${{ secrets.KEYSTORE_BASE64 != '' }}
+        if: steps.signing.outputs.present == 'true'
         env:
-          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
           KEYSTORE_PATH: ${{ runner.temp }}/dotswar-release.keystore
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
@@ -53,7 +74,7 @@ jobs:
         run: gradle bundleRelease --no-daemon
 
       - name: Upload release AAB
-        if: ${{ secrets.KEYSTORE_BASE64 != '' }}
+        if: steps.signing.outputs.present == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: dots-war-release-aab
