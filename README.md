@@ -1,65 +1,98 @@
-# Dots War — сборка .apk для Android
+# Dots War — сборка и публикация в Google Play
 
-Внутри лежит готовый Android-проект (WebView-обёртка вокруг игры) и настройка
-автосборки через GitHub Actions. Собрать APK **прямо в этом чате нельзя** —
-песочница, где я работаю, не имеет доступа к серверам Google (Android SDK,
-Gradle) и даже к обычным файлам GitHub, поэтому настоящий Android-тулчейн
-там недоступен в принципе. GitHub Actions — это уже не песочница, а
-полноценный сервер с интернетом, поэтому там сборка пройдёт без проблем и
-бесплатно.
+## Что в этом проекте
 
-## Что нужно сделать (5–7 минут, один раз)
+Android-приложение — WebView-обёртка вокруг игры (`assets/index.html`).
+Сборка настроена на:
 
-1. Зайдите на [github.com](https://github.com) и, если ещё нет аккаунта —
-   зарегистрируйтесь (бесплатно).
-2. Нажмите **New repository**, дайте любое имя (например `dots-war`),
-   оставьте Public, создайте репозиторий — без README, .gitignore и т.п.
-3. На странице пустого репозитория нажмите **uploading an existing file**
-   (или "Add file → Upload files").
-4. Перетащите **всё содержимое** этой папки (включая скрытую папку
-   `.github` — если GitHub её не подхватит при перетаскивании, зайдите в
-   `.github/workflows/build-apk.yml` отдельно и загрузите его через
-   "Add file → Create new file", вставив путь `.github/workflows/build-apk.yml`
-   и содержимое файла).
-5. Нажмите **Commit changes**.
-6. Откройте вкладку **Actions** в репозитории — сборка запустится
-   автоматически (займёт около 2 минут). Когда появится зелёная галочка —
-   откройте этот workflow-run и внизу, в разделе **Artifacts**, скачайте
-   `dots-war-apk.zip`.
-7. Внутри архива — `app-debug.apk`. Перекиньте его на телефон (через
-   Telegram себе, Google Drive, USB-кабель — как удобно) и откройте файл на
-   Android, чтобы установить. Если система попросит — разрешите
-   "Установку из неизвестных источников" для того приложения, через
-   которое открываете файл (это стандартное предупреждение Android для
-   любых .apk не из Google Play, ничего страшного).
+- **compileSdk / targetSdk 36** (Android 16) — обязательное требование
+  Google Play для новых загрузок и обновлений с 31 августа 2026 года.
+- **AGP 9.3.0 / Gradle 9.5.0** — актуальные стабильные версии, совместимые
+  с compileSdk 36.
+- Сборку через **GitHub Actions** (в песочнице, где я работаю, нет доступа
+  к Android SDK/Gradle-серверам, поэтому сборка идёт на серверах GitHub —
+  бесплатно и без Android Studio на вашем компьютере).
 
-## Что за приложение
+Workflow (`.github/workflows/build-apk.yml`) собирает два файла:
 
-Обычная WebView-обёртка: один экран, полностью загружает игру
-`assets/index.html` (та же готовая версия DOTS WAR со всеми доработками:
-кампания против ИИ, освобождение точек, анимация захвата и т.д.) в
-полноэкранном режиме. Онлайн-режим работает как обычно — нужен интернет.
+1. **`app-debug.apk`** — неподписанный, для быстрой проверки на своём
+   телефоне (просто установить).
+2. **`app-release.aab`** — то, что нужно грузить в Play Console. Собирается
+   только если в репозитории настроены секреты подписи (см. ниже) — без
+   них шаг сборки .aab просто пропускается.
+
+## Шаг 1 — настроить подпись (один раз)
+
+Я сгенерировал релизный ключ (`dotswar-release.keystore`) — он идёт
+отдельным файлом, **не кладите его в репозиторий**, он нужен только в
+GitHub Secrets. Потеряете — потеряете возможность выпускать обновления
+под тем же приложением, храните в надёжном месте (менеджер паролей,
+облако с доступом только вам).
+
+В репозитории на GitHub: **Settings → Secrets and variables → Actions →
+New repository secret**, добавьте четыре секрета:
+
+| Имя | Значение |
+|---|---|
+| `KEYSTORE_BASE64` | содержимое файла `dotswar-release.keystore.base64` (одной строкой) |
+| `KEYSTORE_PASSWORD` | пароль из файла `keystore_password.txt` |
+| `KEY_ALIAS` | `dotswar` |
+| `KEY_PASSWORD` | тот же пароль, что и `KEYSTORE_PASSWORD` |
+
+После этого при следующем push сборка автоматически создаст ещё и
+`app-release.aab` в Artifacts — это и есть файл для Play Console.
+
+## Шаг 2 — политика конфиденциальности
+
+В репозитории лежит готовый `privacy-policy.html`. Google Play требует
+публичную ссылку на неё. Проще всего — включить GitHub Pages:
+**Settings → Pages → Source: Deploy from a branch → Branch: main, папка
+`/ (root)` → Save**. Через минуту-две страница будет доступна по адресу
+вида `https://<ваш-логин>.github.io/<репозиторий>/privacy-policy.html` —
+эту ссылку вставите в Play Console на шаге App content.
+
+## Шаг 3 — публикация в Play Console
+
+1. play.google.com/console → **Create app**, укажите название, язык,
+   платно/бесплатно, категория — Games.
+2. **Store listing**: короткое и полное описание, иконка 512×512
+   (можно взять `app/src/main/res/mipmap-xxxhdpi/ic_launcher.png` и
+   увеличить/пересобрать под 512×512), скриншоты с телефона (2–8 штук),
+   feature graphic 1024×500.
+3. **App content**: ссылка на privacy policy из шага 2, анкета возрастного
+   рейтинга, целевая аудитория, Data safety (честно: собираются только
+   имя игрока и ID комнаты в онлайн-режиме, см. текст политики), декларация
+   об отсутствии рекламы.
+4. **Testing → Closed testing**: для нового аккаунта разработчика это
+   обязательный шаг — минимум 12 тестировщиков, тестирующих 14 дней подряд,
+   прежде чем откроется Production. Создайте трек, пригласите тестировщиков
+   по email-списку или ссылке, загрузите `app-release.aab` туда.
+5. Через 14 дней активного тестирования появится доступ к **Production** —
+   загружаете тот же (или обновлённый) .aab уже в боевой релиз и
+   отправляете на модерацию.
 
 ## Структура проекта
 
 ```
 DotsWar/
-├── build.gradle                          — корневой gradle-файл
+├── build.gradle                          — AGP 9.3.0
 ├── settings.gradle
 ├── gradle.properties
-├── .github/workflows/build-apk.yml       — автосборка на GitHub Actions
+├── privacy-policy.html                   — для GitHub Pages
+├── .github/workflows/build-apk.yml       — debug apk + подписанный release aab
 └── app/
-    ├── build.gradle
+    ├── build.gradle                      — compileSdk/targetSdk 36, signing config
     └── src/main/
         ├── AndroidManifest.xml
-        ├── java/com/dotswar/app/MainActivity.java   — вся "нативная" часть: просто WebView
-        ├── assets/index.html                        — сама игра
-        └── res/mipmap-*/ic_launcher*.png             — иконка приложения
+        ├── java/com/dotswar/app/MainActivity.java
+        ├── assets/index.html             — сама игра
+        └── res/mipmap-*/ic_launcher*.png
 ```
 
-## Если хочется собрать иначе
+## Локальная сборка (Android Studio, без GitHub)
 
-Тот же проект открывается напрямую в **Android Studio** (Open → выбрать
-папку `DotsWar`) — там будет своя, ещё более простая кнопка "Run"/"Build APK",
-без всякого GitHub. Файл `.github/workflows/build-apk.yml` тогда просто не
-понадобится.
+Тот же проект открывается через Open → выбрать папку `DotsWar`. Для
+release-сборки экспортируйте те же четыре переменные окружения
+(`KEYSTORE_PATH` — путь к файлу `dotswar-release.keystore` на диске,
+остальные три как в таблице выше) перед запуском Gradle, либо соберите
+`assembleDebug`/`bundleDebug` без них.

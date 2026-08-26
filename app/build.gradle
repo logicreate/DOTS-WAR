@@ -2,19 +2,42 @@ apply plugin: 'com.android.application'
 
 android {
     namespace 'com.dotswar.app'
-    compileSdk 34
+    compileSdk 36
 
     defaultConfig {
         applicationId "com.dotswar.app"
         minSdk 21
-        targetSdk 34
+        targetSdk 36
         versionCode 1
         versionName "1.0"
     }
 
+    // Release signing config is populated from environment variables so the
+    // real keystore/passwords never need to be committed to the repo — set
+    // them as GitHub Actions secrets (KEYSTORE_BASE64, KEYSTORE_PASSWORD,
+    // KEY_ALIAS, KEY_PASSWORD) and the CI workflow wires them in. Building
+    // locally in Android Studio without these env vars still works for
+    // debug builds; release builds will just be unsigned until you export
+    // the same variables in your shell.
+    signingConfigs {
+        release {
+            def ksPath = System.getenv("KEYSTORE_PATH")
+            if (ksPath != null) {
+                storeFile file(ksPath)
+                storePassword System.getenv("KEYSTORE_PASSWORD")
+                keyAlias System.getenv("KEY_ALIAS")
+                keyPassword System.getenv("KEY_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
+        debug {
+            // unsigned/debug-signed, used for quick sideload testing
+        }
         release {
             minifyEnabled false
+            signingConfig signingConfigs.release
         }
     }
 
