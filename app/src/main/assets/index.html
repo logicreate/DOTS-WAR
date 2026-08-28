@@ -434,6 +434,29 @@ body{background:#050310;color:#fff;min-height:100dvh}
   .gfoot{margin-top:3px;gap:4px}
   .btn-sm{padding:4px 8px}
 }
+/* ══════════════════════════════════
+   TURN TIMER + EDGE BLINK
+══════════════════════════════════ */
+.edge-blink{position:fixed;inset:0;pointer-events:none;z-index:150;opacity:0}
+.edge-blink.show{opacity:1;animation:edgeBlinkSoft 1.6s ease-in-out infinite}
+.edge-blink.urgent{animation:edgeBlinkHard .55s ease-in-out infinite}
+@keyframes edgeBlinkSoft{
+  0%,100%{box-shadow:inset 0 0 40px 6px rgba(255,20,20,0)}
+  50%{box-shadow:inset 0 0 80px 16px rgba(255,20,20,.38)}
+}
+@keyframes edgeBlinkHard{
+  0%,100%{box-shadow:inset 0 0 60px 10px rgba(255,0,0,.18)}
+  50%{box-shadow:inset 0 0 110px 26px rgba(255,10,10,.7)}
+}
+.turn-timer{font-family:'Russo One',sans-serif;font-size:clamp(.62rem,1.8vw,.82rem);
+  color:#c81000;margin-top:2px;font-weight:400;min-height:1em}
+
+/* ══════════════════════════════════
+   LOUPE / RESIGN BUTTONS
+══════════════════════════════════ */
+.btn-loupe.on{background:#ffd94a;border-color:#c89000;color:#3a2a00;box-shadow:0 0 0 2px rgba(255,200,0,.5)}
+.btn-resign{color:#8c1400}
+.btn-resign:hover{border-color:#c82000;color:#5c0d00;background:#f4dcd4}
 </style>
 </head>
 <body>
@@ -514,6 +537,7 @@ body{background:#050310;color:#fff;min-height:100dvh}
 
 <!-- GAME -->
 <div id="screen-game" class="screen">
+  <div class="edge-blink" id="edgeBlink"></div>
   <div class="hud" id="hud">
     <div class="phud" id="phud1">
       <img class="p-avatar p1" data-img="red" alt="">
@@ -524,6 +548,7 @@ body{background:#050310;color:#fff;min-height:100dvh}
     </div>
     <div class="hud-mid">
       <div class="turn-t" id="turnT">—</div>
+      <div class="turn-timer" id="turnTimer"></div>
     </div>
     <div class="phud phud-r" id="phud2">
       <img class="p-avatar p2" data-img="green" alt="">
@@ -537,6 +562,8 @@ body{background:#050310;color:#fff;min-height:100dvh}
   <div class="gfoot">
     <button class="btn btn-sm" onclick="goMenu()" id="gMenu">🏠 Menu</button>
     <button class="btn btn-sm" id="btnRst" onclick="restartGame()">🔄 Restart</button>
+    <button class="btn btn-sm btn-loupe" id="btnLoupe" onclick="toggleLoupe()">🔍 <span id="gLoupe">Loupe</span></button>
+    <button class="btn btn-sm btn-resign" onclick="askResign()">🏳 <span id="gResign">Resign</span></button>
     <button class="btn btn-sm" onclick="openRules()" id="gRules">📜 Rules</button>
   </div>
 </div>
@@ -590,6 +617,18 @@ body{background:#050310;color:#fff;min-height:100dvh}
     </ul>
     <br>
     <button class="btn btn-gold" onclick="closeRules()" style="width:100%" id="rOkBtn">Let the battle begin! ⚔️</button>
+  </div>
+</div>
+
+<!-- RESIGN CONFIRM -->
+<div class="overlay" id="resignModal" onclick="if(event.target===this)closeResignModal()">
+  <div class="modal" style="max-width:380px;text-align:center">
+    <h2 id="resignTitle">🏳 Resign?</h2>
+    <p id="resignText">Are you sure you want to resign? This counts as a loss.</p>
+    <div class="row" style="margin-top:14px">
+      <button class="btn btn-red" style="flex:1" onclick="confirmResign()" id="resignYesBtn">Yes, resign</button>
+      <button class="btn btn-ghost" style="flex:1" onclick="closeResignModal()" id="resignNoBtn">Cancel</button>
+    </div>
   </div>
 </div>
 
@@ -679,6 +718,13 @@ var TR = {
     aiThinkTxt:'⚔️ Thinking…',
     oppLeft:'Opponent left the battle.',
     copyR:'© A.E. All rights reserved',
+    gLoupe:'Loupe', gResign:'Resign',
+    resignTitle:'🏳 Resign?', resignText:'Are you sure you want to resign? This counts as a loss.',
+    resignYesBtn:'Yes, resign', resignNoBtn:'Cancel', resignedTag:'Resigned',
+    oppResigned:'Opponent resigned — you win!',
+    connLost:'Connection lost. Returning to menu…',
+    moveFailed:'Move failed to send, retrying…',
+    moveFailedFinal:'Could not send your move. Check connection.',
     fieldSizes:['10×10','15×15','20×20','25×25','30×30'],
   },
   ru:{
@@ -731,6 +777,13 @@ var TR = {
     aiThinkTxt:'⚔️ ИИ думает…',
     oppLeft:'Соперник покинул битву.',
     copyR:'© А.Э. Все права защищены',
+    gLoupe:'Лупа', gResign:'Сдаться',
+    resignTitle:'🏳 Сдаться?', resignText:'Вы уверены, что хотите сдаться? Это засчитается как поражение.',
+    resignYesBtn:'Да, сдаюсь', resignNoBtn:'Отмена', resignedTag:'Сдался',
+    oppResigned:'Соперник сдался — вы победили!',
+    connLost:'Соединение потеряно. Возврат в меню…',
+    moveFailed:'Ход не отправился, повтор…',
+    moveFailedFinal:'Не удалось отправить ход. Проверьте соединение.',
     fieldSizes:['10×10','15×15','20×20','25×25','30×30'],
   }
 };
@@ -743,7 +796,8 @@ var TEXT_IDS = ['mPveT','mPveS','mPvpT','mPvpS','mOnT','mOnS',
   'enterCodeLbl','btnJoin','btnBackOl','rulesH','rGoal','rGoalT','rHow',
   'rl1','rl2','rl3','rl4','rOnline','rol1','rol2','rLvl',
   'rlv1n','rlv1d','rlv2n','rlv2d','rlv3n','rlv3d','rOkBtn',
-  'gMenu','gRules','rPlayAgain','rMenu','copyR'];
+  'gMenu','gRules','rPlayAgain','rMenu','copyR',
+  'gLoupe','gResign','resignTitle','resignText','resignYesBtn','resignNoBtn'];
 
 function applyLang(){
   // Language button: highlight active language
@@ -785,7 +839,9 @@ var CC={
 var G=null, gameMode='pve', selLv=1, olFSz=1;
 var aiTimer=null, aiLock=false;
 var playerNames=['Red Dots','Green Pix'];
-var db=null, roomRef=null, movesRef=null, myPNum=1, isHost=false, olReady=false;
+var db=null, roomRef=null, movesRef=null, resignRef=null, myPNum=1, isHost=false, olReady=false;
+var loupeOn=false, loupeDrag=false, loupeX=0, loupeY=0;
+var turnTimerId=null, turnGraceId=null, TURN_SECS=15, TURN_GRACE=5;
 
 // PvE campaign progress: 1=Rookie(small board), 2=Warrior(medium), 3=Legend(large)
 var pveLevel=1;
@@ -1328,6 +1384,46 @@ function draw(g){
     ctx.strokeStyle=col+'55';ctx.lineWidth=1;
     ctx.setLineDash([2,2]);ctx.stroke();ctx.setLineDash([]);
   }
+  if(loupeOn&&loupeDrag&&hR>=0&&hC>=0){
+    drawLoupe(g);
+  }
+}
+// Magnifier lens: zoomed clip of the board around the finger, drawn
+// offset above/below the touch point so the finger doesn't hide it.
+function drawLoupe(g){
+  var lensR=Math.min(VW,VH)*0.22;
+  var zoom=2.6;
+  var srcR=lensR/zoom;
+  var cx=loupeX, cy=loupeY;
+  var lensCx=Math.min(Math.max(cx,lensR+4),VW-lensR-4);
+  var above=(cy-lensR*2-30)>0;
+  var lensCy=above ? (cy-lensR-34) : (cy+lensR+34);
+  var bdpr=canvas.width/VW;
+  ctx.save();
+  ctx.beginPath();ctx.arc(lensCx,lensCy,lensR,0,Math.PI*2);ctx.closePath();ctx.clip();
+  ctx.fillStyle=CC.paper;ctx.fillRect(lensCx-lensR,lensCy-lensR,lensR*2,lensR*2);
+  ctx.drawImage(canvas,
+    (cx-srcR)*bdpr,(cy-srcR)*bdpr,srcR*2*bdpr,srcR*2*bdpr,
+    lensCx-lensR,lensCy-lensR,lensR*2,lensR*2);
+  ctx.restore();
+  ctx.beginPath();ctx.arc(lensCx,lensCy,lensR,0,Math.PI*2);
+  ctx.lineWidth=3;ctx.strokeStyle='rgba(255,255,255,.95)';ctx.stroke();
+  ctx.lineWidth=1;ctx.strokeStyle='rgba(0,0,0,.35)';ctx.stroke();
+  var snapXY=n2x(hR,hC);
+  var lensPtX=lensCx+(snapXY[0]-cx)*zoom;
+  var lensPtY=lensCy+(snapXY[1]-cy)*zoom;
+  if(Math.hypot(lensPtX-lensCx,lensPtY-lensCy)<lensR-4){
+    var col=g.cur===1?CC.p1:CC.p2;
+    ctx.beginPath();ctx.arc(lensPtX,lensPtY,7,0,Math.PI*2);
+    ctx.strokeStyle=col;ctx.lineWidth=2.4;ctx.stroke();
+    ctx.beginPath();ctx.moveTo(lensPtX-11,lensPtY);ctx.lineTo(lensPtX+11,lensPtY);
+    ctx.moveTo(lensPtX,lensPtY-11);ctx.lineTo(lensPtX,lensPtY+11);
+    ctx.strokeStyle='rgba(255,255,255,.9)';ctx.lineWidth=1.4;ctx.stroke();
+  }
+  ctx.beginPath();ctx.moveTo(cx,cy);
+  ctx.lineTo(lensCx, above? lensCy+lensR : lensCy-lensR);
+  ctx.strokeStyle='rgba(255,255,255,.5)';ctx.lineWidth=1.5;
+  ctx.setLineDash([3,3]);ctx.stroke();ctx.setLineDash([]);
 }
 
 // ═══════════════════════
@@ -1363,6 +1459,7 @@ function startGame(){
   if(gameMode==='online'&&!olReady) return;
   if(aiTimer){clearTimeout(aiTimer);aiTimer=null;}
   aiLock=false;hR=-1;hC=-1;activeAnims=[];
+  clearTurnTimer();loupeDrag=false;
   var n;
   if(gameMode==='pve'){
     n=selLv===1?11:selLv===2?16:21;
@@ -1405,6 +1502,7 @@ function updateHUD(){
     // Extra-clear "the AI is thinking" cue on top of the ⚔️ Thinking… label
     document.getElementById('phud2').classList.toggle('thinking', gameMode==='pve'&&!isP1);
   }
+  refreshTurnTimer();
 }
 function schedAI(){
   if(!G||G.over||G.cur!==2||gameMode!=='pve') return;
@@ -1425,21 +1523,25 @@ function schedAI(){
       }
     }
     aiLock=false;checkEarly(G);
-    if(G.over) setTimeout(showResult,600);
+    if(G.over){clearTurnTimer();setTimeout(showResult,600);}
     else if(G.cur===2) schedAI();
   },delay);
 }
 function onCvClick(e){
   if(!G||G.over) return;
+  if(loupeOn) return; // loupe mode places on drag-release, not a plain tap
   if(gameMode==='pve'&&(aiLock||G.cur===2)) return;
   if(gameMode==='online'&&G.cur!==myPNum) return;
   var rect=canvas.getBoundingClientRect();
   var sx=VW/rect.width,sy=VH/rect.height;
   var rc=x2n((e.clientX-rect.left)*sx,(e.clientY-rect.top)*sy);
   if(!canPl(G,rc[0],rc[1])) return;
+  commitMove(rc[0],rc[1]);
+}
+function commitMove(r,c){
   var before=G.sc.slice();
-  doMove(G,rc[0],rc[1]);
-  if(gameMode==='online') pushMove(rc[0],rc[1]);
+  doMove(G,r,c);
+  if(gameMode==='online') pushMove(r,c);
   draw(G);updateHUD();
   // Play sound + capture animation if territory was captured
   var justMoved=3-G.cur;
@@ -1449,8 +1551,108 @@ function onCvClick(e){
     spawnCaptureAnim(animCellsFromCap(G._lastCap),justMoved===1?CC.p1:CC.p2);
   }
   checkEarly(G);
-  if(G.over){setTimeout(showResult,600);return;}
+  if(G.over){clearTurnTimer();setTimeout(showResult,600);return;}
   if(gameMode==='pve') schedAI();
+}
+// ═══════════════════════
+//  TURN TIMER — 15s to move, red edge-blink reminder,
+//  auto-plays a random legal move after a short grace period
+//  so nobody can stall a match forever.
+// ═══════════════════════
+function localTurnActive(){
+  return !!G && !G.over && ((gameMode==='pve'&&G.cur===1) || (gameMode==='online'&&G.cur===myPNum));
+}
+function clearTurnTimer(){
+  if(turnTimerId){clearInterval(turnTimerId);turnTimerId=null;}
+  if(turnGraceId){clearTimeout(turnGraceId);turnGraceId=null;}
+  var eb=document.getElementById('edgeBlink'); if(eb) eb.classList.remove('show','urgent');
+  var tt=document.getElementById('turnTimer'); if(tt) tt.textContent='';
+}
+function startTurnTimer(){
+  clearTurnTimer();
+  if(!localTurnActive()) return;
+  var startT=Date.now();
+  var eb=document.getElementById('edgeBlink'); if(eb) eb.classList.add('show');
+  turnTimerId=setInterval(function(){
+    if(!localTurnActive()){clearTurnTimer();return;}
+    var left=TURN_SECS-Math.floor((Date.now()-startT)/1000);
+    var tt=document.getElementById('turnTimer');
+    if(tt) tt.textContent = left>0 ? left : '';
+    if(left<=0){
+      clearInterval(turnTimerId);turnTimerId=null;
+      var eb2=document.getElementById('edgeBlink'); if(eb2) eb2.classList.add('urgent');
+      turnGraceId=setTimeout(autoPlayRandomMove,TURN_GRACE*1000);
+    }
+  },250);
+}
+function refreshTurnTimer(){
+  if(!G||G.over){clearTurnTimer();return;}
+  if(localTurnActive()) startTurnTimer(); else clearTurnTimer();
+}
+function autoPlayRandomMove(){
+  clearTurnTimer();
+  if(!localTurnActive()) return;
+  var legal=vMoves(G);
+  if(!legal.length) return;
+  var mv=legal[(Math.random()*legal.length)|0];
+  commitMove(mv[0],mv[1]);
+}
+// ═══════════════════════
+//  LOUPE — magnifier for precise placement on big boards.
+//  Toggle on, then press-and-drag on the board: a zoomed lens
+//  follows your finger showing exactly where the dot will land;
+//  lifting your finger/mouse commits the move.
+// ═══════════════════════
+function toggleLoupe(){
+  loupeOn=!loupeOn;
+  loupeDrag=false;
+  var b=document.getElementById('btnLoupe'); if(b) b.classList.toggle('on',loupeOn);
+  if(G) draw(G);
+}
+function updateLoupePos(e){
+  var rect=canvas.getBoundingClientRect();
+  var sx=VW/rect.width, sy=VH/rect.height;
+  loupeX=(e.clientX-rect.left)*sx; loupeY=(e.clientY-rect.top)*sy;
+  var rc=x2n(loupeX,loupeY);
+  hR=rc[0]; hC=rc[1];
+}
+function loupePointerDown(e){
+  if(!G||G.over) return;
+  if(gameMode==='pve'&&(aiLock||G.cur===2)) return;
+  if(gameMode==='online'&&G.cur!==myPNum) return;
+  loupeDrag=true;
+  updateLoupePos(e);
+  draw(G);
+}
+function loupePointerMove(e){
+  if(!loupeDrag) return;
+  updateLoupePos(e);
+  draw(G);
+}
+function loupePointerUp(){
+  if(!loupeDrag) return;
+  loupeDrag=false;
+  if(G&&!G.over&&hR>=0&&hC>=0&&canPl(G,hR,hC)) commitMove(hR,hC);
+  else if(G) draw(G);
+}
+// ═══════════════════════
+//  RESIGN
+// ═══════════════════════
+function askResign(){
+  if(!G||G.over) return;
+  document.getElementById('resignModal').classList.add('open');
+}
+function closeResignModal(){document.getElementById('resignModal').classList.remove('open');}
+function confirmResign(){
+  closeResignModal();
+  if(!G||G.over) return;
+  clearTurnTimer();
+  var loser = gameMode==='online' ? myPNum : 1;
+  G.over=true; G.earlyW=3-loser; G.resigned=loser;
+  if(gameMode==='online'){
+    try{ if(roomRef) roomRef.child('resign').set({p:loser,t:firebase.database.ServerValue.TIMESTAMP}); }catch(e){}
+  }
+  setTimeout(showResult,200);
 }
 function onCvMove(e){
   if(!G||G.over) return;
@@ -1466,7 +1668,7 @@ function showResult(){
   var s1=G.sc[0],s2=G.sc[1],w=G.earlyW||(s1>s2?1:s2>s1?2:0);
   var n1=playerNames[0],n2=playerNames[1];
   document.getElementById('resE').textContent=w===0?'🤝':w===1?'🔴':'🟢';
-  var ew=G.earlyW?' ('+T('earlyWin')+')':'';
+  var ew=G.resigned?' ('+T('resignedTag')+')':(G.earlyW?' ('+T('earlyWin')+')':'');
   document.getElementById('resT').textContent=(w===0?T('draw'):(w===1?n1:n2)+T('wins'))+ew;
   document.getElementById('rs1').textContent=s1;document.getElementById('rs2').textContent=s2;
   document.getElementById('rw1').textContent=n1;document.getElementById('rw2').textContent=n2;
@@ -1570,7 +1772,9 @@ function genCode(){return String(Math.floor(100000+Math.random()*900000));}
 function setOS(msg,cls){var el=document.getElementById('olSt');el.textContent=msg;el.className='ol-st'+(cls?' '+cls:'');}
 function leaveRoom(){
   olReady=false;
+  clearTurnTimer();
   if(movesRef){try{movesRef.off();}catch(e){}movesRef=null;}
+  if(resignRef){try{resignRef.off();}catch(e){}resignRef=null;}
   if(roomRef){
     try{roomRef.off();roomRef.child('guest').off();}catch(e){}
     try{
@@ -1602,23 +1806,72 @@ function listenMoves(){
   if(!roomRef) return;
   movesRef=roomRef.child('moves');
   movesRef.on('child_added',function(snap){
-    var d=snap.val();
-    if(!d||d.p===myPNum) return;          // own moves are applied locally
-    if(!G||G.over) return;
-    if(!canPl(G,d.r,d.c)) return;         // ignore duplicates/replays
-    var ob=G.sc.slice();
-    doMove(G,d.r,d.c);draw(G);updateHUD();
-    var og=G.sc[2-myPNum]-ob[2-myPNum];
-    if(og>0){
-      playCaptureSound(og);
-      spawnCaptureAnim(animCellsFromCap(G._lastCap),d.p===1?CC.p1:CC.p2);
+    try{
+      var d=snap.val();
+      if(!d||d.p===myPNum) return;          // own moves are applied locally
+      if(!G||G.over) return;
+      if(typeof d.r!=='number'||typeof d.c!=='number') return;
+      if(!canPl(G,d.r,d.c)) return;         // ignore duplicates/replays
+      var ob=G.sc.slice();
+      doMove(G,d.r,d.c);draw(G);updateHUD();
+      var og=G.sc[2-myPNum]-ob[2-myPNum];
+      if(og>0){
+        playCaptureSound(og);
+        spawnCaptureAnim(animCellsFromCap(G._lastCap),d.p===1?CC.p1:CC.p2);
+      }
+      checkEarly(G);
+      if(G.over){clearTurnTimer();setTimeout(showResult,600);}
+    }catch(err){
+      console.warn('listenMoves handler error',err);
     }
-    checkEarly(G);
-    if(G.over) setTimeout(showResult,600);
+  },function(err){
+    console.warn('listenMoves detached',err);
+    if(gameMode==='online'&&G&&!G.over){
+      showToast(T('connLost'));
+      setTimeout(goMenu,2200);
+    }
+  });
+  listenResign();
+}
+function listenResign(){
+  if(!roomRef) return;
+  resignRef=roomRef.child('resign');
+  resignRef.on('value',function(snap){
+    try{
+      var d=snap.val();
+      if(!d||d.p===myPNum) return;
+      if(!G||G.over) return;
+      clearTurnTimer();
+      G.over=true; G.earlyW=myPNum; G.resigned=d.p;
+      showToast(T('oppResigned'));
+      setTimeout(showResult,400);
+    }catch(err){
+      console.warn('listenResign handler error',err);
+    }
+  },function(err){
+    console.warn('listenResign detached',err);
   });
 }
-function pushMove(r,c){
-  if(movesRef){try{movesRef.push({p:myPNum,r:r,c:c});}catch(e){}}
+function pushMove(r,c,_retry){
+  if(!movesRef) return;
+  try{
+    var res=movesRef.push({p:myPNum,r:r,c:c});
+    if(res&&typeof res.then==='function'){
+      res.catch(function(err){
+        console.warn('pushMove failed',err);
+        if(!_retry){
+          showToast(T('moveFailed'));
+          setTimeout(function(){pushMove(r,c,true);},1200);
+        } else {
+          showToast(T('moveFailedFinal'));
+        }
+      });
+    }
+  }catch(e){
+    console.warn('pushMove threw',e);
+    if(!_retry) setTimeout(function(){pushMove(r,c,true);},1200);
+    else showToast(T('moveFailedFinal'));
+  }
 }
 var _ca=0;
 function createRoom(){
@@ -1659,6 +1912,9 @@ function _dc(){
       } else if(!gst&&olReady&&G&&!G.over){
         showToast(T('oppLeft'));setTimeout(goMenu,2200);
       }
+    },function(err){
+      console.warn('guest listener detached',err);
+      if(olReady&&G&&!G.over){showToast(T('connLost'));setTimeout(goMenu,2200);}
     });
   });
 }
@@ -1699,6 +1955,9 @@ function joinRoom(){
       startGame();
       ref.on('value',function(s){          // room deleted -> host left
         if(!s.exists()&&olReady&&G&&!G.over){showToast(T('oppLeft'));setTimeout(goMenu,2200);}
+      },function(err){
+        console.warn('room listener detached',err);
+        if(olReady&&G&&!G.over){showToast(T('connLost'));setTimeout(goMenu,2200);}
       });
     });
   }).catch(function(){if(!done){done=true;clearTimeout(ct);setOS(T('netErr'),'err');}});
@@ -1708,16 +1967,24 @@ function joinRoom(){
 //  EVENTS
 // ═══════════════════════
 var cv=document.getElementById('gameCanvas');
-cv.addEventListener('click',onCvClick);
-cv.addEventListener('mousemove',onCvMove);
-cv.addEventListener('mouseleave',function(){hR=-1;hC=-1;if(G)draw(G);});
+cv.addEventListener('click',function(e){ if(!loupeOn) onCvClick(e); });
+cv.addEventListener('mousedown',function(e){ if(loupeOn) loupePointerDown(e); });
+cv.addEventListener('mouseup',function(e){ if(loupeOn) loupePointerUp(); });
+cv.addEventListener('mousemove',function(e){ if(loupeOn&&loupeDrag) loupePointerMove(e); else onCvMove(e); });
+cv.addEventListener('mouseleave',function(){ if(loupeOn&&loupeDrag) loupePointerUp(); hR=-1;hC=-1;if(G)draw(G); });
 cv.addEventListener('touchstart',function(e){
   e.preventDefault();
-  var t=e.touches[0];onCvClick({clientX:t.clientX,clientY:t.clientY});
+  var t=e.touches[0],ev={clientX:t.clientX,clientY:t.clientY};
+  if(loupeOn) loupePointerDown(ev); else onCvClick(ev);
 },{passive:false});
 cv.addEventListener('touchmove',function(e){
   e.preventDefault();
-  var t=e.touches[0];onCvMove({clientX:t.clientX,clientY:t.clientY});
+  var t=e.touches[0],ev={clientX:t.clientX,clientY:t.clientY};
+  if(loupeOn&&loupeDrag) loupePointerMove(ev); else onCvMove(ev);
+},{passive:false});
+cv.addEventListener('touchend',function(e){
+  e.preventDefault();
+  if(loupeOn) loupePointerUp();
 },{passive:false});
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape') closeRules();
