@@ -2,10 +2,10 @@ package com.dotswar.app;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
@@ -14,10 +14,18 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.webkit.WebViewAssetLoader;
+
+import java.util.Locale;
 
 public class MainActivity extends Activity {
     private WebView webView;
+    private String insetsJs = "";
     // The game is served from this origin (not file://) so Web Workers, localStorage,
     // history.pushState (hardware Back button) and Firebase work like in a real browser.
     private static final String START_URL = "https://appassets.androidplatform.net/assets/index.html";
@@ -27,9 +35,24 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        // ── Edge-to-edge: the WebView covers the whole screen, system bars are transparent,
+        //    and the page itself keeps its content clear of them via safe-area insets
+        //    (passed in as CSS variables below, because Android WebView does not fill
+        //    env(safe-area-inset-*) on its own). This removes the light strip that the
+        //    default navigation bar used to leave at the bottom.
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        getWindow().setStatusBarColor(Color.TRANSPARENT);
+        getWindow().setNavigationBarColor(Color.TRANSPARENT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            getWindow().setNavigationBarContrastEnforced(false);
+            getWindow().setStatusBarContrastEnforced(false);
+        }
+        WindowInsetsControllerCompat ic = WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
+        ic.setAppearanceLightStatusBars(false);       // light icons on our dark background
+        ic.setAppearanceLightNavigationBars(false);
+        ic.hide(WindowInsetsCompat.Type.statusBars()); // immersive: no status bar, swipe to peek
+        ic.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+
         // Keep the screen on during a battle (turn timers, online play)
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -63,12 +86,33 @@ public class MainActivity extends Activity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 // Stay inside the app for our own origin; anything else (share links etc.) is ignored
-                return !request.getUrl().getHost().equals("appassets.androidplatform.net");
+                return !"appassets.androidplatform.net".equals(request.getUrl().getHost());
+            }
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                pushInsets(); // the page is ready: hand it the current safe-area insets
             }
         });
         webView.setWebChromeClient(new WebChromeClient());
 
+        // System bar / display-cutout insets -> CSS variables --sat/--sar/--sab/--sal (CSS px)
+        ViewCompat.setOnApplyWindowInsetsListener(webView, (v, insets) -> {
+            Insets sb = insets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
+            float d = getResources().getDisplayMetrics().density;
+            insetsJs = String.format(Locale.US,
+                    "(function(s){s.setProperty('--sat','%dpx');s.setProperty('--sar','%dpx');" +
+                    "s.setProperty('--sab','%dpx');s.setProperty('--sal','%dpx');" +
+                    "window.dispatchEvent(new Event('resize'));})(document.documentElement.style);",
+                    Math.round(sb.top / d), Math.round(sb.right / d), Math.round(sb.bottom / d), Math.round(sb.left / d));
+            pushInsets();
+            return WindowInsetsCompat.CONSUMED;
+        });
+
         webView.loadUrl(START_URL);
+    }
+
+    private void pushInsets() {
+        if (webView != null && !insetsJs.isEmpty()) webView.evaluateJavascript(insetsJs, null);
     }
 
     @Override
