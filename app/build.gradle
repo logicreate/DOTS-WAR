@@ -8,8 +8,8 @@ android {
         applicationId "com.dotswar.app"
         minSdk 21
         targetSdk 36
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "2.0.0"
     }
 
     // Release signing config is populated from environment variables so the
@@ -60,4 +60,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
+}
+
+dependencies {
+    // WebViewAssetLoader: serves the bundled game from https://appassets.androidplatform.net/
+    // instead of file:// — gives the page a real origin, so localStorage, history (Back
+    // button), Web Workers (AI engine) and Firebase all behave exactly as in a browser.
+    implementation 'androidx.webkit:webkit:1.12.1'
 }

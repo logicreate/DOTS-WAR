@@ -1,5 +1,18 @@
 # Dots War — сборка и публикация в Google Play
 
+## Версия 2.0 — что изменилось в обёртке
+
+* Игра открывается через `WebViewAssetLoader` с адреса `https://appassets.androidplatform.net/assets/index.html`
+  (а не `file://`). Это даёт странице настоящий origin: работают Web Worker (движок ИИ считает в фоне),
+  `localStorage` (прогресс, настройки), `history` (аппаратная кнопка «Назад» возвращает в меню
+  и спрашивает подтверждение в живой партии) и Firebase без смешанного контента.
+* Добавлена зависимость `androidx.webkit:webkit` (см. `app/build.gradle`) и разрешение `VIBRATE`
+  (вибрация при захвате, отключается в настройках игры).
+* Экран не гаснет во время партии (`FLAG_KEEP_SCREEN_ON`), системный масштаб шрифта игнорируется.
+* `versionCode 2`, `versionName 2.0.0` — при загрузке в Play Console каждая новая сборка должна иметь
+  больший `versionCode`.
+
+
 ## Что в этом проекте
 
 Android-приложение — WebView-обёртка вокруг игры (`assets/index.html`).
