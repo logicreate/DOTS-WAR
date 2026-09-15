@@ -40,7 +40,7 @@ public class MainActivity extends Activity {
     // history.pushState (hardware Back button) and Firebase work like in a real browser.
     private static final String START_URL = "https://appassets.androidplatform.net/assets/index.html";
     // Firebase Console -> Authentication -> Sign-in method -> Google -> "Web client ID" (ends with .apps.googleusercontent.com)
-    private static final String WEB_CLIENT_ID = "PASTE_YOUR_WEB_CLIENT_ID.apps.googleusercontent.com";
+    private static final String WEB_CLIENT_ID = "911143426593-ecmf3a8g72fnm42m93tfc93fkv99gu5p.apps.googleusercontent.com";
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
