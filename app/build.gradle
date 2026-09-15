@@ -8,8 +8,8 @@ android {
         applicationId "com.dotswar.app"
         minSdk 21
         targetSdk 36
-        versionCode 5
-        versionName "2.1.0"
+        versionCode 6
+        versionName "2.2.0"
     }
 
     // Release signing config is populated from environment variables so the
@@ -69,4 +69,8 @@ dependencies {
     implementation 'androidx.webkit:webkit:1.12.1'
     // WindowCompat / ViewCompat for edge-to-edge and safe-area insets
     implementation 'androidx.core:core:1.13.1'
+    // Native Google sign-in (Credential Manager) -> ID token handed to Firebase Auth inside the page
+    implementation 'androidx.credentials:credentials:1.3.0'
+    implementation 'androidx.credentials:credentials-play-services-auth:1.3.0'
+    implementation 'com.google.android.libraries.identity.googleid:googleid:1.1.1'
 }

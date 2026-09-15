@@ -20,6 +20,16 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.webkit.WebViewAssetLoader;
+import androidx.credentials.CredentialManager;
+import androidx.credentials.CredentialManagerCallback;
+import androidx.credentials.GetCredentialRequest;
+import androidx.credentials.GetCredentialResponse;
+import androidx.credentials.exceptions.GetCredentialException;
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption;
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential;
+import android.webkit.JavascriptInterface;
+import android.os.CancellationSignal;
+import java.util.concurrent.Executors;
 
 import java.util.Locale;
 
@@ -29,6 +39,8 @@ public class MainActivity extends Activity {
     // The game is served from this origin (not file://) so Web Workers, localStorage,
     // history.pushState (hardware Back button) and Firebase work like in a real browser.
     private static final String START_URL = "https://appassets.androidplatform.net/assets/index.html";
+    // Firebase Console -> Authentication -> Sign-in method -> Google -> "Web client ID" (ends with .apps.googleusercontent.com)
+    private static final String WEB_CLIENT_ID = "PASTE_YOUR_WEB_CLIENT_ID.apps.googleusercontent.com";
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -94,6 +106,7 @@ public class MainActivity extends Activity {
             }
         });
         webView.setWebChromeClient(new WebChromeClient());
+        webView.addJavascriptInterface(new Bridge(), "AndroidBridge");
 
         // System bar / display-cutout insets -> CSS variables --sat/--sar/--sab/--sal (CSS px)
         ViewCompat.setOnApplyWindowInsetsListener(webView, (v, insets) -> {
@@ -110,6 +123,38 @@ public class MainActivity extends Activity {
 
         webView.loadUrl(START_URL);
     }
+
+    /** Called from the page: window.AndroidBridge.googleSignIn() -> native Google sign-in -> onGoogleIdToken(token) in JS */
+    private class Bridge {
+        @JavascriptInterface
+        public void googleSignIn() {
+            runOnUiThread(MainActivity.this::startGoogleSignIn);
+        }
+    }
+
+    private void startGoogleSignIn() {
+        if (WEB_CLIENT_ID.startsWith("PASTE_")) { js("showToast(T('gFail'))"); return; }
+        CredentialManager cm = CredentialManager.create(this);
+        GetGoogleIdOption opt = new GetGoogleIdOption.Builder()
+                .setFilterByAuthorizedAccounts(false)
+                .setServerClientId(WEB_CLIENT_ID)
+                .setAutoSelectEnabled(false)
+                .build();
+        GetCredentialRequest req = new GetCredentialRequest.Builder().addCredentialOption(opt).build();
+        cm.getCredentialAsync(this, req, new CancellationSignal(), Executors.newSingleThreadExecutor(),
+            new CredentialManagerCallback<GetCredentialResponse, GetCredentialException>() {
+                @Override public void onResult(GetCredentialResponse result) {
+                    try {
+                        GoogleIdTokenCredential c = GoogleIdTokenCredential.createFrom(result.getCredential().getData());
+                        final String token = c.getIdToken();
+                        runOnUiThread(() -> js("onGoogleIdToken(" + jsStr(token) + ")"));
+                    } catch (Exception e) { runOnUiThread(() -> js("showToast(T('gFail'))")); }
+                }
+                @Override public void onError(GetCredentialException e) { runOnUiThread(() -> js("showToast(T('gFail'))")); }
+            });
+    }
+    private static String jsStr(String v) { return "\"" + v.replace("\\", "\\\\").replace("\"", "\\\"") + "\""; }
+    private void js(String code) { if (webView != null) webView.evaluateJavascript(code, null); }
 
     private void pushInsets() {
         if (webView != null && !insetsJs.isEmpty()) webView.evaluateJavascript(insetsJs, null);

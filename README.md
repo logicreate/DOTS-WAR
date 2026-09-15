@@ -109,3 +109,24 @@ release-сборки экспортируйте те же четыре пере�
 (`KEYSTORE_PATH` — путь к файлу `dotswar-release.keystore` на диске,
 остальные три как в таблице выше) перед запуском Gradle, либо соберите
 `assembleDebug`/`bundleDebug` без них.
+
+
+## Версия 2.2 — вход через Google (аккаунты)
+
+Игра использует Firebase Authentication: гость входит анонимно автоматически, прогресс хранится в облаке
+под его UID. Кнопка «G Google» в настройках привязывает Google-аккаунт (прогресс переносится на любое устройство).
+
+Внутри приложения Google запрещает OAuth в WebView, поэтому вход делается нативно через Credential Manager
+и токен передаётся в игру (`AndroidBridge.googleSignIn()` → `onGoogleIdToken(token)`). Чтобы это заработало:
+
+1. Firebase Console → Authentication → Sign-in method: включите **Anonymous**, **Google** и **Email/Password**
+   (последний нужен для «кода переноса»).
+2. Firebase Console → Project settings → Your apps → добавьте Android-приложение `com.dotswar.app`
+   и укажите **SHA-1 и SHA-256** отпечатки обоих ключей (debug.keystore из репозитория и release/upload-ключа;
+   для Play App Signing — ещё и отпечаток ключа подписи из Play Console → App integrity).
+   Команда: `keytool -list -v -keystore debug.keystore -alias androiddebugkey -storepass android`.
+3. Там же скопируйте **Web client ID** (Authentication → Sign-in method → Google → Web SDK configuration)
+   и вставьте его в `MainActivity.java` в константу `WEB_CLIENT_ID`.
+4. Опубликуйте обновлённые правила базы (`firebase-rules.json`) — теперь запись профиля разрешена только владельцу.
+
+Без шага 3 кнопка Google в приложении покажет «Не удалось войти», всё остальное работает как прежде.
