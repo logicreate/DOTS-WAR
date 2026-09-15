@@ -69,17 +69,18 @@ body{background:#050310;color:#fff;min-height:100dvh}
 .menu-inner{
   position:relative;z-index:1;
   width:100%;height:100dvh;
-  padding:0 12px
+  padding:calc(8px + max(env(safe-area-inset-top,0px),var(--sat,0px))) 12px 0;
+  display:flex;flex-direction:column;align-items:center
 }
 /* TRADEMARK LOGO — pinned slightly above the middle (room for the tools row) */
 .logo-section{
-  position:absolute;top:44%;left:50%;transform:translate(-50%,-50%);
+  flex:1 1 auto;min-height:0;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   width:100%;padding:0 12px
 }
 .trademark-img{
-  width:clamp(220px,62vw,480px);
-  height:auto;max-height:33vh;
+  width:clamp(180px,62vw,480px);
+  height:auto;max-height:clamp(120px,calc(100dvh - 380px),36vh);
   object-fit:contain;
   filter:drop-shadow(0 8px 32px rgba(80,60,200,.45)) drop-shadow(0 0 60px rgba(60,40,180,.3));
   animation:logoIn .8s cubic-bezier(.34,1.56,.64,1) both
@@ -88,20 +89,23 @@ body{background:#050310;color:#fff;min-height:100dvh}
 
 /* MODE BUTTONS SECTION — pinned to the bottom, independent of logo size */
 .modes-section{
-  position:absolute;left:50%;bottom:0;transform:translateX(-50%);
+  flex:0 0 auto;
   width:100%;max-width:600px;
   padding-bottom:calc(clamp(22px,4vh,40px) + max(env(safe-area-inset-bottom,0px),var(--sab,0px)))
 }
 .wordmark{margin-top:clamp(6px,1.4vh,14px);font-size:clamp(1.9rem,8vw,3.2rem);font-weight:800;letter-spacing:.06em;line-height:1;
   background:linear-gradient(180deg,#fff0a0 0%,#ffd54a 45%,#f0a000 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
   filter:drop-shadow(0 4px 0 rgba(60,30,0,.55)) drop-shadow(0 0 22px rgba(255,200,60,.45));animation:logoIn .8s .1s cubic-bezier(.34,1.56,.64,1) both}
-body[data-theme=ice] .wordmark{filter:drop-shadow(0 3px 0 rgba(120,80,0,.35)) drop-shadow(0 0 14px rgba(255,200,60,.35))}
 @media(orientation:landscape) and (max-height:520px){.wordmark{font-size:1.5rem;margin-top:4px}}
 .tagline{margin-top:clamp(6px,1.2vh,12px);padding:0 10px;
   font-size:clamp(.66rem,2vw,.9rem);color:rgba(255,220,120,.8);text-align:center;
   letter-spacing:.03em;text-shadow:0 2px 8px rgba(0,0,0,.7);animation:logoIn .8s .15s cubic-bezier(.34,1.56,.64,1) both}
 /* Tools row: big "How to play" + language switch, same style as the mode cards */
 .menu-tools{display:flex;gap:8px}
+.menu-profile{position:absolute;top:calc(10px + max(env(safe-area-inset-top,0px),var(--sat,0px)));right:calc(10px + max(env(safe-area-inset-right,0px),var(--sar,0px)));z-index:5;
+  background:var(--glass);border:1.5px solid var(--glass-b);color:var(--text);border-radius:999px;padding:8px 14px;font-size:.85rem;cursor:pointer;
+  box-shadow:0 6px 16px rgba(0,0,0,.35),inset 0 1px 0 var(--glass-hi);max-width:60vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.menu-profile.in{border-color:rgba(var(--acc-rgb),.7)}
 .mtool{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;
   background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.14);border-radius:12px;
   min-height:46px;padding:6px 10px;color:#fff;font-family:'Exo 2',sans-serif;
@@ -387,13 +391,18 @@ body[data-theme=ice] .wordmark{filter:drop-shadow(0 3px 0 rgba(120,80,0,.35)) dr
 }
 /* Short landscape screens (phones): compact side panel */
 @media(orientation:landscape) and (min-width:600px) and (max-height:520px){
-  .logo-section{top:30%}
-  .trademark-img{max-height:32vh;width:clamp(120px,30vw,220px)}
+  .trademark-img{max-height:19vh!important;width:auto}
+  .wordmark{font-size:1.2rem;margin-top:2px}
   .tagline{display:none}
-  .mtool{min-height:36px}
-  .menu-tools{gap:6px}
-  .mcard{padding:5px 6px}
-  .mcard .char-img{width:40px;height:40px}
+  .menu-inner{padding-top:4px}
+  .mtool{min-height:38px}
+  .menu-tools{gap:6px;margin-top:4px}
+  .menu-tools2 .mtool{min-height:40px;flex-direction:row;gap:6px;padding:4px 6px}
+  .modes-section{padding-bottom:6px!important}
+  .mode-row{margin-bottom:5px}
+  .mcard{padding:4px 6px}
+  .mcard p{display:none}
+  .mcard .char-img{width:34px;height:34px;margin-bottom:2px}
   .lv-cards{flex-direction:row;max-width:none}
   .hud{padding:4px;gap:3px}
   .phud,.phud-r{flex-direction:row;gap:5px;padding:3px 4px}
@@ -451,7 +460,13 @@ body[data-theme=ice] .wordmark{filter:drop-shadow(0 3px 0 rgba(120,80,0,.35)) dr
 .seg button{background:transparent;border:1.5px solid transparent;border-radius:8px;color:rgba(255,255,255,.55);padding:6px 10px;min-width:40px;font-family:'Exo 2',sans-serif;font-size:.72rem;cursor:pointer}
 .seg button.on{background:rgba(160,140,255,.3);border-color:rgba(180,160,255,.55);color:#fff}
 .st-ver{font-size:.62rem!important;color:rgba(255,255,255,.3)!important;text-align:center;margin-top:10px!important}
-.mtool-gear{flex:0 0 52px;font-size:1.25rem;padding:0}
+.menu-tools2{margin-top:8px}
+@media(min-width:900px){.wordmark{font-size:2.6rem}}
+.mtool-ico{font-size:1.45rem;line-height:1}
+.mtool-lbl{font-size:clamp(.66rem,1.8vw,.85rem);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.menu-tools2 .mtool{flex-direction:column;gap:3px;padding:6px 4px;min-height:58px}
+.menu-tools2 .mtool.in{border-color:rgba(var(--acc-rgb),.7)}
+@media(max-width:380px){.mtool-lbl{font-size:.62rem}.mtool-ico{font-size:1.3rem}}
 .lv-card{position:relative;width:100%}
 .lv-card.locked{opacity:.45;cursor:not-allowed}
 .lv-card.locked::after{content:'🔒';position:absolute;right:12px;top:10px;font-size:1.1rem}
@@ -476,6 +491,26 @@ body[data-theme=ice] .wordmark{filter:drop-shadow(0 3px 0 rgba(120,80,0,.35)) dr
 .dly-row.done{border-color:rgba(var(--acc-rgb),.7)}
 .dly-ic{font-size:1.5rem}.dly-n{font-size:1rem;font-weight:800}.dly-d{font-size:.8rem;color:var(--muted)}
 .dly-st{margin-left:auto;font-size:1.3rem;color:var(--acc)}
+.acc-card{background:rgba(var(--acc-rgb),.07);border:1px solid rgba(var(--acc-rgb),.22);border-radius:14px;padding:12px;margin-bottom:10px}
+.acc-row{display:flex;gap:10px;align-items:center}
+.acc-ic{font-size:2rem}
+.acc-name-wrap{flex:1;min-width:0}
+.acc-lbl{display:block;font-size:.72rem;color:var(--sub);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em}
+.acc-name-row{display:flex;gap:6px}
+.acc-inp{flex:1;min-width:0;padding:8px 12px;font-size:1rem}
+.acc-save{padding:8px 14px;font-size:1rem}
+.acc-status{margin:10px 0 0!important;font-size:.85rem!important;color:var(--sub)!important;line-height:1.4!important}
+.acc-why{margin:0 0 8px!important;font-size:.92rem!important}
+.acc-help{margin:12px 0 8px!important;font-size:.8rem!important;color:var(--sub)!important;line-height:1.45!important}
+.gbtn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;color:#1f1f1f;font-size:1rem;padding:11px 16px;
+  box-shadow:0 5px 0 #b9c3d6,0 10px 18px rgba(0,0,0,.35)}
+.gbtn:active{transform:translateY(4px);box-shadow:0 1px 0 #b9c3d6}
+.gmark{font-weight:800;font-size:1.25rem;background:linear-gradient(90deg,#4285F4 0 25%,#EA4335 25% 50%,#FBBC05 50% 75%,#34A853 75% 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:var(--glass);border:1px solid var(--glass-b);border-radius:12px;padding:10px 6px;text-align:center;box-shadow:inset 0 1px 0 var(--glass-hi)}
+.stat-v{font-size:1.35rem;font-weight:800;color:var(--acc);line-height:1.1}
+.stat-l{font-size:.68rem;color:var(--sub);margin-top:3px;line-height:1.2}
+@media(max-width:380px){.stat-grid{grid-template-columns:repeat(2,1fr)}}
 .stg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;width:100%;max-width:420px;margin-bottom:14px}
 .stg{position:relative;border-radius:14px;padding:10px 6px 8px;text-align:center;cursor:pointer;color:#fff;
   background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.04));border:1.5px solid rgba(255,255,255,.14);
@@ -493,14 +528,16 @@ body[data-theme=ice] .wordmark{filter:drop-shadow(0 3px 0 rgba(120,80,0,.35)) dr
 .stage-tag{font-size:clamp(.48rem,1.4vw,.62rem);color:#ffd54a;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .res-stars{font-size:clamp(1.4rem,6vw,2.2rem);letter-spacing:.1em;margin:-6px 0 10px;color:#ffd54a;text-shadow:0 0 16px rgba(255,213,74,.6)}
 .res-stars .off{opacity:.25;text-shadow:none}
-.ach-list{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px}
-.ach{display:flex;gap:7px;align-items:center;padding:6px 8px;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1)}
+.ach-list{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px;width:100%}
+.ach{display:flex;gap:8px;align-items:center;padding:8px 9px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);min-width:0}
+.ach>div{min-width:0}.ach-n,.ach-d{overflow-wrap:anywhere}
+@media(max-width:440px){.ach-list{grid-template-columns:1fr}}
 .ach.off{opacity:.38;filter:grayscale(1)}
 .ach-ico{font-size:1.2rem}.ach-n{font-size:.62rem;color:#fff}.ach-d{font-size:.52rem;color:rgba(255,255,255,.55);line-height:1.2}
-.ach-toast{position:fixed;top:calc(60px + max(env(safe-area-inset-top,0px),var(--sat,0px)));left:50%;transform:translateX(-50%) translateY(-120px);
+.ach-toast{position:fixed;top:calc(60px + max(env(safe-area-inset-top,0px),var(--sat,0px)));left:50%;transform:translateX(-50%) translateY(-200%);opacity:0;visibility:hidden;
   z-index:9998;background:linear-gradient(160deg,rgba(60,50,10,.98),rgba(30,22,0,.98));border:2px solid #ffd54a;border-radius:16px;padding:10px 16px;
-  display:flex;gap:10px;align-items:center;box-shadow:0 12px 30px rgba(0,0,0,.6),0 0 24px rgba(255,213,74,.35);transition:transform .45s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
-.ach-toast.show{transform:translateX(-50%) translateY(0)}
+  display:flex;gap:10px;align-items:center;box-shadow:0 12px 30px rgba(0,0,0,.6),0 0 24px rgba(255,213,74,.35);transition:transform .45s cubic-bezier(.34,1.56,.64,1),opacity .3s,visibility .3s;pointer-events:none;max-width:92vw}
+.ach-toast.show{transform:translateX(-50%) translateY(0);opacity:1;visibility:visible}
 .ach-toast .ai{font-size:1.6rem}.ach-toast .at{font-size:.6rem;color:#ffd54a}.ach-toast .an{font-size:.8rem;color:#fff}
 .res-stats{font-size:.7rem;color:rgba(255,210,140,.5);margin:-8px 0 14px;text-align:center}
 .rlist{padding-left:18px;margin:8px 0 2px}
@@ -523,17 +560,18 @@ body[data-theme=ice] .wordmark{filter:drop-shadow(0 3px 0 rgba(120,80,0,.35)) dr
   animation:afi .2s ease;white-space:nowrap;font-weight:400}
 .ai-think.show{display:block}
 @keyframes afi{from{opacity:0;transform:translateX(-50%) translateY(8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
-.toast{position:fixed;top:15px;left:50%;transform:translateX(-50%) translateY(-70px);
+.toast{position:fixed;top:15px;left:50%;transform:translateX(-50%) translateY(-160%);opacity:0;visibility:hidden;
   background:rgba(18,7,0,.97);border:2px solid rgba(255,160,0,.38);border-radius:26px;
   padding:8px 18px;font-size:.8rem;color:#ffd700;z-index:9999;
-  transition:transform .38s cubic-bezier(.34,1.56,.64,1);pointer-events:none;font-weight:400;
+  transition:transform .38s cubic-bezier(.34,1.56,.64,1),opacity .3s,visibility .3s;pointer-events:none;font-weight:400;
   max-width:min(92vw,520px);width:max-content;text-align:center;line-height:1.35;
   top:calc(15px + max(env(safe-area-inset-top,0px),var(--sat,0px)))}
-.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;visibility:visible}
 
 /* COPYRIGHT (hidden during a battle — it sits where the game buttons are) */
 body.in-game #copyR{display:none!important}
 body:not(.on-menu) #copyR{display:none}
+@media(max-height:520px){#copyR{display:none!important}}
 #copyR{position:fixed;bottom:calc(3px + max(env(safe-area-inset-bottom,0px),var(--sab,0px)));left:50%;transform:translateX(-50%);
   z-index:400;font-size:.55rem;color:rgba(255,255,255,.28);
   letter-spacing:.06em;pointer-events:none;white-space:nowrap}
@@ -660,9 +698,12 @@ h1,h2,h3,.stitle,.mcard h3,.lv-name,.res-title,.modal h2,.stg-n,.code-n,.phud-sc
 .modal h2{font-size:1.4rem}.modal p,.modal li{font-size:1rem;color:rgba(255,235,200,.88);line-height:1.6}.modal h3{font-size:1.05rem;margin:14px 0 6px}
 .rgoal{font-size:1.08rem!important;color:#ffe08a!important;line-height:1.5!important}
 .rstep p{font-size:.86rem!important;line-height:1.35!important;color:rgba(255,240,210,.92)!important}
-.rcv{width:108px;height:108px}
-@media(max-width:420px){.rcv{width:88px;height:88px}.rstep p{font-size:.76rem!important}}
-.st-row{font-size:1rem;color:#ffe08a}.seg button{font-size:.88rem;padding:8px 12px}
+.rsteps{gap:6px}
+.rstep{min-width:0;padding:8px 4px 6px}
+.rcv{width:100%;max-width:108px;height:auto;aspect-ratio:1}
+@media(max-width:420px){.rstep p{font-size:.74rem!important}.rsteps{gap:4px}.rstep{padding:6px 3px 5px}}
+.st-row{font-size:1rem;color:#ffe08a;flex-wrap:wrap;row-gap:6px}.st-row>span{flex:1 1 120px}.seg{margin-left:auto;flex-wrap:wrap;justify-content:flex-end}.seg button{font-size:.86rem;padding:8px 10px;min-width:0}
+@media(max-width:420px){.seg button{padding:7px 8px;font-size:.8rem}}
 .ach-n{font-size:.82rem}.ach-d{font-size:.7rem;color:rgba(255,255,255,.7)}
 .top-row{font-size:.95rem}
 .toast{font-size:1rem;padding:11px 20px}
@@ -685,31 +726,31 @@ body,body[data-theme=neon]{
   --p1:#ff7a6a; --p2:#5cf5a5; --hot:#ff5a4a;
   --ring-bg:rgba(255,255,255,.14);
 }
-body[data-theme=aurora]{
-  --bg:radial-gradient(ellipse at 50% 10%,#0f6b6b 0%,#0b3d52 45%,#071a2e 100%);
-  --bg2:radial-gradient(ellipse at 50% 10%,#0e5e66 0%,#0a3648 50%,#071a2e 100%);
-  --glass:linear-gradient(180deg,rgba(120,255,220,.2),rgba(255,255,255,.06));
-  --glass-b:rgba(120,255,220,.38); --glass-hi:rgba(200,255,240,.35);
-  --text:#f2fffb; --muted:rgba(230,255,248,.78); --sub:rgba(160,255,225,.85);
-  --acc:#9dffe6; --acc-rgb:157,255,230;
-  --frame:#1f8f86; --frame2:rgba(200,255,240,.25);
-  --btn1:#3fd9c0; --btn2:#1a9c8a; --btn-edge:#0c5c52;
-  --panel:linear-gradient(160deg,rgba(18,90,96,.97),rgba(8,40,55,.98));
-  --p1:#ff9a6a; --p2:#6ef0ff; --hot:#ff8a5a;
-  --ring-bg:rgba(200,255,240,.16);
+body[data-theme=sunset]{
+  --bg:radial-gradient(ellipse at 50% 12%,#7a2a8a 0%,#3d1660 40%,#160a2e 100%);
+  --bg2:radial-gradient(ellipse at 50% 10%,#6b2478 0%,#361255 45%,#160a2e 100%);
+  --glass:linear-gradient(180deg,rgba(255,200,220,.18),rgba(255,255,255,.06));
+  --glass-b:rgba(255,180,210,.32); --glass-hi:rgba(255,230,240,.32);
+  --text:#fff6fb; --muted:rgba(255,236,245,.78); --sub:rgba(255,205,150,.9);
+  --acc:#ffb45c; --acc-rgb:255,180,92;
+  --frame:#8a3a9a; --frame2:rgba(255,200,230,.25);
+  --btn1:#ff7a9a; --btn2:#d83a6e; --btn-edge:#7a1a3e;
+  --panel:linear-gradient(160deg,rgba(90,34,110,.97),rgba(40,14,66,.98));
+  --p1:#ff8a6a; --p2:#7ef0c8; --hot:#ff6a4a;
+  --ring-bg:rgba(255,220,240,.16);
 }
-body[data-theme=ice]{
-  --bg:radial-gradient(ellipse at 50% 10%,#ffffff 0%,#dfe9ff 45%,#b9c9f5 100%);
-  --bg2:radial-gradient(ellipse at 50% 10%,#ffffff 0%,#e4ecff 50%,#c3d1f7 100%);
-  --glass:linear-gradient(180deg,rgba(255,255,255,.96),rgba(255,255,255,.75));
-  --glass-b:rgba(90,120,220,.35); --glass-hi:#fff;
-  --text:#1d2757; --muted:rgba(29,39,87,.75); --sub:rgba(50,70,160,.8);
-  --acc:#3d5fe0; --acc-rgb:61,95,224;
-  --frame:#c9d6ff; --frame2:rgba(90,120,220,.35);
-  --btn1:#6f8dff; --btn2:#3d5fe0; --btn-edge:#2543a8;
-  --panel:linear-gradient(160deg,rgba(255,255,255,.98),rgba(228,236,255,.98));
-  --p1:#e0301f; --p2:#12a85a; --hot:#e0301f;
-  --ring-bg:rgba(60,90,200,.15);
+body[data-theme=ocean]{
+  --bg:radial-gradient(ellipse at 50% 12%,#0d5a8a 0%,#08355e 45%,#041a33 100%);
+  --bg2:radial-gradient(ellipse at 50% 10%,#0c4f7c 0%,#082e52 50%,#041a33 100%);
+  --glass:linear-gradient(180deg,rgba(150,230,255,.18),rgba(255,255,255,.06));
+  --glass-b:rgba(150,230,255,.34); --glass-hi:rgba(220,245,255,.32);
+  --text:#f2fbff; --muted:rgba(230,246,255,.78); --sub:rgba(140,235,255,.9);
+  --acc:#5ff2d4; --acc-rgb:95,242,212;
+  --frame:#1a6f96; --frame2:rgba(180,240,255,.25);
+  --btn1:#3fb6ff; --btn2:#1a7fd6; --btn-edge:#0c4a86;
+  --panel:linear-gradient(160deg,rgba(14,80,120,.97),rgba(6,36,64,.98));
+  --p1:#ffa15c; --p2:#6ef0ff; --hot:#ff8a5a;
+  --ring-bg:rgba(200,240,255,.16);
 }
 body{background:var(--bg);color:var(--text)}
 #screen-menu{background:var(--bg)}
@@ -787,9 +828,6 @@ body{background:var(--bg);color:var(--text)}
 .tring .tfg{stroke:var(--acc);stroke-linecap:round;stroke-dasharray:113.1;stroke-dashoffset:113.1;transition:stroke-dashoffset .25s linear,stroke .3s}
 .tring .tfg.hot{stroke:var(--hot)}
 /* menu star field only on dark themes */
-body[data-theme=ice] #screen-menu::before{opacity:0}
-body[data-theme=ice] .trademark-img{filter:drop-shadow(0 10px 30px rgba(60,80,160,.45))}
-body[data-theme=ice] .edge-blink.show{animation-name:edgeBlinkSoft}
 /* ── classic paper theme (game screen only; the rest uses the neon variables) ── */
 body[data-theme=paper]{--p1:#c81000;--p2:#0a7a20}
 body[data-theme=paper] #screen-game{background:#e8e4d8}
@@ -839,12 +877,16 @@ body[data-theme=paper] .tring .tfg{stroke:#e0a000}
       </div>
       <div class="menu-tools">
         <button class="mtool mtool-rules" onclick="openRules()"><span class="mtool-ico">📜</span><span class="mtool-txt" id="mRulesBtn">HOW TO PLAY</span></button>
-        <button class="mtool mtool-gear" onclick="openSettings()" id="mGearBtn" title="Settings">⚙</button>
         <div class="mtool mtool-lang" role="group" aria-label="Language">
           <span class="lseg-icon">🌐</span>
           <button class="lseg" id="lbRU" onclick="setLang('ru')">RU</button>
           <button class="lseg" id="lbEN" onclick="setLang('en')">EN</button>
         </div>
+      </div>
+      <div class="menu-tools menu-tools2">
+        <button class="mtool" onclick="openSettings()" id="mGearBtn"><span class="mtool-ico">⚙️</span><span class="mtool-lbl" id="mSetLbl">Settings</span></button>
+        <button class="mtool" onclick="openAccount()" id="mAccBtn"><span class="mtool-ico">👤</span><span class="mtool-lbl" id="profileTxt">Sign in</span></button>
+        <button class="mtool" onclick="openAch()" id="mAchBtn"><span class="mtool-ico">🏆</span><span class="mtool-lbl" id="mAchLbl">Achievements</span></button>
       </div>
     </div>
   </div>
@@ -1038,7 +1080,7 @@ body[data-theme=paper] .tring .tfg{stroke:#e0a000}
   </div>
 </div>
 
-<!-- SETTINGS -->
+<!-- SETTINGS (game) -->
 <div class="overlay" id="settingsModal" onclick="if(event.target===this)closeSettings()">
   <div class="modal" style="max-width:420px">
     <h2 id="stTitle">⚙ Settings</h2>
@@ -1047,22 +1089,48 @@ body[data-theme=paper] .tring .tfg{stroke:#e0a000}
     <div class="st-row"><span id="stTimer">Move timer vs AI</span><div class="seg" id="segTimer"></div></div>
     <div class="st-row"><span id="stTheme">Board style</span><div class="seg" id="segTheme"></div></div>
     <div class="st-row"><span id="stAssist">Hints (Rookie / Warrior)</span><div class="seg" id="segAssist"></div></div>
-    <h3 id="stAccH">👤 Account</h3>
-    <p id="accStatus"></p>
-    <div class="row" id="accBtns" style="justify-content:flex-start;gap:8px;margin:6px 0 4px">
-      <button class="btn btn-blue" id="btnGoogle" onclick="signInGoogle()">G Google</button>
-      <button class="btn btn-ghost" id="btnTcShow" onclick="showTransferCode()">🔑 <span id="tcLbl">Transfer code</span></button>
-      <button class="btn btn-ghost" id="btnTcEnter" onclick="enterTransferCode()">📥 <span id="tcEnterLbl">Enter code</span></button>
-      <button class="btn btn-ghost" id="btnSignOut" onclick="signOutUser()" style="display:none">↪ <span id="soLbl">Sign out</span></button>
-    </div>
-    <p id="accCode" style="display:none;text-align:center;font-size:1.3rem;letter-spacing:.12em;font-weight:800;color:var(--acc)"></p>
-    <p id="accHint" style="font-size:.78rem;opacity:.8"></p>
-    <h3 id="stStatsH">📊 Your statistics</h3>
-    <p id="stStats"></p>
-    <h3 id="stAchH">🏆 Achievements</h3>
-    <div class="ach-list" id="achList"></div>
     <p class="st-ver" id="stVer"></p>
     <button class="btn btn-gold" onclick="closeSettings()" style="width:100%;margin-top:8px" id="stOk">OK</button>
+  </div>
+</div>
+
+<!-- ACCOUNT + STATS -->
+<div class="overlay" id="accountModal" onclick="if(event.target===this)closeAllModals()">
+  <div class="modal" style="max-width:440px">
+    <h2 id="stAccH">👤 Account</h2>
+    <div class="acc-card">
+      <div class="acc-row"><span class="acc-ic">🙂</span>
+        <div class="acc-name-wrap"><label class="acc-lbl" id="accNameLbl">Your name</label>
+          <div class="acc-name-row"><input class="inp acc-inp" id="accName" maxlength="18"><button class="btn btn-gold acc-save" onclick="saveMyName()" id="accSave">✔</button></div>
+        </div>
+      </div>
+      <p id="accStatus" class="acc-status"></p>
+    </div>
+    <div class="acc-card">
+      <p class="acc-why" id="accWhy">Sign in to keep your progress on any device.</p>
+      <button class="btn gbtn" id="btnGoogle" onclick="signInGoogle()"><span class="gmark">G</span><span id="gLbl">Sign in with Google</span></button>
+      <button class="btn btn-ghost" id="btnSignOut" onclick="signOutUser()" style="display:none;width:100%;margin-top:8px">↪ <span id="soLbl">Sign out</span></button>
+      <p class="acc-help" id="tcWhy">No Google? Use a transfer code: get it here, enter it on your other phone — your progress follows you.</p>
+      <div class="row" style="gap:8px;justify-content:flex-start">
+        <button class="btn btn-ghost" id="btnTcShow" onclick="showTransferCode()">🔑 <span id="tcLbl">My transfer code</span></button>
+        <button class="btn btn-ghost" id="btnTcEnter" onclick="enterTransferCode()">📥 <span id="tcEnterLbl">Enter a code</span></button>
+      </div>
+      <p id="accCode" style="display:none;text-align:center;font-size:1.35rem;letter-spacing:.12em;font-weight:800;color:var(--acc);margin-top:8px"></p>
+      <p id="accHint" style="font-size:.8rem;opacity:.85"></p>
+    </div>
+    <h3 id="stStatsH">📊 Statistics</h3>
+    <div class="stat-grid" id="statGrid"></div>
+    <button class="btn btn-gold" onclick="closeAllModals()" style="width:100%;margin-top:12px" id="accOk">OK</button>
+  </div>
+</div>
+
+<!-- ACHIEVEMENTS -->
+<div class="overlay" id="achModal" onclick="if(event.target===this)closeAllModals()">
+  <div class="modal" style="max-width:460px">
+    <h2 id="achTitle">🏆 Achievements</h2>
+    <p id="achCount" style="text-align:center"></p>
+    <div class="ach-list" id="achList"></div>
+    <button class="btn btn-gold" onclick="closeAllModals()" style="width:100%;margin-top:12px" id="achOk">OK</button>
   </div>
 </div>
 
@@ -1132,12 +1200,17 @@ var TR = {
     lvTitle:'Choose Your Opponent', lvSub:'Beat a level to unlock the next one',
     stTitle:'⚙ Settings', stSound:'Sound', stVibe:'Vibration', stTimer:'Move timer vs AI',
     stOn:'On', stOff:'Off', stStatsH:'📊 Your statistics', stOk:'OK',
+    signIn:'Sign in', accSigned:'Signed in', accNameLbl:'Your name', accWhy:'Sign in to keep your progress on any device.',
+    gLbl:'Sign in with Google', tcWhy:'No Google account? Use a transfer code: get it here, enter it on your other device — your progress follows you.',
+    nameSaved:'Name saved', nameEmpty:'Enter a name',
+    stGames:'Battles', stWins:'Wins', stPct:'Win rate', stStreak:'Current streak', stBest:'Best streak', stRating:'Rating', stOnline:'Online battles', stStars:'Campaign stars', stAch:'Achievements', stDaily:'Daily streak', mSetLbl:'Settings', mAchLbl:'Achievements', achTitle:'🏆 Achievements', achOk:'OK', accOk:'OK',
+    achCount:'Unlocked: {u} of {t}',
     stAccH:'👤 Account', accGuest:'Guest — progress is saved on this device only', accCloud:'Guest — progress is synced to the cloud', accGoogle:'Signed in with Google: {e}',
-    accCode:'Signed in with a transfer code', tcLbl:'Transfer code', tcEnterLbl:'Enter code', soLbl:'Sign out',
+    accCode:'Signed in with a transfer code', tcLbl:'My transfer code', tcEnterLbl:'Enter a code', soLbl:'Sign out',
     tcHint:'Enter this code on another device to continue with your progress. Keep it private.', tcPrompt:'Enter the transfer code (XXXXXX-XXXXXXXX):',
     tcBad:'Code not recognized', tcOk:'Progress restored!', gOk:'Signed in with Google — progress synced', gFail:'Google sign-in failed', netNeed:'Internet connection required',
     soConfirm:'Sign out? You will continue as a new guest on this device.',
-    stTheme:'Style', thNeon:'Neon', thAurora:'Aurora', thIce:'Ice', thPaper:'Classic',
+    stTheme:'Style', thNeon:'Neon', thSunset:'Sunset', thOcean:'Ocean',
     stStatsTxt:'Games: {g} · Wins: {w} ({p}%) · Current streak: {s} · Best streak: {b}',
     gUndo:'Undo', resStats:'Moves: {m} · Time: {t} · Biggest capture: {c}',
     mDlyT:'DAILY PUZZLES', dlyStreak:'Streak: {s} 🔥', dlyDone:'All done today ✔', dlyNew:'3 new puzzles!', dlyProg:'{d}/3 today',
@@ -1235,12 +1308,17 @@ var TR = {
     lvTitle:'Выберите противника', lvSub:'Победите, чтобы открыть следующий уровень',
     stTitle:'⚙ Настройки', stSound:'Звук', stVibe:'Вибрация', stTimer:'Таймер хода против ИИ',
     stOn:'Вкл', stOff:'Выкл', stStatsH:'📊 Ваша статистика', stOk:'ОК',
+    signIn:'Войти', accSigned:'В аккаунте', accNameLbl:'Ваше имя', accWhy:'Войдите, чтобы прогресс сохранялся на любом устройстве.',
+    gLbl:'Войти через Google', tcWhy:'Нет аккаунта Google? Используйте код переноса: получите его здесь, введите на другом телефоне — прогресс перейдёт туда.',
+    nameSaved:'Имя сохранено', nameEmpty:'Введите имя',
+    stGames:'Битв', stWins:'Побед', stPct:'Процент побед', stStreak:'Серия сейчас', stBest:'Лучшая серия', stRating:'Рейтинг', stOnline:'Онлайн-битв', stStars:'Звёзды кампании', stAch:'Достижения', stDaily:'Серия заданий', mSetLbl:'Настройки', mAchLbl:'Достижения', achTitle:'🏆 Достижения', achOk:'ОК', accOk:'ОК',
+    achCount:'Открыто: {u} из {t}',
     stAccH:'👤 Аккаунт', accGuest:'Гость — прогресс хранится только на этом устройстве', accCloud:'Гость — прогресс сохраняется в облаке', accGoogle:'Вход через Google: {e}',
-    accCode:'Вход по коду переноса', tcLbl:'Код переноса', tcEnterLbl:'Ввести код', soLbl:'Выйти',
+    accCode:'Вход по коду переноса', tcLbl:'Мой код переноса', tcEnterLbl:'Ввести код', soLbl:'Выйти',
     tcHint:'Введите этот код на другом устройстве, чтобы продолжить со своим прогрессом. Никому его не показывайте.', tcPrompt:'Введите код переноса (XXXXXX-XXXXXXXX):',
     tcBad:'Код не подошёл', tcOk:'Прогресс восстановлен!', gOk:'Вход через Google выполнен — прогресс синхронизирован', gFail:'Не удалось войти через Google', netNeed:'Нужно подключение к интернету',
     soConfirm:'Выйти? На этом устройстве вы продолжите как новый гость.',
-    stTheme:'Стиль', thNeon:'Неон', thAurora:'Аврора', thIce:'Лёд', thPaper:'Классика',
+    stTheme:'Стиль', thNeon:'Неон', thSunset:'Закат', thOcean:'Океан',
     stStatsTxt:'Партий: {g} · Побед: {w} ({p}%) · Серия: {s} · Лучшая серия: {b}',
     gUndo:'Отменить', resStats:'Ходов: {m} · Время: {t} · Крупнейший захват: {c}',
     mDlyT:'ЗАДАНИЯ ДНЯ', dlyStreak:'Серия: {s} 🔥', dlyDone:'Все решены ✔', dlyNew:'3 новых задания!', dlyProg:'{d}/3 сегодня',
@@ -1331,7 +1409,7 @@ var TR = {
 };
 function T(k){ return (TR[lang]&&TR[lang][k]) || TR.en[k] || k; }
 
-var TEXT_IDS = ['mTag','stAccH','tcLbl','tcEnterLbl','soLbl','dlyTitle','dlyIntro','dlyClose','mDlyT','btnQuick','btnTop','topTitle','topOk','stgTitle','stgSub','btnFree','btnBackStg','stAssist','stAchH','stTheme','btnRematch','shareLbl','stTitle','stSound','stVibe','stTimer','stStatsH','stOk','gUndo','btnBackLv','mPveT','mPveS','mPvpT','mPvpS','mOnT','mOnS',
+var TEXT_IDS = ['mTag','accNameLbl','accWhy','gLbl','tcWhy','mSetLbl','mAchLbl','achTitle','achOk','accOk','stAccH','tcLbl','tcEnterLbl','soLbl','dlyTitle','dlyIntro','dlyClose','mDlyT','btnQuick','btnTop','topTitle','topOk','stgTitle','stgSub','btnFree','btnBackStg','stAssist','stAchH','stTheme','btnRematch','shareLbl','stTitle','stSound','stVibe','stTimer','stStatsH','stOk','gUndo','btnBackLv','mPveT','mPveS','mPvpT','mPvpS','mOnT','mOnS',
   'mRulesBtn','lvTitle','lvSub','lv1n','lv2n','lv3n',
   'btnStart','nameTitle','nameSub','lbl1','lbl2','ne1','ne2','btnCont',
   'olTitle','olSub','tCreate','tJoin','fldSizeLbl','codeLbl','codeHint',
@@ -1352,7 +1430,7 @@ function applyLang(){
   ['1','2','3'].forEach(function(i){ var d=document.getElementById('lv'+i+'d'); if(d) d.textContent=T('rlv'+i+'d'); });
   if(document.getElementById('settingsModal').classList.contains('open')) renderSettings();
   if(document.getElementById('screen-level').classList.contains('active')) refreshLevelCards();
-  refreshDailyCard();
+  refreshDailyCard(); if(typeof refreshProfileChip==='function') refreshProfileChip();
   document.getElementById('btnCont').textContent = T('btnCont');
   document.getElementById('btnBackNm').textContent = T('btnBack');
   document.getElementById('btnBackOl').textContent = T('btnBackOl');
@@ -1385,24 +1463,24 @@ var THEMES={
     s1:{hi:'#ffd8d0',lt:'#ff8a78',mid:'#ff4a3a',dk:'#6a0a00',glow:'rgba(255,100,80,0.9)',dead:'#ff9a8a'},
     s2:{hi:'#dcffea',lt:'#7ff5b0',mid:'#22d07a',dk:'#04502a',glow:'rgba(60,255,150,0.9)',dead:'#8dffc0'},
     glow1:['rgba(255,90,74,0.5)','rgba(255,90,74,0.16)'], glow2:['rgba(62,232,136,0.46)','rgba(62,232,136,0.14)'], vignette:0.38 },
-  aurora:{ dark:true, bg:['#0e4a58','#0a3242','#082532'],
-    p1:'#ff7a3a', p1d:'rgba(255,122,58,',  p1l:'rgba(255,150,90,0.95)',
+  sunset:{ dark:true, bg:['#5a2270','#33124e','#1c0a30'],
+    p1:'#ff6a4a', p1d:'rgba(255,106,74,',  p1l:'rgba(255,140,110,0.95)',
+    p2:'#5ce8b8', p2d:'rgba(92,232,184,', p2l:'rgba(130,245,205,0.95)',
+    paper:'#33124e',
+    gridMinor:'rgba(255,190,230,0.16)', gridMajor:'rgba(255,205,240,0.3)', gridBorder:'rgba(255,215,245,0.5)', node:'rgba(255,205,240,0.42)',
+    gold:'#ffb45c', danger:'#ff4a3a',
+    s1:{hi:'#ffdcd0',lt:'#ff9a78',mid:'#ff5a3a',dk:'#6a1200',glow:'rgba(255,110,70,0.9)',dead:'#ffb0a0'},
+    s2:{hi:'#e0fff4',lt:'#9af5d4',mid:'#38d8a8',dk:'#065a40',glow:'rgba(80,240,190,0.9)',dead:'#a0f0d8'},
+    glow1:['rgba(255,106,74,0.5)','rgba(255,106,74,0.16)'], glow2:['rgba(92,232,184,0.46)','rgba(92,232,184,0.14)'], vignette:0.36 },
+  ocean:{ dark:true, bg:['#0b4670','#072e4e','#051f38'],
+    p1:'#ff8a4a', p1d:'rgba(255,138,74,',  p1l:'rgba(255,165,110,0.95)',
     p2:'#22c8ff', p2d:'rgba(34,200,255,', p2l:'rgba(90,220,255,0.95)',
-    paper:'#0a3242',
-    gridMinor:'rgba(120,255,220,0.16)', gridMajor:'rgba(150,255,230,0.3)', gridBorder:'rgba(170,255,235,0.5)', node:'rgba(160,255,230,0.4)',
-    gold:'#9dffe6', danger:'#ff5a3a',
-    s1:{hi:'#ffe0d0',lt:'#ffa070',mid:'#ff6a2a',dk:'#7a2000',glow:'rgba(255,130,60,0.9)',dead:'#ffb090'},
+    paper:'#072e4e',
+    gridMinor:'rgba(150,230,255,0.16)', gridMajor:'rgba(170,240,255,0.3)', gridBorder:'rgba(190,245,255,0.5)', node:'rgba(170,240,255,0.42)',
+    gold:'#5ff2d4', danger:'#ff5a3a',
+    s1:{hi:'#ffe4d0',lt:'#ffb070',mid:'#ff7a2a',dk:'#7a2a00',glow:'rgba(255,150,70,0.9)',dead:'#ffc0a0'},
     s2:{hi:'#e0ffff',lt:'#80f0ff',mid:'#22c8ff',dk:'#045080',glow:'rgba(60,220,255,0.9)',dead:'#a0f0ff'},
-    glow1:['rgba(255,122,58,0.5)','rgba(255,122,58,0.16)'], glow2:['rgba(34,200,255,0.46)','rgba(34,200,255,0.14)'], vignette:0.38 },
-  ice:{ dark:true, light:true, bg:['#f6f9ff','#e6edff','#dbe4fb'],
-    p1:'#e8402e', p1d:'rgba(232,64,46,',  p1l:'rgba(232,64,46,0.9)',
-    p2:'#18c06a', p2d:'rgba(24,192,106,', p2l:'rgba(24,192,106,0.9)',
-    paper:'#e6edff',
-    gridMinor:'rgba(90,120,220,0.26)', gridMajor:'rgba(70,100,200,0.42)', gridBorder:'rgba(60,90,190,0.6)', node:'rgba(60,90,200,0.5)',
-    gold:'#3d5fe0', danger:'#e0301f',
-    s1:{hi:'#ffd8d0',lt:'#ff8a78',mid:'#ee3a2a',dk:'#6a0a00',glow:'rgba(255,90,70,0.55)',dead:'#e08070'},
-    s2:{hi:'#dcffea',lt:'#7ff5b0',mid:'#18c06a',dk:'#04502a',glow:'rgba(40,220,120,0.55)',dead:'#60c090'},
-    glow1:['rgba(255,80,60,0.34)','rgba(255,80,60,0.1)'], glow2:['rgba(24,192,106,0.32)','rgba(24,192,106,0.1)'], vignette:0.12 },
+    glow1:['rgba(255,138,74,0.5)','rgba(255,138,74,0.16)'], glow2:['rgba(34,200,255,0.46)','rgba(34,200,255,0.14)'], vignette:0.36 },
   paper:{ dark:false,
     p1:'#c81000', p1d:'rgba(200,16,0,',  p1l:'rgba(200,16,0,0.72)',
     p2:'#0a7a20', p2d:'rgba(10,122,32,', p2l:'rgba(10,122,32,0.72)',
@@ -1412,7 +1490,7 @@ var THEMES={
 };
 var CC=THEMES.neon;
 function applyTheme(name){
-  if(!THEMES[name]) name='neon';
+  if(!THEMES[name]||name==='paper'||name==='aurora'||name==='ice') name='neon';
   CC=THEMES[name]; CC.name=name;
   document.body.setAttribute('data-theme',name);
   spriteCache={}; layerKey='';
@@ -1445,10 +1523,12 @@ function accountStatusText(){
   return T('accCloud');
 }
 function renderAccount(){
+  refreshProfileChip();
   var st=document.getElementById('accStatus'); if(!st) return;
   st.textContent=accountStatusText();
   var isG=authUser&&(authUser.providerData||[]).some(function(p){return p.providerId==='google.com';});
-  document.getElementById('btnGoogle').style.display=isG?'none':'';
+  document.getElementById('btnGoogle').style.display=isG?'none':'flex';
+  var why=document.getElementById('accWhy'); if(why) why.style.display=isG?'none':'';
   document.getElementById('btnSignOut').style.display=authUser&&!authUser.isAnonymous?'':'none';
   document.getElementById('accCode').style.display='none'; document.getElementById('accHint').textContent='';
 }
@@ -1614,7 +1694,7 @@ var pressActive=false, pressTimer=null, pressX=0, pressY=0, loupeShow=false, lou
 var HOLD_MS=300, PRESS_SLOP=6;
 var curScreen='screen-menu', _cfCb=null;
 var turnTimerId=null, turnGraceId=null, TURN_SECS=15, TURN_GRACE=5, TURN_WARN=5;
-var APP_VERSION='2.2.0';
+var APP_VERSION='2.3.0';
 var SET={sound:true,vibe:true,pveTimer:15,theme:'neon',assist:true};
 (function(){ try{ var v=JSON.parse(localStorage.getItem('dwSet')||'{}'); for(var k in v) if(k in SET) SET[k]=v[k]; }catch(e){} })();
 function saveSet(){ try{localStorage.setItem('dwSet',JSON.stringify(SET));}catch(e){} }
@@ -1629,22 +1709,49 @@ function fmtTime(ms){ var s=Math.round(ms/1000); return Math.floor(s/60)+':'+('0
 function tpl(str,o){ return str.replace(/\{(\w+)\}/g,function(_,k){return o[k];}); }
 // ── settings modal ──
 function openSettings(){ renderSettings(); document.getElementById('settingsModal').classList.add('open'); }
+function myName(){ try{ return (localStorage.getItem('dwName')||'').trim(); }catch(e){ return ''; } }
+function saveMyName(){
+  var v=(document.getElementById('accName').value||'').trim().slice(0,18);
+  if(!v){ showToast(T('nameEmpty')); return; }
+  try{localStorage.setItem('dwName',v);}catch(e){}
+  playerNames[0]=v; refreshProfileChip(); pushProgress(); showToast(T('nameSaved'));
+}
+function renderStats(){
+  var g=document.getElementById('statGrid'); if(!g) return;
+  var pct=STATS.g?Math.round(STATS.w*100/STATS.g):0, stars=STARS.reduce(function(a,b){return a+b;},0);
+  var items=[[STATS.g,'stGames'],[STATS.w,'stWins'],[pct+'%','stPct'],[STATS.s,'stStreak'],[STATS.b,'stBest'],[RATING.r,'stRating'],
+             [RATING.g,'stOnline'],[stars+'/'+(STAGES.length*3),'stStars'],[Object.keys(ACHV).length+'/'+ACH.length,'stAch'],[dailyStreakNow(),'stDaily']];
+  g.innerHTML=items.map(function(x){ return '<div class="stat"><div class="stat-v">'+x[0]+'</div><div class="stat-l">'+T(x[1])+'</div></div>'; }).join('');
+}
+function openAccount(){
+  renderAccount(); ensureAuth(); renderStats();
+  document.getElementById('accName').value=myName();
+  document.getElementById('accountModal').classList.add('open');
+}
+function openAch(){
+  renderAchList();
+  var u=Object.keys(ACHV).length; document.getElementById('achCount').textContent=tpl(T('achCount'),{u:u,t:ACH.length});
+  document.getElementById('achModal').classList.add('open');
+}
+function refreshProfileChip(){
+  var el=document.getElementById('profileTxt'), chip=document.getElementById('mAccBtn'); if(!el) return;
+  var signed=authUser&&!authUser.isAnonymous;
+  var name=''; try{name=localStorage.getItem('dwName')||'';}catch(e){}
+  el.textContent = signed ? (name||authUser.email||T('accSigned')) : T('signIn');
+  if(chip) chip.classList.toggle('in',!!signed);
+}
 function closeSettings(){ document.getElementById('settingsModal').classList.remove('open'); }
 function segHtml(id,opts,cur,key){
-  return opts.map(function(o){ return '<button class="'+(String(o.v)===String(cur)?'on':'')+'" onclick="setOpt(\''+key+'\','+JSON.stringify(o.v)+')">'+o.l+'</button>'; }).join('');
+  return opts.map(function(o){ var v=typeof o.v==='string'?"'"+o.v+"'":String(o.v); return '<button class="'+(String(o.v)===String(cur)?'on':'')+'" onclick="setOpt(\''+key+'\','+v+')">'+o.l+'</button>'; }).join('');
 }
 function renderSettings(){
   var onoff=[{v:true,l:T('stOn')},{v:false,l:T('stOff')}];
   document.getElementById('segSound').innerHTML=segHtml('segSound',onoff,SET.sound,'sound');
   document.getElementById('segVibe').innerHTML=segHtml('segVibe',onoff,SET.vibe,'vibe');
   document.getElementById('segTimer').innerHTML=segHtml('segTimer',[{v:15,l:'15'},{v:30,l:'30'},{v:60,l:'60'},{v:0,l:T('stOff')}],SET.pveTimer,'pveTimer');
-  document.getElementById('segTheme').innerHTML=segHtml('segTheme',[{v:'neon',l:T('thNeon')},{v:'aurora',l:T('thAurora')},{v:'ice',l:T('thIce')},{v:'paper',l:T('thPaper')}],SET.theme,'theme');
+  document.getElementById('segTheme').innerHTML=segHtml('segTheme',[{v:'neon',l:T('thNeon')},{v:'sunset',l:T('thSunset')},{v:'ocean',l:T('thOcean')}],SET.theme,'theme');
   document.getElementById('segAssist').innerHTML=segHtml('segAssist',onoff,SET.assist,'assist');
-  renderAchList();
-  var pct=STATS.g?Math.round(STATS.w*100/STATS.g):0;
-  document.getElementById('stStats').textContent=tpl(T('stStatsTxt'),{g:STATS.g,w:STATS.w,p:pct,s:STATS.s,b:STATS.b});
-  document.getElementById('stVer').textContent='DOTS WAR v'+APP_VERSION+' · '+T('copyR');
-  renderAccount(); ensureAuth();
+  document.getElementById('stVer').textContent='DOTS WAR v'+APP_VERSION;
 }
 function setOpt(k,v){ SET[k]=v; saveSet(); renderSettings(); if(k==='pveTimer'&&G&&gameMode==='pve') refreshTurnTimer(); if(k==='theme') applyTheme(v); if(k==='assist'){ computeAssist(); if(G) draw(G); } }
 function vibrate(pattern){ if(SET.vibe&&navigator.vibrate) try{navigator.vibrate(pattern);}catch(e){} }
@@ -2824,9 +2931,10 @@ function initMode(mode){
     SS('screen-stages');
     return;
   }
-  SS('screen-name');
-  try{ var saved=localStorage.getItem('dwName'); if(saved&&!document.getElementById('ni1').value) document.getElementById('ni1').value=saved; }catch(e){}
   loadFirebase().catch(function(){});   // start fetching the SDK early; errors surface later in createRoom/joinRoom
+  var saved=myName();
+  if(saved){ document.getElementById('ni1').value=saved; confirmNames(); return; }
+  SS('screen-name');
   setTimeout(function(){document.getElementById('ni1').focus();},80);
 }
 function confirmNames(){
@@ -3030,9 +3138,9 @@ function computeAssist(){
 // ═══════════════════════
 //  DAILY PUZZLE — deterministic position from today's date
 // ═══════════════════════
-var PZ={e:'2AAAAAHUTmQAoAAAAClEObAE=,1AAAAAFpRMAANAAABAAAAAAA=,3AAAAAwBsVeEBkwAeAKJXAAA=,1AAAABgBROb0BdQAAAAAAAAA=,1GwAAAABRBL0BWgAAAFEAAAA=,3AABsAZM2NFEKAAAAAAAJEgA=,1ABs2AABRBKMBdQAAADYAAAA=,2AAADABsAAFEKvQV1AQCiEgA=,1ADYCAHUAMDYKADYbAAAAAAA=,1AAAAACcAEFEDAAAAGwAABgA=,3AFEAAAAAJ1IPvQV2CgAAAAA=,2BicSB1EEAAANUQXDG3UAAAA=,2AAAbAQAAABIoUWJwpQF1GwI=,2AAADAKJsBOEBXQAAGwAGGwA=,1AAAAUVoAMAANAQAbAAAAAAA=,2AgAJAAAAJwAHUVZsAQAAAAA=,2AKIDAwBROr0AkAknAAAAAAA=,2AAAAAF0GNFENAAAAAgAAAAA=,1AwAbEgAAAFEEolJ1AAAAAAA=,2AAAAACgSEWwEADYBAAAANgA=,2GwAAAAAAAFENvQJ1AQA2NgA=,1AgAAACcAB1EEAAAAUwAAAAI=,2AwAAAAADAGwE4QFvAwAbAAA=,3AAAAAABRDL0FxgF1AAADAgA=,2AAMAAAAAAGwBP1EwAg0AAAA=,3AAAAAABRDaIFkAEnAABRGwA=,2DVECbFsAMAIQUwQAAAAACQI=,2DQAFbHYBnAMlAAADHgAAAAA=,3AFEJAABjDb0FyAFaAAAbAAA=,1ABQAUQAAJwAPUQQGAAABAAA=,3AKIAAQ1sp+EAeAAABgAAUQA=,1AAAAAHUALQANAwAAAAASBgA=,2ogAANgAAAGym2AF4AwAAAAA=,2AAAGAKIAAGwBh7QwAA0JAAA=,3AABaADFRs2wEAFEEvRJ1AAA=,2AAAAAHUDFQYQUaYAAAAAUQA=,3ABt1AC5REW0EAAAAAAAVAAA=,2CTYAAG8ANFENAGwAAAAAAAA=,2AAAAACcJqVEFbgEAABsAAAA=,2AAEAAAITAAANUQWiAXUAAAA=,3AAAAAChaERsFbAEAAAAGAQA=,1AAMSAKIAAGwBPwAnAAASAAA=,2ABwAUQAAAHUBmQAoAAAAAAA=,2AgAANgBRBL0BhwAnCQAbNgA=,1AAACAAAGJwAQUVQAAAAAAAA=,2ABIAAABRBL4BkAAeAAAAAAA=,1AgA2BgAAAGwckAAeAAAAEgA=,2AAAJAABRDb0ddwEAAAAGAAA=,2NgAAAB4AEFEFbAEAAAEAAAA=,1AKIGAFEAAGxSkAAeAAAAAAA=,3AgAAAAAAAFENvQXGCXWiAAA=,3AAkAAHUBnAkrUQMANjYAAAE=,1AAAJNgAAClEFbAoAAAIAAAA=,2AAAAUV69BVpkAAAbDVEgGwE=,1AAAGEgAAHgMQUQQAAAAAAAA=,2AAAAACceB1EFbAEAAAAAAAA=,1UQAAUQAAABsBkAYnNgAAAAE=,3AScbD1FVBL1V4QFdAAAAAAA=,1AAAGAAAAClEFbAEAAAAAIQA=,2AAAAAABRDL0FdQEAEgAAogA=,3AAAAGwBRBKIE4VJ4AAAAAAA=,1ARIAAA1aAmwBAAAGAAAAogA=,2AQEAACgJEWwfAAAJAAAAAAA=,1AKIAAAAAAGwBkDYeAAACAAA=,1GwAAAAAAJwAQUwMAAAAGAAA=,3AwAAACcJKwARbKYACQAAAAA=,3AAAAAAAAKAYRbAVtAQAACQA=,1AgAAAAAAClFWcgEABgYAAAA=,1AAkAAABRA70BdQAAogkAAAA=,2UQAAACcAEAEFbxMAAAIAAAA=,1AAEAACcJEFEDAAAAAQMAAAA=,2AAAABgAJKFERbKUAAAAAAAA=,2AAAAUg29AnUBAAAAAAA2HAA=,3AAAAUQ29O6sBdQAAAAAGAAA=,1AQAAAAMAAAANUgJsAQAACQA=,3AAAAUW8ANFEObgEAAKUAAAA=,3EgAAAAAAAHIE2FKBAA0AAAA=,3EgAAHA0ADr0FdQEAAFEAAAA=,2BgBsAZAJFQANAQADAAABAAA=,2AAAAACcJD1EFbAEAogMANgE=,1AAkAAHUALQBeAAAAAAAAAAA=,2BgAAAAAAeAA0UQwAAAIAAAA=,2AAAAVw29O1wBAAAABgAAAAI=,2AAAAAwAJeAA0UQwAAAAAAAA=,3AAAAAFo2gQA0VA0AAAAAAAA=,3ABtRAAABDWwF2AF4AAA2NgA=,3AAAAUQ29BcYTWgAAAAEAAAA=,2AAAAVzYAAFENvQVaAQAGNgA=,2AAAbogAAKFEIcgQAAABRCQA=,1AAAAACcAYFEEAAAAABsAUQA=,1AKIAAxs2AAAKUQVuAQAAAAA=,2AABRAABRA70BkBsnAABRAAA=,2AAIAAHgAGWQNAFFUvQF1AAA=,3GxsAAAAAABsE4QGBNg0AAAA=,1ogMANgAAAFEDwxx1AAAAAAA=,1GwMAEnUAFQANAAAAAFEAAAA=,3ABsAAApRDr1WdQEABgAAAAA=,2AAAeGxBUBWwBAFEDvQF1GwI=,1AQAAAAAADVECbgEAAAAAGwA=,2AB4AEFENAGwBkKIwAAoJNgA=,2AAAAAB9REW0EAFEEvQB7AAA=,2ACcAB1EEAGwE2BN4AAAAAgA=,2AAAAAHgAM1ENAAAJAAADAAA=,2AAACAHgJNFGuAFEADQCnbAE=,1ADYAAAEGJwAHUwQDAAAAAAA=,1AAAAUScAYFQEAAAAAAAAAAA=,2rwAFbAoAAFINvQJ1AQADAAA=,2DWwCbBMAABsE4QF4AAAAAAA=,2AB4AEFEfAFGlvaOQAycAogA=,2AAAnBhBRAmwBAFEEogF1NgA=,3AFEbAABRDaIFxgF1AAADAAA=,2ABIAAB9REWwEAAAAAAAAogA=,2AAAAoloBnDYoAQAAAgYAAAA=,1AFEAAA1RU2wBAAAbCQAAAAA=,1AgADEgAADWMFGwEAGwAAAAA=,2AAAAGwBTDL2ndgEAAAAAAAA=,1AAMAEnUALQANAAAAAAAAAAA=,2AAAACRsAAFENvQVaAQAAAAA=,3BgAACSdREL1TdQEAAACiAAA=,2AwAACQAAAFEEvRyQoh4CAAA=,1AAAAAgAAAGwBPwAnNgAAAAA=,2AAA2AAAAKFoRGwQAAAAAAAA=,2AAAAAG8ANFReAAAADQEFbAE=,3AABsAZMSM1ENAFEEvwFaqAA=,2ADwANiQBnAAoAFEEpQF1AAA=,2AAABAAAArwAFvQF1AAAAAAA=,3AAAnACsDEXI6AAAAClEFcgE=,1AABXAAAAAACvUgUbAQAAAAA=,2AABsHD8AMDkNAFEEvQB1BgA=,2ATaiAAASAAANUXGmo3Z1AAA=,1AACiAAAADVQCbDcAAAMAAAA=,2DVEFGwEAJwAHWqdsAQAANgA=,2DVECbAEDAAAoARFsBAIABgA=,3AKgAACdRD8MFdQEAAABRAAA=,3AAAAAABRDb4FqwF1UQAAAAA=,3AQAAAA1RDqIFdQEAAAYDAAA=,1AAADAAAhAFEDwAF1AAADAAA=,2BgASAwAAKFEIbAQAAAY2AAA=,3AAAACXUALlERbAQAAAC0AAA=,1AAAAAAAAJwkHUaYAAAESAwA=,2AAl1ADASB1IEAAAAAKJRAAA=,2AAAACScAB1EFchwAAAAAAAA=,2AAAAAHUAMAYQUQMAAACiAAA=,2AAIAAB4AEFEFbAECAAAAAQA=,1BgASAAAAAFGmogF1GwAAAAA=,1ogAAAAkAADYNUQJsAQAGAAA=,3CQAACScAK1ERHQQAAAABAgA=,3AAAAAABXBL0E2Ap4GwAAAAA=,3AAAAAFqigQA0Ug0AAAAAAAA=,3AABTAABRA8YBnAAoDQAFbAE=,1CRsAAABRBL0BWgAAAAAAqAA=,3AACiGwBRXr0FxgFaAAAAogA=,3AAAACXgANFEPUwQAAAAAAAA=,2AFEAAycAEABWbAEAABIAAAA=,2FAAAAA1RBaIBdQAABgAAUQA=,3AAIAAAAAAFGvvQXGAVoAAAA=,1AAAAAA1RpxsBAKIAAAAAEgA=,1AAAAAHUAFQYNAAAAABIAAAA=,2AAAABigSEWwEAAAJQFEFbAE=,2AAAAAwA2JwAQUwUbAQAABgI=,1ATYAAApRBWwBAAAAAAMAAAA=,3AAAAAABSDb0CkQEnAAAAAAA=,3AAAAG3gANFoOGwEAEgCiAAA=,3UQAAADkAAFEMvwWQAScAAAA=,1AAAGAABRBKKjdQAAADYAAAA=,2EgBRGwAAJwMQUQJsAQAAAAA=,2DTYFbAECAAANUju9AHU2AAA=,1ABsAAHUAMAAKAAAAAAAAAwA=,2AAAACQAAKFERbTkAAAAAAAA=,2AAAAAAAAeAY0UQoAAAEAAAA=,1AAAAACcJB1EEAACiogAAAAA=,3AAAAAwBRDb0FxwFaAABRAAA=,1ojYAAg0ABWwBAAAAAAIDAAA=,2AAAbGwAADQAFvQF2AAAABgA=,2ADYeABBRBWwBAAAADWMFGwE=,1AAAAAQAAHgAQVwQANjYAAAA=,2DVFTbAEAAFcEvQGHqCcAAAA=,1AABRAAAAAAANUThsAQAAAAA=,2AAAAACcAEFECbAEAAzYAAAA=,3AAAAAHUBnAAqYwQAAAAAAwA=,1AAAAGw1RpxsBAAYAAAAJAAI=,2AAAAAAABAFEKvwV1AQAAAAA=,2AABaAAAAKFEIbAQAAAASAAA=,1AQASAABTBL0AdQAAAAAAAAA=,2AAAAAA0ABb0BdQAANgMAAAA=,1HQAAEgAAJwAHVAQAAAAAAgA=,3Bgk2AABjBL0E4QFdAAAAAAE=,2AAkAAAAJDVFTvVJ1AAAAAAI=,2AQAAAABjBL0AkAAnAAAAogA=,2AAMAACcAEAY7bKMAAAEAAAA=,2AAAAAHgANFEKAACiAAAbAgE=,1EgAAAgkAAAAKUVZsAQAAAAA=,2AAIAACgAEWw6AAAbKFECbAE=,2BgBRAABRDb0ddQEANgAAAAI=,2AAkAAHUSFQAQUQQAUQAAAAA=,2AAAAAChRERsfAQAAAAAAAAA=,2AAADAAAAKFEIbAQAUQAANgA=,3AAAAACdRB8MFdQEACQkAAAA=,2ARsAUQ2iBXU3AAAAAAAKAAA=,2AAmiGwAAAAAKUTu9AXUAAAI=,2AAADAAABAAANUVbAvlt1AAA=,1AAAJYwAAAAANVAJsAQAAogA=,1CQEAACcdD1EEAAAAAACiAAA=,3ogAAAQBRDb0FkAoeAAAAGwA=,2AAAAAABRBKITkAAnAAAANgA=,2AAAAAAAJeAA0VAwAAAAAAAA=,3AAAJAAAADVcOvaR1AQADAAA=,3DWQCbAoBAGwD4QGBAA0AAAE=,2AFEAAChUCGwEAAAANgAGAwA=,3AHgbD1EEAGwE4jdCACcCAAA=,2AAAAAAAbAFENogV3AQAAAAA=,3AABsAZABmQAoAAAAowAAAAA=,2AAAAABsGAHIE4QFdAAAbAAA=,3ABsAAB4AK1QRbAQAADYAAAA=,2DYcFGzcAAGwE4QB4BgAAAwE=,2AAADAABRBL0BPwAnAAAAAAI=,2AhsnAA9RBWwBAAAAAAIAYwA=,3AAAAAAYCAHUBSxIxAA0AAAA=,3AAMSAABSDb0CxgF1AAAAAAA=,1AAAABgBRBL0SdQAAABwJAAA=,2NhIAAB9TEWwEAAAAAAAAGwA=,3AAAAPA1RC70FdQEAAAA2ogA=,2DQAFbAECAGwE4QB4GwCiAAA=,1ADYAAAAAAGwBkAkeAAAANgA=,3UTYANnUBnAAqUQQAAAAAAAA=,3CVGiAAAAJ1EQogV1AQAAAAA=,1NgMAAABRpr0AdQYAAAAAGwA=,2AAAAAFoAMDYQUQQGEgAAUwA=,1GwMCAAkAAFEEogF1AAAAAgA=,3AAkAACVSEWwFbAEACQAAAAA=,3ABIAAG8ANFEObAEAAKIbAAI=,3AAAAAAAADW4F2AF4AAAAogA=,1PAIACQBRBL0BWgAAAAA2AAA=,3AAB1AIEhM1ENAFE6pAF1AAA=,1AAAAAA0ABWwcAAAAABIAAAE=,2CQAAAHgANFEMAAAAAAYAAAA=,2AgASAABRBL0AkAAnCQAAAAA=,2AHgAD1EEAAAoUREbBAAABgA=,2AAAAAFEAAAANUQWiAXUJAAA=,2AQB1URUCEFEEAAC0AAAAAAA=,3EgAAAChXEb2mWgAAr1ECbQE=,3AAMANgAAJwArWhFsAwAAAAA=,2AQAAAAAADQAFvVJ1AABUAAA=,2AAA2AAASAFEEvQGQAB4AAAA=,1AAMAAB4AEFEEAFEAAAACAAA=,2AAAnAhBjBRs3AFEDwAF1AAA=,3AABsAUEKnAAoAACiAAAGAAA=,2DVEFG3YAFQkQUQQAAAAAAwA=,3EgAAAA1RX70CdRwAGwIAAAA=,2EgEAAwBsBOEBXQAAAxIAAAA=,3BgAAYw29BasBdasAAAA2AAA=,1AAAAAgYAAG4BkAAeAAABAAA=,3AAYCAABRBMYBSwAoAKJRAAA=,2AAAAEnUALQAQUVUEorV1AAA=,3EgAAAAAAJwArABFsVQAAAAE=,2AB4AYV3BBXUBAAYbNqQAAAA=,3BgAAGwBRBL2m4QFdAAADAAA=,3AAAAAAAbKFERwAN1AACiAAA=,2DQkFbAEAeAA0UQoAAAAAUgA=,3VAAAAABsBOEAkwAnAAAAAAA=,3ABsnURC9BSQcAAAADVIOIQE=,2AKJRAAASeAA0UVsEvQB1AAA=,2ADZsAZAAFQANAAAGAAAAAAA=,2AFEAAG8ANFENAFFVvQB1AAA=,3AAAAAABgDaIFkAEnAAASNgI=,2rFcFbKMAAAANAAW+CnUAAAA=,2ACcSB1EEAFEMvQV1LgAAAAA=,2ADYAACcbD1EFbAEAAFEAAAA=,1AAAAABsAohsBkAAnAAAAAAA=,1ogMAWnUAMAAKAAAAAAkAAAA=,1AAAAAHUALQANAAAAAgCiAwA=,2ACcAD15VBaIBdQAAAgAANgA=,1AB0AUScAB1EEAAAAEgBRAAA=,1AAAAAQCiAAAKUQVsAQAAAAA=,1AAMAAApRBWwBAAAAAAACAAA=,2AAAACQAAAFFVvgGQBh4SAAA=,2DVECbAEAbwA0UQ0ANgAGAwA=,1AAAAPwBRBL0AdQAAAAAAAwA=,2AAAAACcCB1EFbQEAABMAAAA=,3AAASAABsA+EBkwAnAAADAwA=,1GzYAAB4AEFEEAAAAAAAAAAA=,2ABsAAAAAAHMBkAAwAQoAAAI=,2orQAAABRVb0BPwAnClEFbAE=,2AKIAAA0CBb0BdQAADQAFbAE=,3AAB1CYEANFEMAAAAClcFbAE=,2OAAAAgAAeDYzUQ0AAAEAAAA=,3ADZsUpABSwYoAFEEvQB4AwA=,2NhtRAAAAAAINUVbAvlt1AAA=,1AAkAAApRBWwBAAkGAAAAAgA=,2AzYAABIAABsckAAwKF4CbAE=,1AAAAEnUAMAAKEgAAAAAAUQA=,3EgAAAApRDr0FdQEAABIAAAA=,3AAEAEh9RYmwFbgEAAAAANgA=,3DQAFbAEGAFENvQLGN3UAAAI=,2DYcCbHYALQAQUR8AAAIAAAA=,2AAAAAHgANFFbBgAAEgkAAAA=,1AAAAVwAAClEFbAEAAAkAAAA=,2GwAAAAA2JVGzbAQAAABRNgA=,3AAMACSVREb0EdQAAUQAAAAA=,1AAAAAFFRBKIBdQAAAAAANgA=,2BgBsAZAbMAAKBgAABgIAAAA=,2AAAAAABsBOMBXQAAAgASAAA=,2DVE4bAEAJwMQAAVsCgBRGwA=,3DQYFbCUBnAkrUQQGAAAAAAA=,3AAAAAABXDb0FxgFaAAAAEgA=,3AFEAAABRDb0FkBweAAAAAAA=,2AKgAAA1RBaIBdQAAWgAAAAA=,2CQBsAT+iMAINAAAAAQAAAAA=,2AAAUAABRBMIBkAAeJVEFbAE=,2r1EFHAEAXTY0UQ0AADYAAAE=,3DVE4bAEAXQA0VA5sNwEAAAA=,2ogMAAAIBAGwE4QFvAwAAAAA=,2AAYAAHgANFcKAAAACloFbAE=,3AAAnUQ+9BXUBAAA2UVEAAAA=,1AAASAAAAAG8BPwknAAAbogA=,2AAMAAABRCr2ndQEAAAAAAAA=,1AAAAAHUSLQENAAAAAAACAAA=,1EgAAAABRBKIBdRsAAAADAAA=,3AycAB1FVBMYAnBsoAAAAAAA=,2AicDB1EEAFENvQVaAQAAAAA=,1AABXEgAAolEEvQFbAAAAAAA=,2ABsAAAA2AAAoURFsAwAAAAA=,2AFEJAAAAbxI0UQ0AADkAAAA=,2EgAAEloAMAAQUQQGAAAAAAE=,2ADYAAA1RBaITdQAAABIAAAA=,1AAAApAAAAGwBPwAnAACiAAA=,3AAIAAAAAJVERbgVsAQEAAAA=,1AAAAACcCEFEDABIGABsDAAA=,1AAEAAAAAAAANUQUbAQA2AAA=,2AgAGACQ3nAAoAFEEoqN1AAA=,2AABRNgAADVEFvQB2AAAAAAA=,2AAAbAAAAAFENogV1EwAAAAI=,2AAB1ADA2WFEEAGwDvQF1AAI=,1ADYAAQAAAFcEvRNaAACiAAA=,1AAAAACcAB1EEAAAAACE2AAA=,1AAAJAAAAAHIBPwAnAABRGwA=,2AAAbAAAAXQA0UQ0GAAAAAAA=,3AAAAAHUAMQARbAQBAACjBgA=,2AL0AAAAAAFEEvROQAB4JAAA=,2AAEBAHUALQIQUQQAAAASAAA=,1AAAAOA1RBR4BAAAAEgkAAAA=,2CXg2B1MEAAAKUae9AXUAAAA=,2UR4AEF5VBaJSdQYAEgAAAQA=,3CQEAAABRBMYBSwAoDVEdbAE=,3AAAAAHUBnBIiUQQAAKsbAAA=,1AAABAABSBL0AdQAAAAAAAAA=,1AKIAAAAADWMFGxwAABIAAAA=,2AAAAAAAAeBI0Ua4AAAMAAAA=,2AFEAAABtBOEBXQAAAAAAAAA=,2AAIAAABRDL1WdQEAAAAANgA=,3AgIAAHUAMQARbAQAAAAABgE=,1AACiUQAADQAFbAEAAAA2AAA=,3AAAAAA1sOOEBeAAAAAA2AAA=,2AAAAAABRpr0AkAAnAwAAAAA=,3ABI2NgAAomwE4QGBAAoAAAA=,1AAAbAAEAJwAPVDoAAAABAAA=,1AAAAogAAJwEQUwMAAAAAAAA=,2AAYBCQAADVEFvQFaAwAAogA=,2AAAAAHUALQAQWgQAAAAAGwA=,1AAYAACc2EFEDAgAAAAAAAAA=,2ACcAIlcEAFcMvQV1CgCiAAA=,1AAAANnUAMAoKAAADAAAAAAA=,2ABIJAAAAAGwE4QpdAAAAAAI=,2AB4JRlFVBL0BkBIeGwAAAwA=,3AAAAAAkLAGwE4wF+CQ0AAAA=,2AwAAAwAADVFTvQF1AAA2AAA=',
-m:'1AQAAAB4JEFEDvQFaAAAAAAA=,1AAAAAABRKKYGdQQAAAACAAA=,1AAIABh4AslEDvQFaAABRAAA=,1AAASAABRKKKodQQAAAAbAAI=,1AAADAABXKKIGdQQAAAEAUQA=,1AAkAAABRKKIGdgQAAAAGAwA=,1AAAAAABRKKIGdQQAGwAAAwA=,1AAEAAABRKKIGdgQANgAABgA=,1AAEAAwBRKKJXdQQAEgAAogA=,1NgAAAB4JEFEDvQFaAAAAAAA=,1AAkAAB4AEFEDvRNaAAAAAwA=,1ABsAAABaKKKodQQAAFEAAQA=,1AACiAABRKKIGdR8AAAAAHAA=,1AAAAAB4AEFFUvQFaAAABAAA=,1AAAAAABRKKKodQQACQAAAAA=,1AAYBAABRKKIGdQQAAACkAAA=,1ogAABh4AEFEevVJaAAAAAwA=,1GwAAAB4AEFoDvQFbBgAAAAA=,1AAAAAB4AEFGlvQFaAAA2AAA=,1AAAAAABRKKIGdQQACQYAAAA=,1AAAAAB4AEFEevQFaAAAAAAI=,1BgAAAB4AEFQDvaNaAAASAAA=,1AAYAAB4AEFEDvRNaAAAAAAA=,1ADaiAABRKKIGdR8AAAASAAA=,1YwAAAB4AEFEDvQFaAAAAAAA=,1ADYAAQBRKKIGdVUAAAASEgA=,1AAAAAABRKKIGdQQAGxIAAAA=,1AFEAAB4AEFEDvQFaEgAAAQA=,1AAAAAB4JEFEDvQFaAAAAAwA=,1ogAAAB4AEFEDvgFaAAAAogA=,1AAAJCQBRKKIGdwQAAACiAAA=,1AAAAAB4AEFGlvQFaAAASAAA=,1AAABAB4BEFEDvQFbEgAAAAA=,1GwAAAABRKKMGdQQAEgAAAAA=,1AAAAGx4AEFEDvVJaAwAAAAA=,1AAIAAB4AEFIDvQFaNgAAAQA=,1AABRAABRKKIGdQQAAACiAwA=,1ADgDAABRKKIGdQQAADYAAgA=,1GwAAAB4AEFEDvgFaAABRogA=,1BgAAAB4CEFQDvQFaAAAAAAA=,1AABjAABRKKIGdToAAACiNgA=,1EgAAAB4AEFFUvVJaAAAAAAA=,1CQAAAB4AEGMDvQpaUQAAAAA=,1BgAAAABRKKgGdQQAAAASAgA=,1AAAKAABRKKIGdQQAAAAAAAA=,1AAALAABRKKIGdQQAAAAAAAA=,1AQAAAB4AEFoDvQFaAAAAGwA=,1CQIAAABRKKIGdToAAAECAAA=,1AAAAAB4JEFEDvTdaAAAAAAA=,1EgAAAABaKKIGdQQAAAAAAAA=,1AAAAAgBRKKIGdQQAABIAAAA=,1AAA2AABRKKIGdwQAUQAAEgA=,1UQAAAB4bEFEDvQFaAwAAAAA=,1UQAAAB4AEFEDvVJaAAAAAAA=,1AAAAoh4CEFEDvQFaAAADGwA=,1AAAABgBRKKJXdQQAAAAAAAA=,1AAAAAB4JEFEDvRNaAAAANgI=,1AAAAAB4SEFEDvwFaAAASCgA=,1NjYAGx4AEFEDvRNaAAAABgA=,1AwAAoh4AEFEDvQFaAAAAAAA=,1NgAAAB4CEFEDvRxaAAAAAAA=,1AAAAAB42EFEDvQFaAwAAAAA=,1AAASAABRKKIGdQQACQAAAAA=,1ABMAAB4BEFEDvQFaAAA2AAI=,1AAAAAABaKKQGdQQAEgAAAAA=,1AAAUAABRKKIGdQQAAAAAUQA=,1EgAbBgBRKKIGdQQAAKIAAAA=,1GwAAFABRKKIGdQQAAAASNgA=,1ABIAAB4AEFEDvQFaEgAAAAA=,1ADYAAABRKKIGdQQAAAA2CQE=,1AwAAAABRKKIGdVUAABIAAAE=,1ABsAAABUKKIGdQQAogYANgA=,1AAAAUR4AEFEDvgFaAAAAEgI=,1AAAAUR4AEFEDwxxaAAAAAAA=,1AAkAAABRKKIGdQQAAAIAAAA=,1AAAJAABRKKIGdQQAAAAAAAI=,1AAAAGx4AEFGlvQFaAAAJAAA=,1AAAAAB4AEFEDvQFaUQAABgA=,1AAAAAgBRKKKodQQAAAAAAAA=,1AKIAAB4AEFEDvQFaAAAJAAA=,1AAAAHABUKKIGdQQAAAAAAgI=,1AAIBAABRKKMGdQQAAAAAUQA=,1AQMbAABRKKIGdgQAAAEAAAA=,1AAClAABRKKIGdQQAAAAAAAA=,1AAAKAgBRKKQGdQQAAAASAAA=,1BgAJAABRKKIGdVUAAAYAEgA=,1NgAAAABjKKIGdQQAAAAJAAA=,1AgYAAABRKKIGdVUAAABREgA=,1URsANh4AEFEevQFaAAAABgA=,1GwAAAABRKKKodgQAAAAAEgA=,1AAAAoh4AEFoevQFaAAAJCQA=,1UQAAYx4AEFIDvQFcAAAAAAA=,1UQAAAB4AYWMDvQFaAAAAEgA=,1AQMAAABRKKKodQQAAABRGwA=,1AFEAAB4AEFEDvRNaAAAAAAA=,1CaIAAB42EFEDvQFaAAAAEgA=,1AFMAAABdKKIGdQQAAAADAAA=,1ogAAAB4GEFEDvwFaUQAAAAA=,1AAEAGwBRKKIGdQQAAAAAAAA=,1NgAAAB4AEFEDvQFaAwC0GwA=,1AwAAAB4AEFEDvVJaAAABAAA=,1AAAAGwBRKKKodwQAAAAAGwI=,1CQAAGx4AEFMDvQFaAAAGAwA=,1AgYAAB4AEFGlvQFaAAAAAAA=,1AAAABh4AEFEDvQFaAAAAAQI=,1ABsAAB4AEFEDvQFaAAAANwE=,1ABIbAABRKKMGdQQAAAMSAAA=,1AKIAAABRKKUGdR8AAAAAAAA=,1AAAAVx4AEFFUvQFaEgAAAAA=,1AAAGEgBRKKQGdQQAAAASogA=,1AAAANh4AEFEDvQpbAAAbUQA=,1AwAAAABRKKMGdToAohIAAAA=,1AAABAB42EFEDvQFaAAAAogA=,1AAAAAABRKKgGdQQAABIAAAA=,1AABXAABRKKIGdQQAAAAAAwA=,1AAIAAB4AEFEewAFaUQAAAgA=,1AQAAAB4AEFEDvdlaAAA2AAI=,1VAAAAABdKKIGdQQAAAABAAA=,1AAAAEh4AEFcDvQFaAAAAAAA=,1BgAAAABRKKIGdwQAAAAAogA=,1AAAAAABUKKIGdwQAAKIAAAA=,1NgEAAB4AEFEDwAFaPAAAAAA=,1G6IAAABRKKIGdQQAAAAAAAA=,1AAAAEh4AEFGlvQFaAAASNgA=,1AAIAAABRKKJXdwQAAAAAGwA=,1BgAAEh42EFEDvQFaBgAAAAA=,1AAMAAABjKKMGdQQAAAA8AAA=,1ABIAAABRKKUGdQQAYwAAAAA=,1AxIAAB4AEFMDvQFaNgAAAQA=,1AwYAAABRKKIGdQQAAAAbEgA=,1AAAAAB4AEFEevQFaAABRAAA=,1EgAAAABRKKIGdwQAAAAGCwA=,1CQAAAABRKKIGdVUACQlRAAA=,1AAAAAB4VEFE5vQFaAAAJogA=,1BgA2AABUKKIGdQQAUQAAAAA=,1AAMAAABRKKIGdQQAEgAbAQA=,1ADYAAABRKKIGdToAAAAGGwA=,1G1EAAABRKKMGdToAAAAAAQA=,1AAAAAABRKKIGdQQAAAYACQA=,1AAAAAABRKKIGdQQAUQAAAAI=,1AAAAAB4AslEDvaNaBgAAAAA=,1ADYDAABUKKIGdQQAAAASAQA=,1GwAAAABRKKIGdQQAAAAACQA=,1UQAAAB4AEFEDvaNaAAAAAAA=,1AAC0AABUKKIGdQQAAAAAHQA=,1AAYAAB4AEFEDvgFaogAAAAA=,1AFESAABRKKIGdQQAAAAAAAA=,1AAAAAB4JEFEDvwFaAAAAAAA=,1AAAAAB4AEFEDvjdaAAA2AAA=,1AAAAAB4GEFelvQFaAACiAAI=,1AAAGAABRKKIGdaYAAAAAAAA=,1AACiAABRKKIGdQQAAAIAAAA=,1AKIAAABRKKIGdQQAAAA2AAA=,1AgAAAABjKKKodQQAUQAAAAA=,1ohsAAB4AEFEDvQFbAAAAEgA=,1pAAAAABRKKQGdVUAAAAAAAA=,1NgAAAx4AYVEDvQFaAAAAAwA=,1AAEAAABRKKUGdQQAAAAAAAA=,1AwAANh4AEFEDvQFaAAAAGwA=,1AAAAAABjKKMGdQQAAAASOAA=,1BgAAAABRKKIGdQQAAABRAAA=,1AAEAAABRKKJXdwQAogAACQA=,1AAABAABRKKUGdQQAAACiUQA=,1UQAAAABaKKIGdgQAAAADAAA=,1NqIAAB4AEFEDvwFaGwAAAAA=,1AAAABh4JEFEDvQFaAAA2AAA=,1ADYAAABRKKIGdgQAAFQGAAA=,1AAAAEwBjKKIGdaYAAAAABgA=,1AAAAAB4AEFEDvQFaAAAJUQA=,1AAABAB4AEFEDwAFaAAAMAAA=,1EgAAAABRKKIGdQQAAAASAgA=,1AAACAABjKKIGdR8AAAAACQA=,1AAAAIQBRKKUGdQQAAAAANgA=,1AAEAAB4AEFEDvTdaAAAJCQA=,1EgAAAABRKKIGdQQAABIDAAA=,1ADYAAABRKKKodQQAAKMAAAA=,1AAAcAABRKKIGdQQAAACiAAA=,1AAA2IQBRKKIGdQQAAAEAAAA=,1AAAAAB4AEFMDvRxaAAAbAAA=,1AIcAAQBjKKIGdQQAAAEAAAA=,1AAAAAB4AEFEDvQFaCQAANgA=,1NgMAAB4AEFQDvRNaAAAAAAI=,1AAAAAB4AslQDvQFaAAAAAAA=,1ABsAAB4AEFoDvQFaAAAbAQE=,1CQAApR4AEFEDvwFaAAAAogA=,1ADYAAB4AEFIDvQFbAAAAAAA=,1AFEAAB4AEFcDvQFaAAAAAAA=,1UQAAAB4AEFEDvQFcAABRAAA=,1ADYAAB4AEFIDvQFcAAAAAAA=,1AAEAAB4AEFMDvQFaAwAAUQA=,1AAAAAB42EFEDwwFaAAAJAAA=,1ABIAAB4SEFEDvQFaAACiAwA=,1ogAABgBRKKIGdQQAUQAAAgA=,1IQAAAB4AEFIDvQFaAAABAAA=,1AAAAAABRKKJXdQQAAAAAAwA=,1WgkAAABRKKIGdQQACQAAAAA=,1AAAAAABRKKIGdwQAABtRAAA=,1AAkAAABRKKIGdQQAEgAJAAA=,1AAAAAB4CEFEDvQFaAAA2NgA=,1AAMDAABRKKIGdQQAAFFaAAA=,1VAAAAABRKKIGdQQAAAAAAQA=,1ogYAAABRKKIGdVUAAAAGAAA=,1AAAJAABRKKIGdQQAAAMAAAA=,1AAAAAABXKKgGdQQAUQAAVwA=,1EwEAAB4AEFEDvQFaAAAACQA=,1AwAAAB4AEFEDvwFaAAAGAAA=,1ANgAAB4AEFEevwFaUQAAAAA=,1AAAAAABRKKIGdaYAAACiAAI=,1UVEAAABRKKIGdR8AAAA2AAE=,1AFEAAB4AEFEDvQFaAAAUAAA=,1AAAAAB4AEFQDvRxaAAAAAAA=,1AAAAAABRKKIGdQQAEgEAAAA=,1ogAAAx4AEGMDvQFcAAA2AAA=,1AAMAAABRKKIGdQQAAAA2HAA=,1AAAAAABRKKIGdQQAAAAACQI=,1AAAAAB4AEFoDvQFcAAALBgA=,1NgAAUR4AYVEDvQFaAAAAAQA=,1AAAbAABRKKJXdQQAAAABEgA=,1CQAAAB4AEFGlvQFaBgAAAQA=,1AAAACR4AEFEDvQFaAAADAAA=,1AAIACQBRKKIGdQQANgIAAAA=,1EgYAAB4GEFEDvQFaAAAJEgA=,1ARsSAABRKKIGdQQAAAAAAAA=,1AAAAAABRKKIGdQQAAAIABgA=,1AAAAAABRKKQGdQQAAFEJAAA=,1ogAAAABRKKIGdR8AAAkBAAA=,1AAAAAB4AEFEDvQFaCQASAgA=,1AAAAAB4AEFEDvQFaAAAAHQA=,1AAATAABRKKKodQQAAAAABgA=,1AKIACR4AEFEDvTdaAAAAGwI=,1HgAAqB4AEFEDwwFaAAAAAAA=,1ADkAAABaKKIGdQQAAAAANgA=,1BhsAAB4AEFEDvQFaAAAAAAA=,1AAAAUR4AEFFUvgFaAAAANgA=,1URIAAABjKKIGdQQAAAAAAAA=,1AAkAAABRKKIGdQQAogAAAAA=,1AAAAAABRKKIGdQQAAAMAAAE=,1GwAABh4AEFEDvQFaAAAAAAA=,1GwAAAB4AEGMevQFaAAADAAA=,1AKIAAABRKKIGdQQAAAAAAwA=,1AACrAABRKKIGdQQAAAMAAAA=,1AAAAEwBRKKUGdQQAAAAAEgA=,1BgAAAB4JEFEDvQFcAAAAAAA=,1UQAAAB4AEFEDvQFaAACiCQA=,1AAAAAQBRKKIGdaYAAAAAAAA=,1AwBaBgBRKKIGdQQAABsAAAA=,1AAEAAABRKKIGdR8AGwMAAAA=,1AFEAAB4bEFEevQFaVwAAAAA=,1AAATBgBRKKIGdQQANgAAAQA=,1AAAABh4AEFEevQFaAAAAAAA=,1oxsAAABRKKIGdR8AAAAGAAA=,1AFEABgBRKKIGdVUAAAAAEwA=,1AAAAAB4AEFEevQFaAAAAGwA=,1AAAAAABRKKIGdQQAAFGiAAA=,1AAIAHgBRKKIGdQQAAAAAAQA=,1ABIAAB4AEFEDvQpaAAAAAAA=,1AAAAAB4AEFEDvQFaNgABAAA=,1AwBRAABRKKKodQQAAAAbUQA=,1AAAbCQBRKKIGdQQACQAAAAA=,1AwEAAB4AEFEDvVJaEgCiAAA=,1AAIAAB4GEFFUvQFaAACiAAA=,1AAABAABRKKIGdwQACQCiAAA=,1AAACAABRKKKodQQAADYSAQA=,1NgAAAB4AEFsDvRNaAAAACQA=,1AAkbNgBRKKIGdQQAAAA2AAE=,1AAABAABRKKIGdQQAAAEAAAA=,1CQAAAB4AEFEDvQFaAABRAAA=,1AwAAEh4AEFEDvVJaAAAAAAA=,1AAAAAB4AEFEevaNaAAADAAA=,1AAEAAB4AEFEDvQFaBgAAAwA=,1ABsJAABRKKIGdR8AAAA2EgA=,1AAAAAwBRKKIGdgQAAAAAAAA=,1AAAAAABRKKgGddwAADYAAAA=,1AAAABh4AEFEDvQFaAAAAUQA=,1GwAACR4AEFIDvTdaAAACAAA=,1AAAAAB4GEFGlvQFaNgAAAAA=,1AAAAAB4CEFEDvQFbAAA2EgA=,1AQMAAB4AEFEDvQFaAAClAAA=,1BgIAAABRKKgGdQQAACEAAAA=,1ABsAGx4AYVEDvRNaAAAACQA=,1AAAAAABRKKIGdQQANgAANgA=,1AAYAAABRKKMGdQQAElESAAA=,1AAAABgBRKKIGdQQANgBRAAA=,1AAACAB4hEFEDvQFaAAAAAAA=,1qwAAAQBRKKIGdToAAAMAAAA=,1NgAAAwBRKKQGdQQAGwAAUQA=,1AAMAAB4JEFEDvQFaAABSAAA=,1AKsAAABRKKIGdQQAAAAAAAA=,1ADYBAABRKKIGdQQAogAANgA=,1AAAAAB4AEGMevQFaAAAAGwA=,1ABsAAB4AslEDvaNaAAAJAgA=,1AAABAB4AEFEDwAFaAAAAAAA=,1AAAAAB4AslEDvaNaAABRAAA=,1AAAAAABRKKIGdVUAAAASAAA=,1FAAAAB4DEFEDvQFaAAACAAA=,1AAEACQBRKKIGdQQAAAABAQA=,1ABsAAABRKKIGdQQAAACiAAA=,1AAACBgBRKKIGdQQAAAAAAAA=,1AAEAAABRKKIGdQQAAAA2AAA=,1AwAAEh4AEFFUvQFcAABRAAA=,1AAAAAB4AEFEDvRNaUQAAAAA=,1AAASAABRKKIGdgQAEgAANgA=,1BgAAAB4AEFMDvQFcAAAAAgA=,1IQAABh4AEFEDvTdbAAAAAAA=,1ogAAAABRKKIGdQQAAAkAAAA=,1WgAAAABRKKIGdVUAAAAAAAA=,1ADYAAB4AEFoDvQFaGwBSAAA=,1UQAAAB4AEFEDvQFaAAAAogA=,1EgkAAABRKKIGdQQAAAAGAAA=,1AAAACQBaKKIGdQQAGxIGAAA=,1UQAAAABRKKMGdQQAAABRNgA=,1NgMAGwBRKKgGdQQAAAAAUQA=,1AAIAAB4AEGMDvQFaAACiAAA=,1OAAAAB4AEFIDvQFaGwCiAAA=,1AAAAAB4hEFEDvQFaOQAAogA=,1BgAACQBRKKQGdQQAAAAAAAA=,1AAAACR4AEFEDvQFbAAAAAAA=,1AAAANgBRKKIGdQQACQAAUQA=,1AAADAABXKKIGdQQAAAAACQA=,1AAAAoh4AEFoDvQpaAAAAEgA=,1AAMDAABRKKIGdgQAAAkbAAA=,1AQAAAB4AslEDvQFaAAADGwA=,1ADkAAABRKKIGdVUAAAABAwA=,1AgAAEh4AEFEDvQFaAAABEgA=,1AAIAUR4AEFEDvRNaogAACQA=,1AAAAEh42EFEDvQFaogAGAQA=,1AAAAAABRKKQGdQQAAAAABgA=,1AAAAAB4GEFcDvb5aAAADAAA=,1AQAAAABRKKIGdVUAAABRAAA=,1AQYAAABRKKIGdQQAAAAACgA=,1AAAAAABXKKIGdQQANgAAAAA=,1AAAAAABaKKJXdgQAAAYAAAA=,1AAAACgBRKKIGdQQAAABRAAA=,1AAMAAB4BEGMDvaNaAAAAAAA=,1AAAAAQBRKKIGdQQAG1EAAgI=,1GwAAAB4BEFEDvQFaAAA2CQA=,1AQAAAB44EFEDvRNaAAAAAAA=,1CxsAAABRKKKodQQAAAIAAAA=,1GwAAEh4AEFcDvQFaSAAAAAA=,1AAAAAB4CEFEDwwFaAAAAAAA=,1VwAAGwBRKKIGdQQAAAAbAAA=,1EgAAAB4AEFGlvQFaAAAAAAA=,1AAMAAB4GEFEDvQFaEgAbBgA=,1ogAAGx4AEFEDvaNaAAASogA=,1NgAAAABRKKIGdQQAUQAACgA=,1AAA2AABRKKIGdaYAAAA2AAA=,1GwAAGx4AEFEDvwFaAwAAAAA=,1AAAAAABjKKIGdQQAAABRAwA=,1AAMAAABRKKJXdQQAABMAAAA=,1AAAAAQBRKKIGdQQAAAAAogA=,1CQBRAwBRKKMGdQQAUQAAAAA=,1AAAAEh4AEFEDvQpaAAAJpQA=,1AAAAAB4AslEDvQFaAAAAogA=,1AAABAABRKKIGdQQAAAkAAAA=,1ABIAUR4AEFEevQFaAAAACQA=,1AAAAAB4AEFFUvQFaAAAAAgA=,1AAAAHh4AEFEDvQFcCQAABgA=,1AAAAAB4AEFEDvQFaEgBRAAA=,1GwAAAABRKKIGdQQAUTYAAAA=,1HgAAAB4AEFcDvQFaogAAUQA=,1GxtRAABRKKIGdQQAEgAAogA=,1AAAAAB4AEFEDvQFaAAAPAAA=,1AAEAAB4AEFEevQFaAAAAEgA=,1ADYCAABRKKIGdgQAADYAAAE=,1CQAAAABRKKIGdgQANjYDAAA=,1AAAAEh4AEFIDvQFaAAAbGwE=',
-h:'1CQAANgAAAAA3FQAnAAAAAAA=,1AQAAABsAFQABUQMAAAICAAA=,1UaIAAAMALVEEAAAAAAASAwA=,1AAkAAABRAwYtUQQAAAAAogA=,1AAAAAAkAYAADGwEACQAAAAA=,1AAAcBi0ACVEDAAACAAAAAAA=,1AAkAAB4BCQAFUQABAABRAAA=,1UQABAAAACb0AbAEBAAAAAQA=,1AAEAAABRAwMBhwAJAAA3AAA=,1AAMbABUAAVEDAAASAAAAAAA=,1AAAAGwADCb0AbAEBAAAAAgA=,1AAAAAAAAHgCjUQJRAAAJqwA=,1AAAAAAkGB1EAGwEAAKIAAAA=,1AFEAAAAAAFEAAKd1AACiBgA=,1AAAAAAMABQABWqIAAAAANgA=,1AAAAABsAAAAKUQC9ABsBAAA=,1BgAAAAAAAFEEPwBRAAAAogA=,1AAAAAA29AAIBAAAAAKIAAgA=,1NgAAAAoAA6IBGxsAGwMAAAA=,1AAAAUQAAClEAwAAbAAAGAAA=,1UQAAEgAAAQAPbAEACVEAAAA=,1AAAJAQ8AAxsBAAADNgAAGwA=,1AAAJAAAAABsBURstAAMAAAI=,1AAAACQpRAL0AGwAABgAAAAA=,1AAIAAAAAAb0ACQAeAAADAAA=,1AAAAAFEAAAZUPwB1AAAJAAA=,1AAAAAAMALVEEABIAGwAAAAA=,1AAAbALcAAVEDAAAAAAAGAAA=,1AABRAD8AAwAKAAACAgAAAAA=,1AAAAogMABQABWhsAogAAAAA=,1AAAAAAEJD2wBAAAAAAAAAAE=,1AAAAAFoAAwAHAwEAAAASAAA=,1AAAAGwkAhwANAAAGAAAAAAA=,1EgAAAAAAA1ECGwBaAAADAAA=,1UQAAAAAAABsBCQAVNgMAAAA=,1AAAAAAAAAAABFQAnAABTAAA=,1AAkbABUJAVEDABIAAAAAogA=,1GwAAAAAACVEAAAV1EgAAGwA=,1AAIDAAAAG1GkUQQAAAAAAAA=,1AKIAAAAAAAIBAA9sAQAAAQA=,1ABKiAAAACQAHUQAbAQIDAAA=,1BgAAAQBRAAAFdQAAAAAAAAA=,1AAAAAAAAAwAFAAFcAwAAAAA=,1AAEAAA0ADxsAAAAACQCrAAA=,1AAIAAAAACQYHUQAeAQAAGwA=,1AAAAAAAAG1ECUQQANhIAAAA=,1AAAAAABRAACndQAAqwYAAAA=,1AKUACQAACb0AbAEANgAAAAA=,1GwAAAwAADb0AAAEJAAAACQA=,1UQAAAAAAA1ELGwBaAAAAGwA=,1AAADAABRAxsAPxsJAQAJAAA=,1AAACAAm9AG4BAKIAAAACAAA=,1AAkbAC0ACWMDAAAAAAIAEgA=,1GwABAB4ACQAFUQAAAAABAAA=,1AAAAACdRAgADABsAohIAAAA=,1AAAJEg8SAxujAAYAAAAAAAA=,1AAAACQAAAAAKCQOiARsAAAA=,1AAAAAANRrRsAWgAAAAAAAAA=,1UQAAAAAAAAANCQ8bAAAAAAA=,1AAAbAC0bCVE5AAAAAwAAAQA=,1AAAAACcALVoAAAAAAAAGAAA=,1BgAAABsALQAJUQMAEhsAAAA=,1AFEAAAMALWMEAAAGAAAAAAA=,1AAAbAC4ACVEDAACiAAABAAA=,1AAAAAAYAAGwBFQAbAAAGAAA=,1ogkAAABaAAAFdRIAAAAAAAA=,1AAAAAAAADb0AAAEJUQAAUQA=,1AQAbEgEAD2wBAAAAAAAACQA=,1AABRAABUAxsAPwAJAAASNgA=,1AAAAAAAAAwYtUQQAAAAAAAE=,1AKIAABsAFQABUQMAAAEAAAA=,1AAAAAgAAAaIBUQAeAQCiAAA=,1AAIAAAMALVMEAAAAAAAANgA=,1AAAAAHUABwAJAAAAAFQGAAA=,1BgAAAAAAAAAJvgBsAQAAAAA=,1AAAAAAAAAFEfPwBRCQAAUQA=,1AwAJAAdRAB0BAgkAAAAAAAA=,1AKIAABIAAAABFQAnAAAAAAA=,1AAAAAABRAwBShwAJogAAAAA=,1AAAAADlSAhsAWgAAAAASAAA=,1AAAbAAAAABtRogEnAABUAAA=,1AAAbAAAAClEAvQAbAAAABgA=,1AAAAAAm9UWwBAAAAAKKiBgA=,1AAAAAAAAW1EAvRsbAAAAAAE=,1AAAAAAACCQAPAAMbAQAAAwA=,1AFEAAAAJAAAJvQBsAQAAAAA=,1AAAACQAAHgABUQJRAAAAUQA=,1AAABAAMbLVEEAAAACQAAAAA=,1CQAAAAAAABsAogEnAABRAAA=,1AAAAAAAAAFEEP1FRAAMAUQA=,1ABsAAAAAUWwBogEDAAAAEgA=,1AAAAogAAUQADPwB1AAACAAA=,1ABIAAAkAB1EAGwECAAAAAAA=,1AAAAABtRAlEEAAA2AAAAAAI=,1AABRAD+iAwAKAAAAABIAAAA=,1AwAAAAAAAwAFAAFaAAAbAAA=,1AFMAAAAAAwAtUQQAAFIAAAA=,1AAYAEgMAOwABWgAAAAAAAAA=,1AAAJAAdRohsBAAAJAAAAAAA=,1AAAAAANRAhtjWgAAojYAAAA=,1AABXEj8AAwAKABsJAAAAAAA=,1AAYAACdRAgADAAAAAFEAAAA=,1AAAAohIAAAABFQAnAAAABgA=,1ogAAAAlRhwANAAAABgAAAAA=,1AAABAAAAAwAtUQQAAAAABgA=,1ABJRAIcAGwAKAKIAAAAAAAA=,1ogAAAAAACgADqwEbBgAAogA=,1AAkAAFoAAwAHAAEAAAAANgA=,1AAAAGwEAD2wBABIAAACiAAA=,1AAMAAANRAhsAWgAAAFEAAAA=,1AAAAAApRUb0AGwAAABsDAAA=,1ADYAAHUAhwABEgAAAAASAAA=,1AwAAAFoAAwAHAAEAAAkAAAA=,1AAAAAAAAClE2vQAbAAAABgA=,1AFEAAABRAAAgdQAAGwBRAAA=,1ADYAAAMABQABWgAAAAASAAA=,1AAAAAB0GLQAJUTkAAAAAAAA=,1NlFRAIcAGwBbAAASAAAAAAA=,1AQBRAIeiGwIKAAAAAAAAAAA=,1UTYAAAAAAwAtUQQAAAAAEgA=,1AAAAAFEAAAADPwB1CQAAAwA=,1AAAbABUBAVE5AKIAAACiAAA=,1AAkAAAMDLVcEAAAAAAASAAA=,1AgYAAA29AAABAAMAAAAAAAA=,1ogAAAAAJAwAtUQQAABMAAAA=,1AAAACQBRAwABhwAJUgAAEgA=,1AAAAAABaAwABiQAJAAAGAwA=,1AAAAAgm9AGwBAAYAAAMAAAA=,1ABsAAHUABwAJNgAAAAAABgA=,1AAAAABtaFQABUQMCAAAAAAA=,1GwAAAAAAHgAJAAVRCQAAAAA=,1AAAAAAAAAAANAGAbAAIAAAA=,1AAYAAFoAGwAPAAEAAAADAQA=,1UQAACQkAhwANAQAAAAAANgA=,1AAAGGxsALQAJUQMAAAAAAAA=,1AAA2AAAAAb0ACQAeAAA2AAA=,1AAAAAABRUQAFdRIAAAAAAAA=,1AAAJAA8ApRsBAAAAAAAAGwA=,1AAAACR4ACTYFUQADAAAAAAA=,1AAAAAAAAAAADP1F1AAAAHgA=,1ogAAAANRAhuiWgAAAABRGwA=,1AgAGAAkADwYDG6MAAAAAAAA=,1AKIAAAAbAFEDAAGKAwkAAAA=,1AAAAAAMSBQIBWgYAAAAAAAA=,1AAAAAwMAOwABWgAACQAACQA=,1IQAAAAMABQIBWgAAAAEAAAA=,1UQAAAABRogAFdQAAAAALAAA=,1BgAAAAAAAAABAA9sowAAUQA=,1AAAAAAkAhwANAAAANgAGAAA=,1AAAAAFoAAwkHAKMAAAAAAAA=,1AABRAIcAGwAKAKIAAAAAogA=,1GwAAAAAAAwAtUQQAAAAAUQA=,1AAEJAA8AAxsBAAAANgAAAAA=,1AAAAUQAAABIBAA9sAQAABgA=,1AAABABtRFQABUQMAAAAAUQA=,1AwAAAAMABQABWgAAAAAACQA=,1UQACAAYACQAPAAMbAQAAAwA=,1GwkAAAAAA1ECGwBaAAAAAAA=,1AAAAAANRAhsAWgAACQAANgA=,1AAAAogAACVEAAAV1AAAAAAA=,1AAAAAAAACgADogEbCQAAogA=,1BgAAGwABABsBCQBmAAMAAAA=,1AAAAAFEAAAIBAA9sAQAABgE=,1AAAACgAAAFEEAAUJAFEAAAA=,1AAAAAFoAGwAPAAEAAwASAgA=,1AQAbABUJAVEDAAAAUQAAAAA=,1AGwAAANRAh4AWgkAAAAAAAA=,1AAAAABtSAlEEAAAdAABRAAA=,1AAAAUQAAAAABAA9uAQAAAAE=,1AABRAEEAAwAKAAADAAAAAAA=,1AwAApAAACb0AbAEAAAAAAAA=,1AAAAABsALQAJUQMAWgAAAAA=,1ohsAABsALQAJUQMAAAAAAAA=,1AAAAAAAAAwOnAKNaAAAAogA=,1AAEAAFEABwANAAABBgAAAAA=,1AAAANhsDFQABUQMAAAAAAAA=,1AAAbAC0ACVYDAAAANgAAAAA=,1AAAAogAAAAAJvQBsAQAAEgA=,1AAAABgAJAAABAA9sAQAAAAA=,1AAAAAB5RAhsAWgAAEgASEgA=,1AAkAogAAA1ECGwBaAAAACQA=,1AABUAD8DAwAKAAAAAFEAAAA=,1AAAAEgASAwAtUQQAAAAAAQA=,1AgAAAAkADwADGwEAAAACAAA=,1AFFXAIcAGwAKAAAAUaIAAAA=,1AAAAAABXAAAFdQAAAAAbAAA=,1AwAAAAm9AG0BAAAAAAYAAAE=,1AAABAB4DCQAFUQAAAKIAAAA=,1AAkBAAAbG1ECUQQAAAAAAAE=,1GwAAAB4ACQAFUQAAAAAGAAA=,1CQAAAAAAGxsBCQAVAAMAEgA=,1UQAABgAACQAHUQAhAQAAAAA=,1AAAJAA8AAxsBAAASAgAAAAA=,1AAAAACcDLVEAADYAAKgAAAA=,1ADYAAAAAJwAtUQAAAABRAAA=,1ohIAAAAAAAAJvQBsAQAAAAA=,1AAkAAAAAABsKUQC9ABsAAAA=,1AAAAAA29AAABABIAAAAGAwA=,1AAAAACdRAgBUAAAAAKIAAAA=,1AAAAAAADHgMBUQJRAAAAEwA=,1AAAAAAAACQAPAAMbrAAAAAA=,1BgAAAAkAB2MAG6MAAAAAAAE=,1AAAAAABRAAAFdQAANgAAPAA=,1AAAAAAm9AGwcAAAAAAAAAAE=,1CQAAURsALQAJUaUAAAAAAAA=,1AAAbARUAAVMDAAAAAAAAAAA=,1NgAAAAAAAgAJwwBsowAAAAA=,1AAAABgAACQAPCVQbAQAAAAA=,1AIcAAABUCQAHUQAbAQAAAAA=,1AAIAAAMACb0AbDcAAAAAAAI=,1AAMAAAAAABs2ogEnAwAAAgA=,1AABTAD8GAwAKAAAAAAAAAAA=,1NgAAAAkAhwANAAAACQAAAAA=,1AAAAogAAAAADPwB1AAAAAAE=,1AAAAAAASCQAPAAMbCgAAAAA=,1GwAAAwkAB1EAGwEANgAAAAI=,1AAAAAAoAA6QBGxsAAAAAAAA=,1AAAAAAMALVEEAFEAAAAAEgA=,1AAAAAB4GCQAgUQAAAAAAAAA=,1NgAAAAAAAQAPbQEAUQAAAAA=,1AABRAIkAGwAKAAA2CQAAAAA=,1AwAAAAkAB1EAGwEAAAAAAAE=,1AAEJAAAAAGwBFQAbAAAAAAA=,1AABRAIcAGwAKABsAAAAAAwA=,1AAAAAHUAhwABAAACAKsAAAA=,1AAAAAAAAHgAJAAVRAAAGCQA=,1AAMACQAAAwAtUaYAAAAAUQA=,1EhIAAAAAAAABAA9sAQAAAAA=,1UQAAAKIAAFEAAAV1AAAACQA=,1AAMAACdTAgADGwAAUQAAAAA=,1AAAAAHUAhwABBgAbAAAABgA=,1CQAAACcALVEAAAEAAAAAAAE=,1AAAbAy0Aq1EDAFEJAAAAAAA=,1AAAbAy0ACVEDABIBAAAAAwA=,1AAAACQNRCxsAWgAAAAAAAQA=,1AAAbEhUAAVEDAAAAAAAAEgA=,1AAAAAAAAGwABAA9uAQAAAAA=,1ogAAAAMCBQABWgAAEgAAAAA=,1AAAbAC0ACVEDAAkDAAAAAAA=,1AABRAAAAAAANvQAAAQAAogA=,1AAMAAAAAAAANAA8bAAAbAAI=,1AAAAAAASAAAJvQBsUgADNgA=,1ARsAAAAAAQCrvQBsAQAAAAA=,1NgAAEgAAAFEAAAV1NgAAAAA=,1AgAAAKUABQABWgAAAAAAAAA=,1AABRAAAAAAANvTYAAQAAAAA=,1AQAANgAAA1oCGwBaNgAAAAA=,1CQAAACdRAgADGwAAAAMAAAA=,1AAIJG2AAAxsBAAAAADYAAAA=,1AAAAAFFRAxsAQBsJAAAGAAA=,1AAAAYwAAUr0ACQAeAAAAAAA=,1AAAAAAASA1ECGwBaAAAbAAA=,1AwAAAAAAHgCrHQVRAAAAAAA=,1CQAAAAkAB1EAGwEAAAAAAAI=,1AAAbAC8ACVEDAAAAABsDAAA=,1AAAAAAAAAGMAAAV1AAAbAAA=,1CQAAAA0SDxsAAAEAADYAAAA=,1ABsAAApRAL0AG6IAABsAAAA=,1AQAAGwAACQAHUQAbAQA2AAA=,1AAAAAA0ADyEAAACiAAAAAAA=,1NgAAAwkAhxINAAAAAAAAAAA=,1AABRAIcSGwAKEgAAAABRAAA=,1AAAAAAAAAFEEQQBRAAIAAAA=,1AAAAAABRAxsAPwAJAAASAAE=,1URIAAAMALVEEAgAAAAAAAAA=,1GwAAAA0ADxsAAKIAABsAAAA=,1ABIAAAAAABsAolInAAAAAAA=,1AKIAAAMABQCjWgAAAAACCQA=,1AwAAAAkAhwANAAAAAAAJAAA=,1AABaAAASAwAFAAFaAAAAAAA=,1NgAAABsAFRIBUQMAABsAAAA=,1BgC0AAAAG1ECUQQAAAAAAAA=,1AAAJAAdRABsBAKIAAAIBAAA=,1AAAAAwMALVEEAACiAAAAAAA=,1ogAAAB0AFQABVwMAAAAAAAA=,1ogAAAAAAAAABFQAnAAAAVAA=,1AAAAAwmihwANAAAAAAADAAA=,1AKIbAC0ACVEDADYAAAkAAAA=,1AAAAAA29AAABAAAAAAIABgA=,1AAAAAAAAAz8AdQAAGwAANgA=,1NgAAAAAAAAANAA8bAACiAAA=,1ABIAUQAAAz8AdQYAAAAAAAA=,1AAAAAApRAL0AHTgAAAAAAAA=,1CQAAAwoAA6IBGwAAGwEAAAA=,1AAMAACcALVEAAwAAAAA2AAA=,1AAASAAAAAwAtUQQAAAAAAAE=,1AAAJUQAAWr0AbKMAAAAAAAA=,1AAAAElEABwANAAAAAAEAAAA=,1AAAAAwkAhwANAAAAUQAAAAA=,1AAAAAAMALVIEAwAAUQAAAAI=,1AAAAAwMALVEEAgAAAAAAAAA=,1AAAAAABRAAAFdQAANgBRAAA=,1AAAAAAAAAAAKAwOiARsAAAI=,1AAAAAAkAsQADGwEAAAAJAAA=,1AAAAAApRAMQSGwAAAAAAAAA=,1AAADAAAAAwAtUQQAAAAAAwA=,1AAAAAFoAGwAPAAEAAAAGNgA=,1BgAAAAAACgADogEbAwAAAAA=,1AAAAAFoAGwAPAL4AAAAAAAA=,1AAYBAAAAAAABFQAnAAAAAAA=,1AAAbABUAAVEDAAC0ogAAAAA=,1AAAAAFoAGwMPAAEAAAAGAAA=,1UQAAAAkAhwANAAAAAAkJAAA=,1GwAAEgAAAaIKUQAeEgAAAAA=,1AAAAogkADwADGwEAAAABAAA=,1AABRAEEAAwAKAABUAAA2AAA=,1AAAAAAAAAasBUQAeNgAABgA=,1AAAAGwMALVcEAAAAAAAAogA=,1NgBRAD8AAwAKAAAAAAAAogA=,1AAAAAANaAhsAWhIAAAAAAAA=,1AABRAAAAAFEDAAGNAAkAAAA=,1AAAAAAAAAAANAA8bAAC0UQA=,1EgAAAAMVLVEEAACiAAAAAAA=,1AAAAAABjAxsAQAAJAAAAAAE=,1AAAANgpRAL2iGwAAAAAAAAA=,1ADYAAA29AAABAAA5AAAAogA=,1AAAAAAAGAwYtUQQAAAAAAAI=,1AAAAAAIAAAIDPwB1AAAAAAA=,1AgAACQNRAhsAWgAAAAAAAQA=,1AAAAAHUABwAJNhsAABQAAAA=,1AAAJNgdRABsBAAA2G6IAAAA=,1AAEAAAAAAFEDGwA/CQkAAAA=,1AAAAAB4AAVQCUQAAAAEANgA=,1AAAJAAAAHgABURRRAAAANgA=,1AABRAIcAGwAKBgAAABIAAAA=,1AAEAAAAbA1ECGwBaAAAAAAA=,1AQAAEgBRAAAFdQAAAAAAAAA=,1AAkAAAYAG1ECUQQAAAMAAAA=,1CQBRAIcAGwAKAAAGAAAAAAA=,1AgAAAA29AAABAAACAQAAAAA=,1AAAAAAAAG1ECUQQAAAAKAAA=,1AAAAACdUAgMDAAAAAQAAAAA=,1AAIJAAdRABsBAAAAAAMCAAA=,1AAAAG1oAG1EPBgEAAAAANgA=,1AAAAACcALVEAABsAAQAAAAA=,1AAAJAwdRABsBAAAAAwAAAAA=,1ABsAAAEAAAAJvQBsAQBRNgA=,1ABIJAAAACQAHUTYbAQASAAA=,1AwAABgkAB1EAGwEAGwAAAAA=,1AAAAAAAAAFEEAAUJAKIGAAA=,1AAAAAFEAABsBUQMtAAMAAAA=,1BgAAAHUAhwABAgMACQAAAAA=,1AAEAABsAFQABVwMAAAMAAAA=,1AAAAAAAbG1GkUQQAAAICAAA=,1AgAAUQAAAwktUQQBAAAAAAA=,1NgBRAAAAAFEAAQV1AAAAAAA=,1AABRAAAAAaQBUQAeAAAAAAA=,1AAAAAABRAAAFdQAAAAIKAAA=,1AAAABgAAAFEAAAV1EgAAAAA=,1AAAbAC4ACVEDAAAGABIAAAA=,1AAAAAABRBD8AUQAANgAAGwA=,1ABIAAAAAA1EUGwBaAAAJogA=,1AQAAAAkSB1EAGwEAAAAbGwA=,1AAAbAC0KCVEDAAAAogAABgA=,1AAAAAABRUQAFdQAAAAAAAAE=,1AFEAAACiAAABFQAnAAAAAAA=,1AAEAAA0ADxuiAAAAAAAABgA=,1AAAhAy0ACVEDAAAAAAAABgA=,1ADYAAAAADb0AAAEGNgAAAQA=,1AAAAAAAADQYPG1EAAAAGAAA=,1AAADABsALQAJUQMBAAAAAAA=,1AFEAAAAAAAMDPwB1AAAJUQA=,1AAAAAAAACb0AbAEABhwAAAA=,1AAMAAAAAAAANAA8bAAABAAA=,1AwAANgAAG1ECUQQAAAYAAAA=,1AAAAAA29AAABAABRYwAAAAA='};
+var PZ={e:'3AKgAAHcBmQArUVUDxgB1UQA=,2AFIEonZaMAAPUVUEvQlaGwA=,3BicSBlFwBOEBkx4eEFEDAwA=,3AxtsAT92nBIoDQBRVb0AXAA=,2AicAD15UBb0BWgAABgA2AQA=,3BhtsAZMANGMKAFFeqxZaDQE=,2ACc2B1FvBNgceAAAAFFRAAA=,3daIVAKwAAFENvQXGAHWlAAA=,2ADcAAHUTnAAfAAB4A6hSeQA=,2AAEAAHgANFEMBgAbAZA2HgA=,3DQAgGwEAJ1gPvQV2AQAAAAA=,2CQAAbwE2ACcNUQW9onUAAAA=,3AFEDowF4AAAoVBG9A3UbAAE=,3tCcABl5wAuEBeCcAIVEEAQA=,2CQAANloAMCcQYFUDAAAbogA=,2AAAbAAASKFEIbQQAAAAAAQA=,2ALQJAABRBL1akBUnDQAAAAA=,2AzZaADALEFEfAAB4BKhReQA=,2HgkHUQQAAGym2FJ4BgAAAAA=,2ABIAAA1RU70BdQAADVECHAE=,2JycGV1UEAGMNvQJ3AQAAOAA=,2ABIAACcDEFECbAEAUQAAAAA=,2DQEFGwEDAGwE4QFvAwAAAAA=,3AAAANgBRDL0FxgF1BgAANgA=,3XB4VRV4EAGwE4QCBAA0DGwA=,3AAADAQBRDaIFkFInAAAAAAE=,2AwAAAHghNFEKAAB4H6hReQA=,2BgBsN5AAMAAKDVEdGwEAEgA=,3AwEAGwBRDb07xgFaAAAANgA=,2AFoAAAAAKAMRbAQBADYAAAA=,3AAIAAA1sBeEAeCcAB1E5AgA=,2AQAGACQ3nAAoAFEEvQBcAwA=,3bwE2EicAAGwE2BOBAA0AAAA=,2CmwCbAEAAGwE2KN4AAAAAAE=,3AABaBjFREWwEAgAeAw9ROgE=,2AAAAAAA2KFERbAMAY6IAAAA=,3AQB1Ay5REXAEAFFeqC11DQA=,2AgAbHJAAMAENDQA4dlIFGwE=,2AwMAAChpCGwEAAB4BKhReQA=,2ABt1URUAEFMEAAknAKhRBAA=,3UQAAAChRERsFbAEANqIDAQA=,2AAkCAFEDvWx2PwAwDQ0UbAE=,2AB4AEFoMAGw3kQAVDV4CGwE=,2NlEADQBTcMEBh3gnD1E5AAA=,2DWMCG3YAMAEQW1QCdQEAAAE=,2AQAACgBWcL4Bkh4eRlEDBgA=,2dicVD1sDAGw64QFdAwAAAAA=,2AgAAAABRcL43hycnAAADEgA=,2AAAAoh4AEFdWbAEAAB0AAAA=,2AB4ARlEDAHUBnAYlAABREgA=,3bSiHD285AFENvafGCXWiAAA=,3HRIAbHZAnB4rW1QCbAEGCQA=,2UQAAAABRDL0FdVIAElMAAAA=,3AAYeY2G9BXcBACcKWFYeAQA=,2ogAABgAAJVERbAQAADY2AAA=,2AAAJNgBRDb0FJDcAAAkAGwA=,2AKIABgBRcL5APx4nClE7GwE=,3VB4AEFFdBL0E4QFdAAAGCQA=,2AAEAAB42EFFWbwEAAAEAAAA=,2ATY2NgBRDL0FdQEAAAAAAAA=,3BicABlFVBKIE4aN4AwAJBgA=,2Bh4AD15VIME/dXgAAAlRAAA=,2AKInABBaAmwBAKJaA703WgA=,2eQFBbB8AAG4E4gFdPwAAAwA=,2AFEEowFaJwBhUQUbAQAVAAA=,3HQAAACcAKwARbDoAAAAGAAA=,3BgAAAAAAKAZibAVsNwEAAAA=,2NgAAAAAAH1ERbAQCAAAAAAE=,2EgAAAQBRDL2ndQEAAFEAAAA=,2AAkAGwAAKAARbAQAAAAACQA=,2AgAAAHgANFqsAFEeAQ9RBAA=,2AAABEicAYRIFbBwAAAAAAAA=,2CQAAUQ3DAnUBAKIbAT8AJwA=,3UwAAUQ2+BasBdScAB2MeAAA=,2AQkDGwAAACANYVbAAHUAAAA=,3AKIAAG8ANFEObAEABgASAAA=,3bAo2GycAomwE2AqBAA0SAAA=,3AQAAAA0AX70FdQEAAwAAAAA=,2BgBso5AAFQANAQADDQAUbAE=,3AAAACSgAEWwFbAEAAAEJAAA=,2AFFv0Id1MAANATYAABQAAAA=,2CQkAAABaJy0QXgJsAQIACQA=,2AAAnIRBRAmwcAAABDVcCGwE=,2DSEFGwFaeDA0WwwAABIAGwI=,3CmwFG1sAgQA0Yw0AGwBRAAA=,3AAAnW2DCIHYBAACiCQAANgA=,3UQAAXl6/IMcBWgAAGwAAOQA=,2eAPDWnkAAFEfwwE/oicGAAA=,2AFQEogB1JycPV1ZwAQASAAI=,2AAAAAChRs3IDAFEEowFdBgA=,2XicFKlIDAFEKwwV1EwBRAAA=,2AAA2NlFVwL1bkAAnClEFHAE=,2AAB1AC0AEGQEAABRA6JSdQA=,3Gx9AB3gEABsE4wGBCQ0ANgA=,2Hh+QD28EABsE4dl4AAAJEgA=,2UgAAAFpbnBUoDVE5vQFaAAA=,3AAAAAApRDr0FdQEAURsBAAA=,2AAAeALJXBWx2AC0NWwIbHAA=,2AAkAAAACDVEFwwl1AAAAogA=,2UgS9oloAAGwD4Td4AAAAAAA=,2AgMAAB4AEFEFbAEAABsAUQA=,2ogAAogABDVECvQF1AAAAAAI=,2AKIAAHgAM1sNAKJ4A8RReAA=,2AAYCAHgANFEMAABaDRUOKAE=,2UQAAAABaeC0ZXg0AUQAAAAI=,2AAAAACcAD1EgbAEBEgAAAwA=,2AAAGEgAAJycQD1ZvAQA8AAA=,2UTYAAAAAClQFvQF1AACiAAA=,2dQ0SAnkBAGNUvQGQqycAAAA=,3AQEAbwE/eB40UVxwvgBdAwA=,3ogAAAABRDaUFxgF1AAAbAAA=,2AAB3AC0AEFMEAAAKZQJsAQA=,2CQMAAFoAMB8QYFUEAAAAAAA=,3bKM2ACcSAGwE4QFmNg0AAAA=,2AAAACQAAr1QFvQFaUQAANgA=,2UQAAPwBRrr0FdQEAAwAAAAA=,2AFMDonZ1MAAPUVUEtAB1qAA=,2dQ1+HSUBAFENvQVaowAApAA=,3AgAAACdRsr0CdRwAAAEAAAA=,3bwE/CR4JAFENvSCQAR4AAAA=,2pAAAKABTcL4BPycnD1EeAAA=,2AAACAwAAJwAQUVYevgFgGwA=,2AgAAUW8ANFsNAAB1AC0ACgA=,3AABsCpMSM1ENAAANFAJsAQE=,2ozkDACRbnDAoCgAeAAdRBAA=,2AAAAAAAADQCnvQF1SAAAUQA=,3AQknACsSEWymAABvA8xSXgA=,2ADYGAAAAJycQWFYeAQAACQA=,2AQByAT91MC0NChsAGxsAAAA=,2AA0TBRsTAAANUValx3ZaAAA=,2ABIAAAAAJVERbKYAAAYGAAA=,2W1WnJHYAAFENvQUmAQAAOQE=,2CQAAbAE5JycQUQJsHAIAAAA=,3BgAAACdRD72ndQEAAKJRBgA=,3AAASAwBaDb0grAF1AAAAAAA=,3AAAAAA1jDqIFdaMACQAAAAA=,2ADcAAAAAClEFvRN1AAAAAAA=,2AAACBgAAKGMIbAQAG1EAAAA=,3BgAAAHU2LlFibgQAAAYAAAA=,2AAAAG3ZCFSdhUQQACaMAAAA=,2AwAAAChaCGwEAAB2CmMOKAE=,3AFEAAHgAM1EObFIAAAAABgI=,2NgkAACRbnAAoAAB4A8NReQA=,2ABsAUR4AYVEFbAEAUQAAAAA=,2dQ0VBSUKAFFevVYkAQASCQA=,2byg2BngEAFENvQJ1HAAAAgA=,3AAAAoicAK1ERGwQAAAAAHQA=,3CQAAGwBRpr0E2AF4AAAbCQA=,3AKIAAFoAgQk0UV4EogFaCQA=,3UQADDVFTHsdbnC0oDQAAAgA=,2AwMJAABRDb0FWgEAAwYAAAA=,3AAAAAABbDb0FxjdaogAAAAA=,3ogAAG3gANFcPUQQAAACiUQA=,2AAAAACcSEAAFbAEAVwAAUQA=,2Eh4AIl5VBaVbdS0ArwAAAAA=,3W4rCHFsAAGMNvSDGHFoAAAI=,2AAYnABBRBRujAAAbAUAAJwA=,3UwAAAAByBOEBiicnD1E5AAA=,2AAkAACgCEWwEAAAnAQZRpgA=,2AAAABgAAJx4QYFYfAQAABgI=,2BicAWFvABXUTAABjA71bWgA=,3ABu0AABRDb0CkAEnAAAGAAA=,3URIAAHgANFQOGwEAAFEAAgA=,3HQpRAmwBAFEMwAWQAScAAAI=,2Ah4bRVFVH6NAkCcnAAAANgA=,3CmwCbAEAJ1EQvR11NwAAAAA=,2JzYHUVQGAAANUSC9AHUDAAA=,2AAACAHg2NFEKAAANADhsAQA=,2GwAAAAADKGMRbAMAAACiAAA=,2ClEgGwEAeAA0UVsAAAEANgA=,2EgAAOScAEFE4bQEAAAAAAAA=,3AB0AAABRDb0FxgFaAAAAAAI=,2AAAnCw9RVmwBAHgDxFF4AAA=,2AgAAogAADQAFvRN1AAAAEgA=,2EgIAEihaYmwDAABeA79sdgA=,2AACiUQAAHicQYFZvAQAGAgA=,2AApXAmwBAHIE2AF4GwACAAA=,2HgAPYwQAAAANUTu9G3YAAAA=,2AAAApScAEFECbBwAAAAABgA=,3BgAAbHaInB4qUQQDAFEAAAA=,2ABIAG15Uv75bdQAANwAAAAI=,2bAE/AB4AAFqmogGQAycJogA=,2AIcAAAAAKFEIbAQAADYAAAA=,2AwAAAQBRBL0AkAAnClEFIQE=,2ACcbD1FvcNmIeB4AoqIAAQA=,2rFECbHYAMAZYUVUEogFgEgA=,3Bh4JRlFUBL0E4aNdAAAAAAE=,3AAYAAAAGDWwF2QF4AAAAAAI=,3AScbD1FUBMYAnCcoD1E5AAA=,2AAAAACcAsgAFbAEAAKIAAQA=,2ABsAongANFQKADYNUQIbAQE=,2DVECGwF1Jy0QWwJsAQEABgI=,2AgEAACgAEWwEAABRBKgSdQA=,2ElEAClFccL4BhycnIlFUAAA=,2G1EAAHWiFQYQUVUDogF1NgA=,2GzYAAF5Vp75adQAANlEAAQA=,2AAAbbAE2JycPW3FxHAEABgA=,3EgYAAABTBKtbnBUoDQAAUwA=,2AB4AEF5UBb11dhIADQIAAAI=,2JwAGUR8AAAAoVxEbpgAAEgA=,2IQGHGyiKACcNUXG9AVoDAAA=,2Ah4bKlJDACclUbNsBAAJAgA=,2AAAAUScAD1EFbAECCQAAAAA=,3ABsAAABXDb0FkBweAAAGAAA=,2AGMAAABRH6NAkCcnDVECHgE=,3HAAAAQB1bxI0Xl9vvgFaAAI=,3AAAAAAACDVEOvQJ1CgA2ogA=,3HhMQUQMBAGwD4QGBAA0AAAE=,2AAAnDQ9WIG0BABIAAAMbAAA=,3rFEFG2QAAGwE4RxCACcAAAE=,2JycGV1UEAGMNogV3CgASAAA=,3AQBvAZABmQAoAFED0Al1AAA=,2dR4SRl4DAGwE4QFdGwAAAQE=,3EgAAAB4DK1oRbAQAAAAABgA=,2ACcSBlEEAGwE4VF4BgAAAwA=,2AAYJAABRBL0BPwAnDQAFIQE=,2AKUnAA9RcXM3ACcAUQAAEgA=,3dxISAF4EonZbSwAxAK8DAAA=,3BhKiAABRDb0CxgF1AAAANgA=,2AAAAAA1RAr0TdgAAQFEFGwE=,2AAB1Gy0AslEEAABvNz8AHgA=,3AAAAAQ1UC8MFdTcAAAAANgA=,3CmNWGwEAAGwE4QCBAA0TAAA=,2ADYAAQAAAGx2kC0wQAoANgA=,3rwACbHZ2nBIqXgQAAACkEgA=,3rBsFbAEAJ1IQogV1AQAACQE=,2CgMAAABRH70AkAAnDQA4bAE=,2EgAAoloAMAAQXgQCbBwAAAA=,2bwTNUV0AAFFeqAV1AQAAWgA=,3AAAAACVREWwFbAECAAAJAQA=,3AAABCW8ANFGwbwEAAAAAogA=,3AAAAEgAJDWwF2FJ4AAA2AAA=,2Nh4AD1FwBOFbXS0ArwAABgA=,3AAB1EoEAM1ENAABuATZUJwA=,2AFIAAChREWwDAAAAQwAFGwE=,2AKsAAHgbNFFdAFF4vRNaDQA=,3BgsSAFFUpsd1nAAoDQAXGwE=,2AFE5ogF1JwAQUQUbEwAACQA=,2XicFIVIEAFENogV1NwAABgA=,2AFQAAHgAGVINAFEErFF6GwE=,3pAAACShREb1VWgAAClcCbAE=,3AFEepQF1Jx4rYWJvAwAApQA=,3AFEDAAAADVEOvQJ1HAAAAAA=,2UQOjAXUAAFoKvQV3AQAABgA=,2ABt3ADAbYFEEAFFVpr5aWgA=,2AAAnFBBjVhsBAFEDxwFfbAE=,3AABsAUEKnAAoAAAbDQAFGwE=,2AIcDvXV1FQAQUQQAAFEAAAI=,3AgAAAA1RDr4CdaMAAKIAAAA=,2AAABAwBscOJAXR4ADQY7GwE=,3ABsAUQ29BasBdcAAB1QEAAA=,2ogAAAABjBL12kBIeDQAAGwA=,3AB4SIlFVBMYBSycoBlGmAAA=,2CQAAEnV1LRKyXgQAAFEGAAA=,3DTYFGwEAJwArARFsBAAAAAI=,2AAAeALJXBWxbABUUDQAAogA=,3ACcCBlFeBL0E4RxdAAAAAAA=,3AwYJAAAAKFERvwN1AAAAAAA=,3AwBRGwE/eCc0UQtvAQAAAAA=,3ElEbDQBucOJakzAnCgBRUQA=,3AQAnW2HCICUBADwKAAVvAQA=,2DQYCbAEAeBI0UVsDvVJaAAI=,2ADZuAZAAFQYNAFEEogFaAAA=,2AAAAAB4AEFEFbAEAGwIAEgA=,3AACiAABRDaMFkAEnAAAbGwA=,2AAAAIQAAAAAoDRFucAEAAwA=,2JwMHWgMAAGMMvQV1LgAAAAA=,2AAAAAABRDaIFdwEAAAAbNgA=,2UTq+AFoAABsBkDwwAA0AAAA=,2pAMAongANFEKAAAKUQJsAQA=,2AzYAAF0DNFENAABeVb8bWwA=,2AAAADV5TIKMBdQAABgkSAAA=,2AAB3ABUBEFEEAAAeDVhlHwE=,2AKIACQBaJy2yDQVsAQEABgA=,2AFoeABBjcW1AAh5yATYAJwA=,2WngtBl4EABsE4VJ4AAA2WgA=,3ohIDAFp1gRU0Ww0AAAYACQA=,2AAMAAABXDL0FdQEAAAIAAAA=,3AAAAACdRB70FdRwAAKMAAAA=,3Y1EAAFFwpeJbkwAnDQACbAE=,2OAYAAF0GNGMNAFEfvpBaHgA=,3JxIHUQMDNnUBnAAxDVsCGwE=,3owADAFFUpsd2nCclB1FUAAA=,2AwAADV4UIL5bdS0ADQCiAAA=,3AAl1AIE2NFEMAgAAClECbAE=,2CgBWdQEAeBszUV4EogFdAwA=,3AgBvAZABSwYoAAAKUQUbNwA=,2UQS9AFoAAFMMvwV1AQAAAQA=,2AAAAUVu9BXWjAFEEwwBaAAA=,2bwE2ACcAABsBkAAwHA0DGwA=,2GwAAAHVbnBUfDQAACQY2UQA=,3AgAAAApRDr0FdQEABgAAogA=,3EgAAAB9REWwFbBMAAAMAAAA=,3dXgtB1sDAFGvwwLGAXUJAAE=,3CTYAG3aQgR4ZUV4EogB1EgA=,2ASEAongANFEKAAB3DWYCJQE=,2AAAAAABRCsMFdQEAUQADAAA=,2AAEAtAAAJVERbAQAAAAVAAA=,3PAkAACVREb8EdQAADQAFHQE=,2AgAADQ1ccaMBdQAAClcOGwE=,2BgBsAZAJMAAKBgAADVEdGwE=,3UTYAAFFwpeJbkycnPVGlAAA=,2UQAAbAE2JycQAAVsAQAAHAA=,3DQMCbCUBnCcrWFUDEgA2FAA=,3AAAABgBRDb0FxgFaAAABCQA=,3AAYKAABRDb0FkAEeEgAANgA=,2AAYAUQ2iBXUBAAlbAAVsAQA=,3AA0SVhsBAGxV4gGKACcJAAA=,2EgAAEwBRCr0FdQEAABsAAAA=,2olEEowFdJwAPUQVsAQAABgA=,3AABRHgE/XSc0UQ5sAQAAAQA=,2AQkGAFFVwb1bkCceBlEEAQA=,3OAMAAABRBKtbnC0oDQAAGwI=,3ABInUQ+/BXV2ABIAXgAANgA=,2bAqHNh4AbG03PycwAA0AGwI=,3AAAAAQ1RC8M7dQEAAAAGAAA=,2AwBsAYc2MAANAAAeAxBRAwE=,2NgACAgBsA+FbeDAACgAAAAA=,3AAA4AwBRcMeHnB4oClGtbAE=,3DQACbwEAHlEQvTt1NwBRAwA=,2URsCAAAADVEFvQFaAAASUQA=,3AABRCQA2AAAfUWLBpnV1AAA=,2rFQCbHYAFRIQUQQACQAAEgA=,2AQAAAAAAKFERG1UAAAASAAA=,2UScAB15UBaIcdwAAKFoCGwE=,2BgAAEgBRcL4/kG8nAKIAAAA=,3EhsbAAAAJVcRbAVsAQASAAA=,2AAIABihRER0EAgAnQw9WHgE=,2UQAAAACiJwBgWwVxbQEAVAA=,3AIdwo5FbnAAfAABaEhUADQE=,2AAIAAAAADVEFvQB1NgABBgA=,2Cg0FcRwBAFENoyB1NwCiUQA=,2BgB1ADAbB1EEAAAeCQdjBAI=,2ABQAAAAADVEFwApaAAAAogA=,2AFF1EjAJWFEEAAAlUpUbHwI=,2G7WQAG8DvW1bPwAwAA0SUQA=,2UVQAAAB1JxIPXgVsAQAAEwA=,3GwAAAHUAMQARbwQAAAAAqwA=,2UQSiAHUbAFEEvQqQAB4SAAA=,3CaIAAHUJLlERbAQBAAAAAAA=,2AAAnOA9RBWwBAABsEzYAJwA=,2dQASAA0BAAAKVwW9UnUAAAA=,2AAAAAg1aBaIBdScABmMEAAA=,3CaQAAFFUwcdbSx4oEFEDAAA=,3DVcCG3YBnAAiXlUCG2QDAAA=,2AFsAAABRBL12Py0nCgAACQA=,2CQEAACcAB1IFbAEAABsAAAA=,2r1ECHgEAJykQYFNvAQAACQA=,2AyEAAABRcL43h8knAAAACQA=,2ACcDD1FUHr5AkCcnAAASCQA=,3AAAAEnUAMQARbAQANhIAAAA=,2AAAAACcAEACnbwEACQAAAAA=,3CaQACQ1sAuMBeAAAClECbAE=,2ADgAAABRH74/kMknDQA7GwE=,3DV5THRwBAGwE4wqBGwoGAAA=,2DRtWGwEAeB4zYF4EAAAAAQA=,2olEEvQBaJx4QYFYfAQBRCQA=,3AAYSAAAADWwF4xxdAAAAUQA=,2UTYAonUALQAQXgQFJAEACQA=,2BgAAAHgbNFMMAAAeDQ9ccAE=,2ADYJAQAADVECvQF1ogAAAAA=,2AABsSYcAMCdeB1F4AC0AWwA=,2AA0SAmwBAGwE4QpdAAAAAAI=,2EgAAClFWH74BkAAeGwAANgA=,3AApRAmwBAGwE4Qp+Gw0AogA=,2AAAJAAAADVcCvRN1GwAAAAA=',
+m:'1AAAAAFFVwL1bXAAwAAoCAAA=,1HgAPUQQAAGwNNgJ4AQBUAAA=,1AAAbHJEAHgAQUVQEogB1AwA=,1ADYAAAAAeQAUbA0CAKIAAQA=,1AwAAAHkGFGwNAABRA70BWgA=,1ABsAAgAAeQAUbA0AAAAJAAA=,1AAAAWiiiBnUEAFEDvgFaGwI=,1AFEAAwBRKKIGdQQAAAAAAAA=,1XhIFGxwAAG8NNgJ4AQAAAAA=,1CQMAAFoAMCcKYFYeAQAAAAE=,1AABaBjAbClEFHgEAAAAAAAA=,1HhsPUwQDAFEoogZ1BAAAAAA=,1JwBXUQQAAHYEtAB5AAADAQA=,1AAAADQpTcRwBkAYeAABRNgA=,1WgAwAwoAAFEoogZ1BAAAWgA=,1WgO9AHUDAFEoogZ1BAAAAAA=,1UR4AB1FVA70BWgkwAAoAAAA=,1UQABAB4AEFEDvQFaAAAAAAA=,1AIcAAFpaMC0KXgUbAQASAAI=,1GxwAongBPFEoAAAKUQUbAQA=,1OQAAAABRb743WicwAFsAAAA=,1AAlaADAAClEFGwEAAAAAAgE=,1AAAAAApRBR4BkCceKlEDAAA=,1NgAAAABsDTakeAEAEgAAAAA=,1ADYAGwAAHgAQXgPCHFsAAAA=,1ABIBAHgBPFEoAKJsATYAJwI=,1HgEHUQQAAFooogZ1BACiNgA=,1AAACAB4AEFMDvQFaAAAAAAA=,1AQAhAZB1HhIQXgMAABIAAAA=,1AAAANgAAClcFGwGQAB4AAAI=,1GwACAAAAeQAUbA0AURsAAAA=,1AAAAAwBRb743WicwAAoANgA=,1AABaADA2ClMFGwEAAAAAAAA=,1JwAHWqUAAHUEtAB5EgAABgA=,1AAAAAAAAClEFHQGQAB4BAAA=,1AKIbAZAAHgMQUVQDvQB1AAE=,1ADYAUSioBnUEAACvAwUbAQA=,1AAoAAHg3PFEoAFFRBKIAdQA=,1AABaADAAClEgGwECAAACAAA=,1AAAAAB4AEFMDvQFaAAAAAAE=,1YwO9AHcAAGwNNgJ4AQA8AAA=,1AgEAHh4AEFEDvQFaAAAAAAA=,1AAkAAB4AEFEevQFaAAAAAAA=,1AAAACQBRKKIGdQQACQAAAAA=,1AAAAAHg3PFEoAABRA71jdQA=,1AAAAAHkJFGwNAgAADQACbwE=,1AABcADAAClEFGwEAAAkAAAI=,1HgAHUgQAAFEoogZ1BABRWgA=,1DQICbFsAMAAKUTsbAQAJEgA=,1ClMFGwEAAGwNNgJ4AQAGAgA=,1AAAAAHgBPFEoAAB1CRIArwA=,1AFEAAABRKKUGdQQAGwAAAAA=,1AABaADACClEFGwEAGxsAAAA=,1AAABAFFRA71bWjAwCgoAUQA=,1ABtaGzAAClEFGwEAAABREgA=,1AAAAUSiiV3UEAAAeABBTAwA=,1AgAbbZE/HiAQUQMAAAA4AAA=,1AAAbAZAAHidhV1QEAAAACQA=,1ABseGxBRHr6IWicAAAAhAAA=,1CQAAAABRb76IWh4wAAoAogA=,1NgAAAAAAClEFGxOQAB4AAAA=,1DTYFHAEGHgAQUQO9AVobAAA=,1WgAVAw0AAHVVtAB5AAAAAAA=,1AKIAAApSBRt2kBUeCgAAAAA=,1JwAHUR4CAGwNNgJ4EwAAEgA=,1AACoNgAAeQAUbA0AABsAAAA=,1AAAAAABsDTgCeAEAABICAAA=,1AAAAAHgBPFEoAAANCQUbAQI=,1ADYcAZAAHgAQXgMCbAECAAA=,1ACcAWFEDAGyvNgJ4AQA2AAA=,1AAAJAwBaKKIGdQQAEgAAAAA=,1UR69AHcAAHUEtBt5AAAANgA=,1AABXAABSA712WhIwDQoAogA=,1AABRAABRHsGRWh4wAFsGAAA=,1ABsAAHgKPFEoAABsATYDJwA=,1BgYAUSiiBnUEAAABCgkFbAE=,1AABaADAAClEFGwEABgASGwA=,1EgAAAFwAMBIKUVYevgB1UQA=,1AAAAYyiiBnUEAKJ1AC0ACgA=,1CQEAAKJUA71bWjAwCgoAAAA=,1JwAHUgMDAGwNNgJ4EwAAAAI=,1JwIPUQMBAFEoogZ1BAAAAAA=,1AQAAAHgBPFEoAgAeNrJRAwA=,1DQmnGwEAAFEoogZ3BAA2AAA=,1GwGQAB4AAHUEtAl5AAASAAA=,1HgAPUwQAAGwNNwJ4AQAAAAI=,1AQAAAABsDTYCeAEAAAEAAAA=,1AicAV1EEAGwNNgJ4AQAAAAA=,1CQAAIQE/HicQUTm9AVoJAAA=,1AAAAAAAAeQAUcg0AAAAAEgA=,1AAkeABBjHr6IWicANgACAAA=,1AAABAFp4MC0KWwUbAQAJCQA=,1AAYAEh4AEFEDvQFaUQACAAA=,1CgAFbAEAAHWmtAB5AAA2AAA=,1ACcABltVBRsBkAMeNgAAAAA=,1AABaADAAClEFGwEAAAYJAAA=,1DQICbAEDAGwNNgJ4AQAAAQA=,1EgAAAApRIBxAkCceGwAGNgA=,1AAAAAHgBPFEoAQBjA71SWgA=,1ogYAAFpRMAAKW1YgHAEAogA=,1ABIAAAAAClcFGwGQAB4GAAA=,1AB4AEFEDAGyvNgJ4AQAAGwA=,1AAAANgAAHgIQW1TCJVsAAAA=,1AAYeABBRb75AWh4AAAAAAgA=,1AAACAAAAClE7GwGQEh4AAAA=,1AABaCTAACmMFGwEAAAAAAAA=,1bAE/AB4AAGMoogZ2BAA2AAA=,1UQSiAHUAAFQoogZ1BABRCQA=,1AABcADAArFEFGwEAADYGAAA=,1UQSiAVoAAHUEtAB5AwAAogA=,1ABs2bAE/Hh4QUQO9AVoAAAA=,1WwAwAAoAAG8NNgJ4AQAAGwI=,1AFEAAB4AEFEDvQFaAAACAAA=,1AAEAWiiiBnUEAABRBL0AWgA=,1AAAAAHkGFGwNAABaVDAACgA=,1AAAAQwpWIBwBkQAeAwAAAAA=,1AAAACQpaBRs3kAAeCgAFcgE=,1NgAAUSilBnUEAABaABUADQA=,1BgAAAFp4MC0KWwUbAQAGGwA=,1AAAAEgBjKKIGdQQAAAAACQA=,1ClEFLQEAAGwNNwJ4AQCiAAA=,1AgIAAApaBRsBkAAeQFEFGwE=,1UQO9AVoAAHUEtAB5AAAbBgA=,1AAAACQAACmUFGzeQAB4AAAA=,1AAYAAABRKKIGdVUAAAA2AAA=,1AgAbHJE/HicQUVQAAAMAGwA=,1UR+9AFoAAFEoogZ1BABRAAA=,1BgMAUSiiBnUEAAAADQYCbAE=,1ADYeAGFUwL12WgAAAwAbAQA=,1AAAAEgAAeQAUbA0AAAAAEgA=,1AAAAG1uHMCkKUQUbAQADAQA=,1EgAAUSiiBnUEAABsCjYAJwA=,1WgktAA0AAFEoogZ1BABRAAA=,1ClEdbAEAHgAQUQO9tVoAAAA=,1GxIANgBRKKIGdToAAAAAAAA=,1ogAAAHkSFGxeAAANAgJsAQA=,1HgCyUQMGAHUEtAB5AAAAAAA=,1NgAAAHkAFG8NAAB1AC0ACgA=,1ABIAAHgBPFEoAAAeCpCiHgA=,1AAAAUSilBnUEAAABClECbAE=,1qwAAAFoAMAAKXgUdbQEACQI=,1ACcABlEEAHUEtAB5AABTAAA=,1ABMAUSilBnUEAAAbUpAAHgA=,1AAAAAgBRb75AWh4wAAoAUQA=,1AAAAAHgBPGMoAAAbAZBaHgA=,1AAYAAAAAHgCyWwPCbVsAAAA=,1ClcFGwEAAFQoogZ1OgAANgA=,1ogMAAFoAMCcKV1YfAQAAAAA=,1AAAAAFoAMAIKXjsdbQEAAAA=,1AAAAAAB1HhUQWx69AVoAAAI=,1VAS9AFoDAGwNNqR4AQAAAAA=,1dQASAA0AAFEopAZ1BAA2NgA=,1AG8GB1EEAFEoogZ1BACiAAA=,1DW0CGxwAAHWmtAB5AAAAAAA=,1AABaADAAClcFGwEAAAAJAAA=,1AFEGAAAAeQAUbQ0AAAAAAAE=,1CgAgbZEAHgAQUVQACaQAAAA=,1DQAFGwECAFEoold1BAAbAAA=,1AAYAAAAAClEFGwGSAB4AAAA=,1AAIAAHkSFGwNAAANCQUbNwA=,1BgAAUSiiBnUEAAAKUQUbAQI=,1GycABlMEAHUEtAB5AAAAAAA=,1NgBRAABRKKIGdQQAAAAAAAA=,1JxsHUQMAAGwNNgJ4AQAAAwA=,1AFE2AAAACmMFGwGQAB4AAAA=,1UQAAHgE/HicQUQO9AVoAAAA=,1dwkSAA0GAGwNNgJ4AQAAAAA=,1ABsANnkAFGyvAABaAC0AXgA=,1AAADGwBRA71bWrcwDQoAAAA=,1AAEAAB43EFEDvQFaAAAAAAI=,1AwAbAAAAeQAUbA0AABIAAAA=,1AAAbBgBRKKIGdQQAAKIAAAI=,1AgAJAABsDTYCeAEAAAAAAAA=,1ATYDAAAAW1EFGwGQAB4AAAA=,1AAASGwBRKKIGdQQAAACiAAA=,1AAAAAABRKKIGdQQAGwEAAAA=,1ABsAAAAAeRIUbA0AAAAbAAA=,1AAAAAAAAeQMUbA0AAKsJAAA=,1AAAAUR4AEFMDvQFaAAAAAAA=,1ABIAAHgBPFEoAABRBKIKWgA=,1CQAbtZAAHgAQW1QFGwEAGwA=,1ogAAAApRIBsBkB4eIlEEAAA=,1BgkAAFFUwL5bWgAwAAoGAAA=,1AFIEvQBaHgAQUVS9AVoYAAA=,1CocgHJEAHgAQVwMAAAAAAAA=,1AgBaADAAClEFGwEAAAASAAA=,1GwAAAABRA74BWicwB1sDAAA=,1UQADJVFTb74BWgAwBgoAAAA=,1CR4AB1tVBSETkAAeAAAANgA=,1AABaADAAClEFGxMAAAABAAA=,1AAAAAB4AEFoDvQpaAAADAAA=,1AAAANh4AEFEDvQFaPwAABgA=,1AAAAEgAAeQAUbA0AAAA2AAA=,1AGMAAApRBRt2ki0eCgAABgA=,1ABIANnkAFGwNAAANAAJsowA=,1AFEAAAAAeQAUbK8AABISAAA=,1BgAAAABRKKIGdgQAAAAAAAE=,1AAAAAQBsDTYCeAEAGwAAAAA=,1AAAbAZAAHhIQUVQEzwBaAAA=,1UQAAAHgBPFEoAAA2DVFTGwE=,1UQAAVyiiBnUEAAAAKFoCGwE=,1AAAAAAAAeQAUbA0AGwBRAAA=,1AB4BD1QEAHUEtAB5AAA2AwA=,1ElEAAHkAFGwNAgB1ABUAWwA=,1AAAbAZAGHh4QYVQDAAA2AAA=,1BgASAAAAClIFGwGQAB4GAAA=,1AAAeHJBRHgAQXgMFG6MAAAA=,1ADYAUSiiBncEAABRHqKjdQA=,1JwAGWgQAAGwNNgJ4AQA8AAA=,1AAAAAAASClMFGwGQBh4AAAA=,1EgAAAApSBRtbkBUeDQAAAAA=,1DVICGxMAAHUEtAB5AAAGAAA=,1AAAACgBWb74BWlcwAAoAAAA=,1UQO9AVoAAHUEtAl5AAAAHAA=,1CloCbAEAAFEoogZ1BAAAEgA=,1AAsAbFs2MCcKUQUbAQAJUQA=,1ABsAAB4AEFoDvQFaogAAAAI=,1AAAAAABRKKIGdQQAAAMAUQA=,1AFEeABBRA712WhUAJQAAAQA=,1UR4AB1FVA70BWgAwAAoGAAA=,1AAAAAABRKKMGdQQAUTYAAAI=,1EgAbAZAGHgAQUVQDvVF1AAA=,1AAkAAHgBPFEoAAAnCQZROgA=,1AAAAEnkJFGwNAAAADQAFGwE=,1AwAAAgBRKKIGdQQAAAEAAAA=,1HgAQUTkAAHUEtAl5AAADAAA=,1AwBaADAAClEFGwEAABIAAAA=,1AAAAAApRcRxAkG8eAAAAAAE=,1AAkGAAAAeQAUbA0AAAAAAAA=,1ogAAG1uQMB4KUSAbAQAAAAA=,1HgAAEloAMAAKW1YgHAEAAwA=,1DVECGwEAAFEoogZ1VQAAAgA=,1AFEAAAAJHgAQUVTAvltaAAA=,1AAAAAB4AEFpUvQFaAAAAAwA=,1AwAJAABsDTYCeAEAADYAAAA=,1AFtRBRsBAHINNgJ4AQAGAAA=,1AAYAUSiiBnU6AAAAClECbAE=,1AFEfvpBaHgAQWgMAAAASVAA=,1BhIAAAAAHgAQUVTBo1p1AAA=,1UQAAAHkAFG4NAAB1VxIADQA=,1AAAACgBsDTYCeAEAAAASAAA=,1AAAAEnkAFG4NAABsAYcGHgA=,1AFEEolp1MAAKUQUhHAAAAAA=,1AABaADA2rFEFGwEBAAAAEgA=,1NgYAAHg3PFEoAAB1ABUACgA=,1AAAAUSiiBnUEAABsUjYDJwA=,1G6OHACcAAGMoold1BAAAAAA=,1BgAAAABRA712WhUwJQoAAAA=,1AKIAAHgBPFEoAFEEvgBaAAA=,1AAAeABBgA70BWicAWGMDAAA=,1cgE2ACcAAFEoold1BAAABgA=,1DVECGxMAAFEoogZ1pgAAAQA=,1DQAFG1sAMAAKUQUbCgAACQA=,1AKIAAHgBPFEoAgAeAAdjBAA=,1AAACAABsDTcCeAEAAAAAAAA=,1AAAeABBUA712WhUACgAJCQA=,1AAAeAGFewL1bWgAAUQADAAA=,1ADwAUSiiBnU6AAB1ABUbCgA=,1AwAAAAAAeQAUbA0AAAADAAA=,1AB4AB1tVBRsBkKIeEgAAAAA=,1NgAABgpRVhsBkAAeClECbgE=,1AAAJUQAAeQAUbA0AAAAAAAA=,1AQ0GAmwBAGwNNgJ4AQAAAAA=,1AKIAAApRBRujkAAeDVECGwE=,1AKIAAHgBPFEoAAAAClICbAE=,1JzYHUQMAAHUEtAl5AACiAAA=,1AIemogFaHgAQVAO9AVoAAAA=,1AAAAAAAAClGnGwGQAB4bAAA=,1AAkBAB4AEFcDvQFaAAABAAA=,1CQAAEgBRHr6IWicwAAoAAAA=,1ACcAD1EDAFEoogZ1pgAAAgA=,1ClEFGwEAAFEooqh1BAAAOQA=,1AACiCQBRKKKodQQAAAAAAAA=,1AKUAAKxjBRsBkCceB1EDAAA=,1AQAeCRBRHr5AWicAAAAAqAA=,1AFEAAAA2ClIFGwGQCR4AAAA=,1AAAAAAAAClEFGxOQAB42AAA=,1GzYAAAAAClEFGwqQAB4AAAA=,1AA1RUxsBAGwNNwJ4AQCiAAA=,1AAAAbFuNMB4KUQUdAQAAAAI=,1G6xRAmwBAHUEtAB5AAAGAAA=,1ABQAUXgBPFEoAAANAAJsHAA=,1AAAAAwASeQAUbw0AAAAAUQA=,1AAAeAGFVpb12WgAAAFEJAQA=,1ABIAG3gBPFEoAFEDvQB2AAA=,1dQASAA0AUXUEtAB5AAAACgA=,1AAkBAB4MEFEDvQFaAAAAAAA=,1UQO9G3UAAGwNNgJ4AQAAAAI=,1BgAAAAAAeQAUbA0AAAASAAA=,1AFEfvpBdHgAQUaUAAAEDAAA=,1Ex4AB1FVA70KWhswAAoAAAA=,1DQAgHJEAHgAQVAMAAAYANgA=,1AAEAAFoAMB4KWFYfAQAJAAA=,1AwAAUSiiBnUEAFEEqwB1AAA=,1UQYAAAABClEFIQGQAB4AAAA=,1ADYAUSiiBnUEAAAeEgdRpgA=,1AApRBRsBAHUEtDZ5AAAAAAE=,1AAAAG3kAFGwNAAB1ABUACgE=,1CRIAUSiiBnUEAAANAAJsAQI=,1AAAeALJRA70TWgAADQACbAE=,1AAAAoloAMAIKXgUgHAEGEgA=,1dQASCQ0AAFEoogZ2BAAAAAI=,1AAIAAFFVpb5bWgAwG6wAAAE=,1AAAACltWIBwBkTYeAAABAAA=,1ogAAAHgBPFEoAQAbCpASHgA=,1BgAAAAAbeQAUbA0AAAAJAAA=,1DYekGwEAHgAQUQO9AVoAAAA=,1AQADCQB1Hi0QWwO9AVoAAAE=,1JwBXUQQAAGwNNgJ4AQC0CQA=,1WgMwAAoBAFEoogZ1BAAAAAA=,1AAAAogAAeQAUbA0AAACrAAA=,1Hh4QUQMAAHUEtAB5AAAAAAA=,1NgAADQpWIBwBkAYeAAAACQA=,1AAAeAhBRA70BWskAB1pUAAA=,1AgAbAZAAHgAQUVQEorVaAAA=,1AAYAAAAAeQkUbK8AAACiAAA=,1AFEbAZEAHgAQUVQDoqN1AAA=,1AAAAAABsDTakeAEAogAAAAA=,1ADgAAAA2eQAUbA0AAAAAAAA=,1AABaADAArFoFGwEAAAAAAAE=,1DVECG1IDAGwNNgJ4AQAbAAA=,1AAIAAB4AEFEDvRxaAAAAAQA=,1WgAtAF4AAFEoogZ1BAAAAwA=,1AABaADA2rFEFGwEAAAAABgA=,1AgCiAABRA70BWicwD1sDAAA=,1CwAAAABUA71bWhUwDQoAogA=,1HgAQUQMGAHUEtAB5EgAAAAA=,1AAAAAFoGMAYKUVYfowFaAAA=,1AAACAABRKKJXdQQAEhsAAAA=,1ABsDAABsDTgCeAEAADYAAAA=,1UQAAUSiiV3UEAABRA78AdQA=,1AAAAAAA2eQAUbw0AADkAAAA=,1NgYCAABsDTYCeAEAAAAAAAA=,1AAASAAAAClEFG6OQAB4AogA=,1NgAAUSikBnUEAAAADQACbAE=,1AABaADAAClIFHQEAAAEAogA=,1HAAAAB4AEFEDvQFaAAAAAAA=,1WlEVAA0AAGwNNgJ4AQAANwA=,1GwAADQBTb74BWgAwEgoAAAA=,1AAABAFoAMCesYFYeAQAAAAA=,1BgA2AAAAeQkUbA0CAAAAAAA=,1ADYeABBRb743WicAURIDAAA=,1AAAeBhBRb743WicAAAAAqAA=,1AAAACgBob74BWxswAQoAAAA=,1ABtRAABRKKQGdQQAAAAAAAI=,1CaxRBRsBAHUEtAB5AwA2AAA=,1AAAACR4AEFEDvQFaAAABAAA=,1AAYAAABRKKIGdgQAAACiBgA=,1AA1RpBsBAHVVtAB5AAAJAQA=,1qAAAAHgBPFEoAABRBKIBWgA=,1HgMQUaUAAHYEtAB5AAAAGwA=,1AwAAEloAMAAKXiAdbQEAAAA=,1AAAbAZB1Hi4QWwMAAAAAGwA=,1WgkVAA0AAFEoold1BAAAAAA=,1AFEDvVtaMAAKYwUbEwAANgA=,1AAAeABBRHsRAWicAAAASAAA=,1EgAASABRA74BWh4wD1sEAAA=,1AgAbN5AGHgAQXgMCbDcAAAA=,1ABIDAABRKKIGdQQAUQAAAAA=,1ClwFGwEAHgAQUVS9AVoAAAA=,1AAAAG3kAFGwNAABaAC0DDQA=,1AAAbAZAAHgBhUVQDvQB1UQA=,1AgAAAB4AsmMDvQFaEgAAAAA=,1AAAAAHkAFGwNAAAKEgVsNwA=,1CQAAAHgBPFEoAFEDojd1AAA=,1AAAAAAAAHh8QWFTBAVobAAE=',
+h:'1AAAAAAAAClEAwAAbGwAAGwA=,1ABIAGwAGAwAtUQQAAAAAAwA=,1AwAbABUAo1EDAAkAAAAAAAA=,1AAAAAQAAAwAtVAQAAAAAGwA=,1UQABAAkADwADGwEAAAAAEgA=,1AAAbAC0ACVEDAAADAAAbAgA=,1AAAAAAAAAxsFAgFaAAAbogA=,1CQAAAAACCcAAbAEAAwAAAAA=,1AAEAAAkDDwADGwEAAAAACQA=,1AAAbABUJAVGlAKIAAFEAAAA=,1AAA2AAAACb0AbBMAogAAAAA=,1AAAAAAAADb0AAAEAqDwAAAA=,1AQAAAB4AAVECUgkAAAAbAAA=,1AAEAAB4ACQAFWgAAAAYAEgA=,1ogAAAABRogAFdjYAAAAAAAI=,1AAEJNgAAAwAFAAFaAAAAAAA=,1AAAbAAAAJ1ECAAMJNgAAVwA=,1AAAAAAAACb0AbAEAAKwAAAA=,1AAAAAAACAwAtUQQAAACrAAA=,1NgBTAAAACb0AbAEAAAAACQA=,1AKIAAAADAQAPbKMAEgAAogA=,1AAASAAAAG1ICUgQAAAAANgA=,1AgAAAAkADwADGxwAAAAAAQA=,1NgAAAB4AAVQCUQAAAAAAAgA=,1ABIAAAkAB1EAGxMAAAAAGwA=,1GwAAAAAACgADogEeAACiAAA=,1AAACAABRAwAtUQQAohsAAAA=,1AAAbABU2AVEeAAAJAAABAwA=,1AAAAAAsAG1ECUQQAAAAAAgA=,1AACiAAAACb0AbKMAAAIGAAA=,1AgIAAAAAq70AbAEAAAASogA=,1UQAAAAAAAz8AdQAACwAAAAA=,1AAAJAABRAAOndQAAAAAbAAA=,1AAAbNi8CCVEDAAADAAASAAA=,1AKIAAAEAAwAtUQQAAAAAEgA=,1AFMAAAAAAQAPbgEAAAAAGwI=,1AgAbALcAAVEDAAAANqIAAAA=,1AAAAAAEACQAHUVEfowFaCQE=,1AAAAAAA2G1GkUQQAAABRAAI=,1GwAAAAAAAwlWAAFaLQAAAAA=,1AhIAAAAACb0AbAEAAAAGAQA=,1AAIAAABTAAAFdQAAAQAJAAA=,1AAkAAAAAAwAFADdaAAAAAAE=,1AAAAAAAGG1ECUQQANgAAAAE=,1GwAAAAAAAQAPbAEAAAACBgA=,1AAAAAAAMG1ECUQQAogAAAAA=,1ogAAAABSAAAFdQAAAAAABgA=,1AjYANgAACb0AbAEAAAMAAAA=,1AAAAAQAADb0AAAEAogAANgA=,1AAAAAgAAA1ECGwBaAAAACQE=,1BgAbALcAAVMDAAAAAAkAAAA=,1NgkAAB4ACQAFUQAAAAAANgA=,1AAAbAC4CCVEDAAA2AABUAAA=,1AQAAAB4ACRsFUQAAUQYAAAA=,1EgAAAAIACb0AbBMAAAAAAAA=,1AAAbABUAAVEDAwASAAA3CQA=,1AAAAAAkADwEDGwEBAAASAAE=,1BgAbABUJAVE5AAAAAAEANgA=,1AAAAAAABA1oLGwBaNgAAAAA=,1CQAbAC8ACVE5AFEAAAAAogA=,1AAEAAAAADQAPGwCiNgAAAgA=,1GwAANgAAG1ECUQQGADYAAAA=,1AAAAEgkADwADGwEAAAAbCQA=,1CQkbAC0ACWMDAACiAAAAAAA=,1AAAAAAAAG1UCUQQGAAAAAgE=,1AAkAG6JRAAAFdQAAogAGAAA=,1AAAAAAmiDwIDGwEAAAAGAAA=,1GwAAAABRAAAFdRsAAAASAAA=,1AAAbAC0ACVEDAAmoAAA2NgA=,1AAMANgAAAwAtUQQAAAAAWgA=,1AAkAAFEABwANAAAAAxsAAAA=,1AAAAAAAAAQAPbAEAAAsAUQA=,1AKIAAAAGAQAPbBwAAAAJAAA=,1ADYAAgAAAwEFAAFaAAASAAA=,1AFEAAAAJAQAPbAEACQAAAAA=,1AAMAAAkAWFEAGwEAAFEAAAA=,1pAAAAAIAAz8AdQAAAAAAAAA=,1BgkAAABRAAAFdQAAAQAMAAA=,1UQAAAB4AAVEdUaIAAAAAAAI=,1AAMbGwAAG1ECUQQAAAA2BgA=,1GwAAAAkAYAADHQEAABsAAAE=,1AAACAAkADwADGwEAAAMbEgA=,1AAAAAAAACgEDowEbAAAbAAA=,1BgAAAAAACmMAvQMbAAAbAAA=,1ARsAAAAAJwAtUQAAAAAAAAE=,1AAAAAB4AAVoCUQMAUQAAAQA=,1AAAAAAABDQAPGwAAABIAGwA=,1EhsAGwkADwADGwEAAAEAAAA=,1AAAAEgAAA1RTGwBaAAAAAAA=,1ABsAAAAAAFIDAAGKAAkAAAA=,1AKIAAAkAB1EAHAEAAKIAAAA=,1GxsAAAEAVFECGwBaAAAAAAA=,1AAAAAAAAr70AABMAADYAAAA=,1AAAAAAAADQAPG6IAACESAAI=,1AAAbAC02q1EDAAAACQAAAAA=,1AAMAAAAAAwCnAAFcAAAAAAA=,1AgAAAKIJAwAtUgQAAAACAAA=,1ABsAABJRAAAFdRsAAAAAAAA=,1AAMAGwAAAwAFAAFbAAAAAAI=,1AQAAAFFRAAAFdQAACQAAAAA=,1AAAbBhUAAVEDAKIAAKIAAAA=,1ABIbAC8ACVEDAAAAGx4AAAA=,1AAABAABRBD8AUQAAAAAAHgA=,1AQAAAAkAB1EAG2QAAGMAAAA=,1AAIAAAAAAzYtUgQAAAACAgA=,1AAAAAAAADQBgGwAAUQYAAAA=,1CQAAAAkADwADGwEAEgAABgA=,1EqMAAAkAB1FRGwEAAAAAAAA=,1AAAACQBRBD8AUQAAAAAGEgA=,1CQAAAABaAABWdaIAAQAAAAA=,1ABIAAFEAAFEDAAGKBgkAAAA=,1AAlRAAAAAwAtUQQAUQAAAAA=,1ABJRAD8BAwAKAFEEogFaAwI=,1AAADAAAAAwAFAQFaAACtAAA=,1AAkbAC0ACVEDAABRAAEBAAA=,1AAACAAAAA2MCGwBaogAAAAA=,1CgAFbBwALQAJUYoAAAAANgE=,1AAA2AgAAAz8AdQAAADYAogA=,1AAAAAB4ACQEFUTYAABIDAAA=,1pAAAAAAAAwAtUQQAAAEAAAA=,1AAAApQAAAz+idQAAAAAAAAA=,1AKIAAAAADb0AAAEAAAkSAAA=,1AAAbNhUBAVEDAAkAAAAAAAA=,1AAAANgAAA1ECHjZaAAABAAA=,1AAABAAAAAxstUwQAAAAAAAA=,1AAACAAAAAwBWAAFbAAAAAAA=,1EgAbABUdAVEDAAAAAAAACQA=,1AAADAABRHz8AUQAAAAAAEgA=,1AAAAAB4AAVECURsAAAAAqwA=,1rAAFbBwAFRsBUgMAUQkAAAA=,1AKIbAC0AWlEDABsTAAAAAAA=,1AAAbAC0MCVEDAAAAJAkAAAA=,1AAAAAAYACb0bbAEAAAADAAA=,1AAAbABUCAVEDAAASGwAAAAA=,1AhsbABUAAVEDAQAAAAMAEgA=,1AAAbCS0Aq1EDAAClAAAAAAA=,1ADcAAABRAAAFdQAAADYAogA=,1AAAAEgAAAwAtUQQAAACjAAA=,1AwAAAAABCgADogEbAAAAEwA=,1ogAAAABRAAYFdQkAGwAAAwA=,1AAAAAAAACcMAbAEAEjYAAAA=,1AhIAAAkCDwBUGwEAAAAAAwA=,1AAlRAAAAG1ECVwQAAKIAAAA=,1NhsAAAkAB1dRGwEAAABRAAA=,1CQAAAFFRAAAFdQAAABsAAAA=,1NgBRAAAAAwAtUQQAAAA2AAA=,1AAADGwBRBEAAUQAAAACiAAA=,1AAAANjZRAAA7dQAAAAAAAAA=,1AAEAEgAAA1ECGzZaAAAAAAA=,1GwAAGwkADwADGwEAAAAbogA=,1AAkbAC0ACVFUAAA4AAAAAAE=,1UQAAAwAAAwAtUQQAAKIAAAA=,1AAAbG7cAAVEDAABSAAAABgA=,1ogAAAAAADb0AAAEJADY2AAA=,1AAAAAB4AAVECUTYAUQYAEgI=,1AAAbURUDAVEDAACiAAAbUQA=,1AAAbAABRBAAFCQAAAACoAAA=,1G6IAAAAAA1FTGwBaAACiBgA=,1AAAbAAAAHlECGwBaCQAABgA=,1BgAAAAkADwBUGwEAADaiAAA=,1AACiAwAAA1ECGwlaAAADAAA=,1AKIAAAAJAwAtUQQAAAAABgA=,1AAMcAC0ACVE5AAAAAAAAAAA=,1AAAAAABXAAAFdQAAAACiAAE=,1AQYAAAASAwAFAAFaAAAAAAA=,1AAAbABUAAVEDAwkAAAASVwA=,1UQkAAB4AAVECVBIAAAAAAgA=,1GwAACQAAAQAPbKMAADYAAAA=,1AAAbNhUAAVEDAAAAWhsAAQA=,1AKIACQAAAwYtUQQAAAAAAAA=,1ADYAAAMACb0AbAEAAAABAAA=,1ABsAAAAGDb2iAAEACQAAAAA=,1AFEbABUhAVEDAAAAAAADCQA=,1AAAAAAAGAwAFAKNaBgAANgA=,1ABs2AAAAAz8JdQAAABtRAAA=,1GwAAAB4DAVECUQAAAQESAAA=,1AAkeAC0SCVEDAABRAAACAAA=,1AAAAAB4AAVFTUQAGAKISAAI=,1BgAAAABRBD8AUQAACQAAAQA=,1GxsAAABRBD8AUQAANgAAAgA=,1AAAAAAAAA1ECGwBbEgASAAA=,1EgAAAAAAAwAtUQQAAKIAAAI=,1AAAAAAAAAwAtUQQBAAAANwA=,1GxMAAAkADwADGwEAAAkDAAA=,1AAAAAQAAAz8AdVEAAFEAAAA=,1UQAAogAAAzanAAFaAAAAAAA=,1AAAAAABRBD8AURsAogYAAAA=,1AAAAAB4ACTkFUQAAAAAbAwA=,1AAAAAAkAG1ECUQQAAKKiAAA=,1VAAAAB4ACQkFUTYAAAA2AAA=,1AAC0AAAAA1ECG1FaAAAhAAA=,1AAAAAAAbAwAtUQQGAAA2AAA=,1AAATAAAAA1ECGwBaBgAAAAA=,1AAA2AABRAAAFdwAABgBRAAA=,1BgAACQAACcMAbAEAAAAAAAA=,1ogAAAAAADQAPGwAAAQAANgA=,1AQAAAKsAB1EAG6MAAAAAAAA=,1AAAAAAIACb0AbQEAAwAAAAA=,1GwAAAB4bCQAFWgAAABsAAAA=,1AAAbAhUAAVEDADYAAAAAUQA=,1AAAAAB4AWgAFUQAAAAAABgE=,1AAAAGwkAPVEAGwEACQkAAAA=,1AAAACQBRAAAFdQAAAAY2AAA=,1ABwAAAkAB1GiGwEACQAAAAA=,1Ax4AB1EEAAAJvQBsowAAowA=,1AAMbABUAAVEDAAAAAAABCQA=,1ABsAAB4DCQAFUTYAAQAGAAA=,1AAAGAAmkDwADGxMAAAAAUQA=,1AFEAAAASCQAHUVEfowFaEgA=,1AFEAAwAACb0AbAEAUQAAAAA=,1BgAAAAAAAxsFAAFaAAASAAA=,1AAAcABUAAVEDAAABACEbAAA=,1CwAAAgkAB1EAGwEAABsAAAE=,1GwAAABsAFQCjUVQEogFaGwA=,1CgAFbxwAFQABUQMAAFEAAAI=,1NgAAAAkAB1EAGwEAAAAANgE=,1AAAAAAAAJwAtUQADAAAANgE=,1CQAAAAkAIlEAGwEAADwAAAA=,1GwIAAABRAAYFdQAAAAAAAAA=,1AAADAAkADwIDG6MAAAIAAAA=,1NgAAAAYSG1ECVwQAAAAAAAA=,1ADYAAAkAB1EAGwEABgAAAQA=,1AAYbAC4ACVEDAAAAAAAABgA=,1NlEAAAAbDQAPGwBRAAAAAAA=,1AAMAAAkAhwkNAFEEowFaCQA=,1AwAAAAAAAzkFAFJaAAAANgA=,1AAAAAAEJAwAtUQQDCRsAAAA=,1AAAbABUJAVEDAAAAAAASGwA=,1EgAAAAAAAQAPbwEAAAAACQA=,1AAAAGwBRBD8AUQAAEgYJUQA=,1UQAAAB4AUlECUaIAAAAAAAA=,1AAAbABUAo1cDAAASAAAAAAE=,1CgAbAC0ACVEDAAAAAAAAGwA=,1AAAbAC0DCVEDAQAAP6IAAAA=,1AAACAAAAA0ASdQAAAAAAUQA=,1AAkdABUAAVEDAGMAAAAbAAA=,1AAAAAABRBD8AUQYCAAACAAA=,1AAAAAAAAJ1ECAAMSAAAAHAE=,1ABsbAC0CCVEDAAAAAAAAHQE=,1AAEJAAAACb0AbAEAUQAAAgA=,1AgAJAAAAAQAPbAEAURsCAAA=,1AAAAAAm9omwBAAASQ1GkGwE=,1AAAAAAAAA1GkGwBaAAAGCQA=,1AAAAAFFRAwAFAAFaGwAAGwA=,1AQAAAFtRAL0AGzYAABIGAAA=,1AAAAAKJRAwAgAAFaAAAAAAA=,1AwAAAAAAA1cCGwBaAACiAAA=,1AAEJAABRAAAFdQAAAAACAQA=,1AFEbABUAAVEDAAAAAAASAgA=,1AAASAAAACb1RbAEAAAAbUQA=,1AAAAAAAAClEAvTYbAQAAAQA=,1GwAAAAAAJwAtUQAAAAEAogA=,1AAACAB4AAVELUQAAAAASAAA=,1AAMAAAkBB1EAHgEAAACrAAA=,1AAAbJC0ACVEDAAAAUQkAAAI=,1AAAAAAAAAQAPbzcAAAAGAAA=,1BgAAtAAAAwAFAAFaAAABAAA=,1GwEAAABRAAAFdQAANgAAAAA=,1AAAAAAlRDwADG20AAABRAAA=,1NgAAAAoADwADGwEACQAAAAA=,1AwBRAAAADb0AAAEAAAA2AAA=,1AwAAAAAAAwAFAAFcAAASBgA=,1AAAAPwEAA1ECGwBaogAACQA=,1EgEAAAkAB1EAGwEAAAMAAAE=,1BgAbAC0ACVcDAAkGAAAbAAA=,1AAkAAAAAJwAtWgAAAFEAAAI=,1AAAAGwAAJ1ECAAMAAABjAwA=,1AAAbAAAbDQAPGwBRAAAAAAI=,1AAIAAx4AAVECUQAAAAASAAA=,1AAAAAAAUCb0AbDcAAKIAAAA=,1ABIAAABRAAandQAAAAAJUQA=,1AAAAUQAAG1ICVwQAAAAABgA=,1AAAABjYAAQAPbAEAAAADAAA=,1AAAbAC0SCVEDAwAbBgAAAAA=,1CQAbAy0ACVEDAAAACRtRAAA=,1AAAAAABRBAAFCQAAAQBXNgA=,1AAAAAABRH0EAUQAAABsAAAA=,1AAAbAC0SCVFUAKIAAAAJAAA=,1AAAAAABRJwAtWgAAAAAAAwA=,1AAYAAAAAVD8AdQAAAAM3AAA=,1CQAAAAAJCb8AbAEAAAYAAAA=,1AABUAwAAAz8AdQAAAAAAAAA=,1ADYAAAAAAz8AdQAAAQBUAwA=,1AAAAogAAAQCxbAEAUQAGAAA=,1AAAAAAAAAwYtUQQBAFEAAAA=,1ABIAAAAAAxstUQQCAKIAAAA=,1AAADAAAACb0AbKMACQIACQA=,1AAMBAAAAAwAFAAFaAAAAIQA=,1AAAAHgAAG1ECVwQAAAAbAAA=,1AAADAAAAAz8AdQAAEjYAAAA=,1AAAAAAAACb0bbAEBBgAACgA=,1ABsAABJRAAAFdQAAAAAbAQA=,1AAYAAAAAA2MCGwBaAAASAAA=,1EhIAAAkADwADGxMAAAAAAAA=,1AAAAAgAAq70AbDcAAAAAPAA=,1AFEAAAAAJwAtUQAACQAAGwA=,1GwAAAAAAAQAPbzcAAFEAAAA=,1AAAbAy0ACWMDAAAAEgAAAAA=,1AAMSAAAACb1RbAEAAAYAAAA=,1AFEbAC0ACVEDAAA2AAAAAAI=,1AAAbABUAAVE5AQAAAgAAAAA=,1CQAACQAACb0AbAEAAAAANgA=,1ADYGAAABAwAFAAFaAAAAAAA=,1AAAAAAAAAz8AdQAAAwIAUQA=,1BgAAAAkbDwADIQEAEgAACQA=,1AAAAAABaBAAFCQAAAAC0AAA=,1UQACAAAAG1ECUQQAAAMAAAA=,1AAAAAABRVQAFCVE2AAASEgA=,1BgAAAAAAJ1ECAAMANgAAUQA=,1AAADCQAAAwAtUQQAGwMAAAI=,1BgAABgMACb0AbAEACQAAAAA=,1pAAAGwMABQC1WgAADVECGwE=,1AAAALQkAB1EAGwEAAAASAAA=,1CQAbAC0ACVEDADYAUQAAAAA=,1AAAAAAEBA1ECGwBaAAABAAA=,1AwAAAB4ACQAgWgAAGwAAAAA=,1ABIbABUGAVEDAgASAAAAGwA=,1AKIJAAAJG1ECUQQAAAAANgA=,1AAAbAC0SCVEDAABTAABSAAA=,1AAAbohUGAVEDAgAAAwAAAAA=,1AAAbABUAo1oDAAABAAAACQA=,1BgAAAAACA1ECGwBaogAANgA=,1AAAAAB4AAVECVAAAAACiCQA=,1AAAGAABRBD8AUQAAAAASAAE=,1AwAAAFobB1EAGwEAAAAGAAA=,1AwAAAAAAOVcCGwBaAAAAAgA=,1AFEAAABRAAAFdVEAAwAAGwA=,1CQAAAAIAG1QCUR8AAABRAAA=,1BgAAAwAAG1ECUQQAAAABAAA=,1AQA2AAAACb2ibAEAAAAJAQA=,1AAASAAAAAwAtUQQAAAEVAAA=,1AQCiAAAAA1MCGwBaAABRCQA=,1AAAbAC0ACVEDADYAACEAUQA=,1ogAAAAAAAwAtUQQAABIAUQA=,1AAAAAAAAHlECG1FaAAA2AAA=,1AAYAAAAAG1MCUQQAAAAbAAA=,1AAAAAAkAPVEAGwEAAAkDAAA=,1GwAAAAAACgMeogEbAAAAAAA=,1ADkAAAkAB1EAGwEAABwAAAA=,1AQAAAAkbDwADHQEAAAAAAAA=,1AAAAAAEAG1ECUwQDABsAAAE=,1AKIbABULAVEDAAACAAAJAAA=,1AAAbAKIAAwAFAAFaAAAGAAA=,1AAAAAAA2G1ECVAQAAAEGAAA=,1AAAABgAAAwAtUQQAAACiUQA=,1AgAAAAkADwA5G1IAAAmiAAA=,1owAAAAAAAwktUQQAAAAAAAA=,1AAIGAABRAAAFdQAAUQAAAAA=,1AQAACQmiDwADGwEAAAAAAAE=,1CVEbAC0ACVEDAAAAAAAJEgA=,1AAAAAABRAwMFAAFbAAAAAAA=,1AAEAAAAbAwAtUQQCEgAAAAA=,1AQMAAAkAB1EAHgEAogAANgA=,1AAAboi0GCVE5AAAAAAEAEgA=,1AABXAABRAAAFdQAAAAAAAwA=,1AgADAAkAB1EAGwEAADYAAgI=,1ACEAAAkCDwADG1IAAAAAAAA=,1AAAbAC0Aq1EDAAAAABtTAAA=,1AAAALQkAB1EAGwEAAAA2UgA=,1AAAbEhUAAVEDAwAAEgYAGwA=,1AAAAAABRAAMFdQAAGwEAAAA=,1AAAANgkCDxIDGwoAAAAAAwA=,1EhIAAAASCb0AbAEAAAAAAAA=,1AAAAEgBRBD8AUQAAAQYAAAA=,1AAIAGwAAG1GkUVUAAAA2AAA=,1CRIbABUAAVEDBhsAAAASAAA='};
 function dayKey(){ var d=new Date(); return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate(); }
 function dayIndex(){ var d=new Date(); return Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/86400000)%366; }
 // decode "T"+base64 (5 cells per byte, base 3) into a 9x9 board
@@ -3973,6 +4081,7 @@ try{history.replaceState({s:'screen-menu'},'');}catch(e){}
 window.addEventListener('orientationchange',function(){setTimeout(relayout,250);});
 
 // ── INIT ──
+document.body.classList.add('on-menu');
 applyTheme(SET.theme);
 applyLang();
 refreshDailyCard();

@@ -8,8 +8,8 @@ android {
         applicationId "com.dotswar.app"
         minSdk 21
         targetSdk 36
-        versionCode 6
-        versionName "2.2.0"
+        versionCode 9
+        versionName "2.3.0"
     }
 
     // Release signing config is populated from environment variables so the
