@@ -11,7 +11,7 @@ android {
         // versionCode is taken from the VERSION_CODE env var when building on
         // GitHub Actions (100 + run number, always increasing), so you never
         // have to bump it by hand. Local builds fall back to the number below.
-        versionCode (System.getenv("VERSION_CODE") ?: "10").toInteger()
+        versionCode = Integer.parseInt(System.getenv("VERSION_CODE") ?: "11")
         versionName "2.3.1"
     }
 
