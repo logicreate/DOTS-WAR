@@ -622,7 +622,10 @@ body:not(.on-menu) #copyR{display:none}
   .gfoot{margin-top:4px;gap:6px}
   .zoom-row{display:none}   /* phones: pinch to zoom instead of buttons */
   .gfoot .btxt{display:none}  /* phones: icon-only Menu / Restart / Rules so all buttons fit one row */
-  .gfoot .btn-sm{padding:9px 12px}
+  .gfoot{flex-wrap:nowrap;gap:5px}
+  .gfoot .btn-sm{padding:9px 9px;font-size:.9rem;min-width:0}
+  #btnUndo .btxt2{display:none}
+  .btn-resign{padding:9px 12px!important}
 }
 /* Touch devices: no sticky hover states after a tap */
 @media(hover:none){
@@ -1021,7 +1024,7 @@ body[data-theme=paper] .tring .tfg{stroke:#e0a000}
   <div class="gfoot">
     <button class="btn btn-sm" onclick="askMenu()" title="Menu">🏠 <span class="btxt" id="gMenu">Menu</span></button>
     <button class="btn btn-sm" id="btnRst" onclick="askRestart()" title="Restart">🔄 <span class="btxt" id="gRestart">Restart</span></button>
-    <button class="btn btn-sm" id="btnUndo" onclick="undoMove()" style="display:none">↶ <span id="gUndo">Undo</span></button>
+    <button class="btn btn-sm" id="btnUndo" onclick="undoMove()" style="display:none">↶ <span class="btxt2" id="gUndo">Undo</span></button>
     <button class="btn btn-sm btn-resign" onclick="askResign()">🏳 <span id="gResign">Resign</span></button>
     <button class="btn btn-sm" onclick="openRules()" title="Rules">📜 <span class="btxt" id="gRules">Rules</span></button>
     <div class="zoom-row">
@@ -3279,7 +3282,7 @@ function refreshUndoBtn(){
   var b=document.getElementById('btnUndo'); if(!b) return;
   var show=gameMode==='pve'&&G&&undoLimit()>0;
   b.style.display=show?'':'none';
-  if(show){ b.disabled=!(undoStack.length&&undoLeft>0&&!G.over); b.innerHTML='↶ <span id="gUndo">'+T('gUndo')+'</span>'+(undoLimit()<99?' ('+undoLeft+')':''); }
+  if(show){ b.disabled=!(undoStack.length&&undoLeft>0&&!G.over); b.innerHTML='↶ <span class="btxt2" id="gUndo">'+T('gUndo')+'</span>'+(undoLimit()<99?' <b>'+undoLeft+'</b>':''); }
 }
 function undoMove(){
   if(gameMode!=='pve'||!G||G.over||!undoStack.length||undoLeft<=0) return;
