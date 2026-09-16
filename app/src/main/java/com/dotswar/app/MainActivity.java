@@ -26,6 +26,8 @@ import androidx.credentials.GetCredentialRequest;
 import androidx.credentials.GetCredentialResponse;
 import androidx.credentials.exceptions.GetCredentialException;
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption;
+import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption;
+import androidx.credentials.exceptions.NoCredentialException;
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential;
 import android.webkit.JavascriptInterface;
 import android.os.CancellationSignal;
@@ -40,7 +42,7 @@ public class MainActivity extends Activity {
     // history.pushState (hardware Back button) and Firebase work like in a real browser.
     private static final String START_URL = "https://appassets.androidplatform.net/assets/index.html";
     // Firebase Console -> Authentication -> Sign-in method -> Google -> "Web client ID" (ends with .apps.googleusercontent.com)
-    private static final String WEB_CLIENT_ID = "911143426593-ecmf3a8g72fnm42m93tfc93fkv99gu5p.apps.googleusercontent.com";
+    private static final String WEB_CLIENT_ID = "PASTE_YOUR_WEB_CLIENT_ID.apps.googleusercontent.com";
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -134,13 +136,23 @@ public class MainActivity extends Activity {
 
     private void startGoogleSignIn() {
         if (WEB_CLIENT_ID.startsWith("PASTE_")) { js("showToast(T('gFail')+' (no client id)',6000)"); return; }
-        CredentialManager cm = CredentialManager.create(this);
         GetGoogleIdOption opt = new GetGoogleIdOption.Builder()
                 .setFilterByAuthorizedAccounts(false)
                 .setServerClientId(WEB_CLIENT_ID)
                 .setAutoSelectEnabled(false)
                 .build();
-        GetCredentialRequest req = new GetCredentialRequest.Builder().addCredentialOption(opt).build();
+        requestCredential(new GetCredentialRequest.Builder().addCredentialOption(opt).build(), true);
+    }
+
+    // Second attempt: the explicit "Sign in with Google" button flow. It shows the
+    // account chooser even when the One Tap flow reports NoCredentialException.
+    private void startGoogleSignInFallback() {
+        GetSignInWithGoogleOption opt = new GetSignInWithGoogleOption.Builder(WEB_CLIENT_ID).build();
+        requestCredential(new GetCredentialRequest.Builder().addCredentialOption(opt).build(), false);
+    }
+
+    private void requestCredential(GetCredentialRequest req, final boolean allowFallback) {
+        CredentialManager cm = CredentialManager.create(this);
         cm.getCredentialAsync(this, req, new CancellationSignal(), Executors.newSingleThreadExecutor(),
             new CredentialManagerCallback<GetCredentialResponse, GetCredentialException>() {
                 @Override public void onResult(GetCredentialResponse result) {
@@ -150,7 +162,10 @@ public class MainActivity extends Activity {
                         runOnUiThread(() -> js("onGoogleIdToken(" + jsStr(token) + ")"));
                     } catch (Exception e) { fail(e); }
                 }
-                @Override public void onError(GetCredentialException e) { fail(e); }
+                @Override public void onError(GetCredentialException e) {
+                    if (allowFallback && e instanceof NoCredentialException) { runOnUiThread(MainActivity.this::startGoogleSignInFallback); return; }
+                    fail(e);
+                }
                 private void fail(Exception e) {
                     String t = e.getClass().getSimpleName();
                     String m = e.getMessage() == null ? "" : e.getMessage();

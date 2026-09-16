@@ -1697,7 +1697,7 @@ var pressActive=false, pressTimer=null, pressX=0, pressY=0, loupeShow=false, lou
 var HOLD_MS=300, PRESS_SLOP=6;
 var curScreen='screen-menu', _cfCb=null;
 var turnTimerId=null, turnGraceId=null, TURN_SECS=15, TURN_GRACE=5, TURN_WARN=5;
-var APP_VERSION='2.3.0';
+var APP_VERSION='2.3.1';
 var SET={sound:true,vibe:true,pveTimer:15,theme:'neon',assist:true};
 (function(){ try{ var v=JSON.parse(localStorage.getItem('dwSet')||'{}'); for(var k in v) if(k in SET) SET[k]=v[k]; }catch(e){} })();
 function saveSet(){ try{localStorage.setItem('dwSet',JSON.stringify(SET));}catch(e){} }
