@@ -8,8 +8,11 @@ android {
         applicationId "com.dotswar.app"
         minSdk 21
         targetSdk 36
-        versionCode 9
-        versionName "2.3.0"
+        // versionCode is taken from the VERSION_CODE env var when building on
+        // GitHub Actions (100 + run number, always increasing), so you never
+        // have to bump it by hand. Local builds fall back to the number below.
+        versionCode (System.getenv("VERSION_CODE") ?: "10").toInteger()
+        versionName "2.3.1"
     }
 
     // Release signing config is populated from environment variables so the

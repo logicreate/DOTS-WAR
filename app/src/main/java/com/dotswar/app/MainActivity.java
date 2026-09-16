@@ -40,7 +40,7 @@ public class MainActivity extends Activity {
     // history.pushState (hardware Back button) and Firebase work like in a real browser.
     private static final String START_URL = "https://appassets.androidplatform.net/assets/index.html";
     // Firebase Console -> Authentication -> Sign-in method -> Google -> "Web client ID" (ends with .apps.googleusercontent.com)
-    private static final String WEB_CLIENT_ID = "911143426593-ecmf3a8g72fnm42m93tfc93fkv99gu5p.apps.googleusercontent.com";
+    private static final String WEB_CLIENT_ID = "PASTE_YOUR_WEB_CLIENT_ID.apps.googleusercontent.com";
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -133,7 +133,7 @@ public class MainActivity extends Activity {
     }
 
     private void startGoogleSignIn() {
-        if (WEB_CLIENT_ID.startsWith("PASTE_")) { js("showToast(T('gFail'))"); return; }
+        if (WEB_CLIENT_ID.startsWith("PASTE_")) { js("showToast(T('gFail')+' (no client id)',6000)"); return; }
         CredentialManager cm = CredentialManager.create(this);
         GetGoogleIdOption opt = new GetGoogleIdOption.Builder()
                 .setFilterByAuthorizedAccounts(false)
@@ -148,9 +148,16 @@ public class MainActivity extends Activity {
                         GoogleIdTokenCredential c = GoogleIdTokenCredential.createFrom(result.getCredential().getData());
                         final String token = c.getIdToken();
                         runOnUiThread(() -> js("onGoogleIdToken(" + jsStr(token) + ")"));
-                    } catch (Exception e) { runOnUiThread(() -> js("showToast(T('gFail'))")); }
+                    } catch (Exception e) { fail(e); }
                 }
-                @Override public void onError(GetCredentialException e) { runOnUiThread(() -> js("showToast(T('gFail'))")); }
+                @Override public void onError(GetCredentialException e) { fail(e); }
+                private void fail(Exception e) {
+                    String t = e.getClass().getSimpleName();
+                    String m = e.getMessage() == null ? "" : e.getMessage();
+                    if (m.length() > 120) m = m.substring(0, 120);
+                    final String msg = t + (m.isEmpty() ? "" : ": " + m);
+                    runOnUiThread(() -> js("showToast(T('gFail')+' — '+" + jsStr(msg) + ",8000)"));
+                }
             });
     }
     private static String jsStr(String v) { return "\"" + v.replace("\\", "\\\\").replace("\"", "\\\"") + "\""; }
