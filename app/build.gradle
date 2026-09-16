@@ -1,5 +1,16 @@
 apply plugin: 'com.android.application'
 
+// Always-increasing version code: 100 + GitHub Actions run number
+// (GITHUB_RUN_NUMBER is set by GitHub automatically for every build), or
+// VERSION_CODE if given explicitly; local builds fall back to 12.
+static int dotsVersionCode() {
+    String v = System.getenv("VERSION_CODE")
+    if (v != null && v.trim()) return Integer.parseInt(v.trim())
+    String run = System.getenv("GITHUB_RUN_NUMBER")
+    if (run != null && run.trim()) return 100 + Integer.parseInt(run.trim())
+    return 12
+}
+
 android {
     namespace 'com.dotswar.app'
     compileSdk 36
@@ -11,7 +22,7 @@ android {
         // versionCode is taken from the VERSION_CODE env var when building on
         // GitHub Actions (100 + run number, always increasing), so you never
         // have to bump it by hand. Local builds fall back to the number below.
-        versionCode = Integer.parseInt(System.getenv("VERSION_CODE") ?: "11")
+        versionCode = dotsVersionCode()
         versionName "2.3.1"
     }
 
