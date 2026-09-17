@@ -170,10 +170,30 @@ public class MainActivity extends Activity {
                     String t = e.getClass().getSimpleName();
                     String m = e.getMessage() == null ? "" : e.getMessage();
                     if (m.length() > 120) m = m.substring(0, 120);
-                    final String msg = t + (m.isEmpty() ? "" : ": " + m);
+                    final String msg = t + (m.isEmpty() ? "" : ": " + m) + " | app SHA-1: " + signingSha1();
                     runOnUiThread(() -> js("showToast(T('gFail')+' — '+" + jsStr(msg) + ",8000)"));
                 }
             });
+    }
+    // SHA-1 of the certificate this installed APK is actually signed with —
+    // must match an Android OAuth client in Google Cloud for sign-in to work.
+    private String signingSha1() {
+        try {
+            android.content.pm.Signature[] sigs;
+            if (android.os.Build.VERSION.SDK_INT >= 28) {
+                android.content.pm.PackageInfo pi = getPackageManager().getPackageInfo(getPackageName(), android.content.pm.PackageManager.GET_SIGNING_CERTIFICATES);
+                sigs = pi.signingInfo.getApkContentsSigners();
+            } else {
+                @SuppressWarnings("deprecation")
+                android.content.pm.PackageInfo pi = getPackageManager().getPackageInfo(getPackageName(), android.content.pm.PackageManager.GET_SIGNATURES);
+                sigs = pi.signatures;
+            }
+            java.security.MessageDigest md = java.security.MessageDigest.getInstance("SHA-1");
+            byte[] d = md.digest(sigs[0].toByteArray());
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < d.length; i++) { if (i > 0) sb.append(':'); sb.append(String.format("%02X", d[i])); }
+            return sb.toString();
+        } catch (Exception e) { return "?"; }
     }
     private static String jsStr(String v) { return "\"" + v.replace("\\", "\\\\").replace("\"", "\\\"") + "\""; }
     private void js(String code) { if (webView != null) webView.evaluateJavascript(code, null); }
