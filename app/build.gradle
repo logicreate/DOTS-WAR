@@ -8,7 +8,7 @@ static int dotsVersionCode() {
     if (v != null && v.trim()) return Integer.parseInt(v.trim())
     String run = System.getenv("GITHUB_RUN_NUMBER")
     if (run != null && run.trim()) return 100 + Integer.parseInt(run.trim())
-    return 13
+    return 14
 }
 
 android {
@@ -23,7 +23,7 @@ android {
         // GitHub Actions (100 + run number, always increasing), so you never
         // have to bump it by hand. Local builds fall back to the number below.
         versionCode = dotsVersionCode()
-        versionName "2.4.0"
+        versionName "2.5.0"
     }
 
     // Release signing config is populated from environment variables so the
