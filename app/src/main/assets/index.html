@@ -510,6 +510,10 @@ body{background:#1d1a12;color:#fff;min-height:100dvh}
 .gbtn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;color:#1f1f1f;font-size:1rem;padding:11px 16px;
   box-shadow:0 5px 0 #b9c3d6,0 10px 18px rgba(0,0,0,.35)}
 .gbtn:active{transform:translateY(4px);box-shadow:0 1px 0 #b9c3d6}
+.abtn{display:none;width:100%;align-items:center;justify-content:center;gap:10px;background:#000;color:#fff;font-size:1rem;padding:11px 16px;margin-top:8px;box-shadow:0 5px 0 #3a3a3a,0 10px 18px rgba(0,0,0,.35)}
+.abtn:active{transform:translateY(4px);box-shadow:0 1px 0 #3a3a3a}
+.amark{font-size:1.25rem;line-height:1}
+body.ios .abtn{display:flex}
 .gmark{font-weight:800;font-size:1.25rem;background:linear-gradient(90deg,#4285F4 0 25%,#EA4335 25% 50%,#FBBC05 50% 75%,#34A853 75% 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .stat{background:var(--glass);border:1px solid var(--glass-b);border-radius:12px;padding:10px 6px;text-align:center;box-shadow:inset 0 1px 0 var(--glass-hi)}
@@ -1270,6 +1274,7 @@ body[data-theme=paper] .tring .tfg{stroke:#e0a000}
     <div class="acc-card">
       <p class="acc-why" id="accWhy">Sign in to keep your progress on any device.</p>
       <button class="btn gbtn" id="btnGoogle" onclick="signInGoogle()"><span class="gmark">G</span><span id="gLbl">Sign in with Google</span></button>
+      <button class="btn abtn" id="btnApple" onclick="signInApple()"><span class="amark"></span><span id="aLbl">Sign in with Apple</span></button>
       <button class="btn btn-ghost" id="btnSignOut" onclick="signOutUser()" style="display:none;width:100%;margin-top:8px">↪ <span id="soLbl">Sign out</span></button>
       <p class="acc-help" id="tcWhy">No Google? Use a transfer code: get it here, enter it on your other phone — your progress follows you.</p>
       <div class="row" style="gap:8px;justify-content:flex-start">
@@ -1376,7 +1381,7 @@ var TR = {
     stTitle:'⚙ Settings', stSound:'Sound', stVibe:'Vibration', stTimer:'Move timer vs AI',
     stOn:'On', stOff:'Off', stStatsH:'📊 Your statistics', stOk:'OK',
     signIn:'Sign in', accSigned:'Signed in', accNameLbl:'Your name', accWhy:'Sign in to keep your progress on any device.',
-    gLbl:'Sign in with Google', tcWhy:'No Google account? Use a transfer code: get it here, enter it on your other device — your progress follows you.',
+    gLbl:'Sign in with Google', aLbl:'Sign in with Apple', tcWhy:'No Google account? Use a transfer code: get it here, enter it on your other device — your progress follows you.',
     nameSaved:'Name saved', nameEmpty:'Enter a name',
     stGames:'Battles', stWins:'Wins', stPct:'Win rate', stStreak:'Current streak', stBest:'Best streak', stRating:'Rating', stOnline:'Rated battles', stStars:'Campaign stars', stAch:'Achievements', stDaily:'Daily streak', mSetLbl:'Settings', mAchLbl:'Achievements', achTitle:'🏆 Achievements', achOk:'OK', accOk:'OK',
     achCount:'Unlocked: {u} of {t}',
@@ -1423,7 +1428,7 @@ var TR = {
     enterCodeLbl:'Enter 4-digit code:', btnJoin:'Join', btnBackOl:'← Back',
     creating:'Creating room…', waiting:'Waiting for opponent',
     connecting:'Connecting…', connected:'Opponent connected!', started:'Battle started!',
-    notFound:'Room not found. Check the code.', netErr:'Network error. Check internet.',
+    notFound:'Room not found. Check the code.', netErr:'Network error. Check internet.', permErr:'Server refused the request (sign-in / database rules). Update the app and try again.',
     codeCopied:'📋 Copied: ',
     lvSubPvp:'Choose field size', lvSubPve:'Choose battle size',
     yourTurn:'Your move ▶', oppTurn:'Waiting for opponent…',
@@ -1484,7 +1489,7 @@ var TR = {
     stTitle:'⚙ Настройки', stSound:'Звук', stVibe:'Вибрация', stTimer:'Таймер хода против ИИ',
     stOn:'Вкл', stOff:'Выкл', stStatsH:'📊 Ваша статистика', stOk:'ОК',
     signIn:'Войти', accSigned:'В аккаунте', accNameLbl:'Ваше имя', accWhy:'Войдите, чтобы прогресс сохранялся на любом устройстве.',
-    gLbl:'Войти через Google', tcWhy:'Нет аккаунта Google? Используйте код переноса: получите его здесь, введите на другом телефоне — прогресс перейдёт туда.',
+    gLbl:'Войти через Google', aLbl:'Войти через Apple', tcWhy:'Нет аккаунта Google? Используйте код переноса: получите его здесь, введите на другом телефоне — прогресс перейдёт туда.',
     nameSaved:'Имя сохранено', nameEmpty:'Введите имя',
     stGames:'Битв', stWins:'Побед', stPct:'Процент побед', stStreak:'Серия сейчас', stBest:'Лучшая серия', stRating:'Рейтинг', stOnline:'Рейтинговых битв', stStars:'Звёзды кампании', stAch:'Достижения', stDaily:'Серия заданий', mSetLbl:'Настройки', mAchLbl:'Достижения', achTitle:'🏆 Достижения', achOk:'ОК', accOk:'ОК',
     achCount:'Открыто: {u} из {t}',
@@ -1531,7 +1536,7 @@ var TR = {
     enterCodeLbl:'Введите 4-значный код:', btnJoin:'Войти', btnBackOl:'← Назад',
     creating:'Создаём комнату…', waiting:'Ждём соперника',
     connecting:'Подключаемся…', connected:'Соперник подключился!', started:'Битва началась!',
-    notFound:'Комната не найдена. Проверьте код.', netErr:'Ошибка сети. Проверьте интернет.',
+    notFound:'Комната не найдена. Проверьте код.', netErr:'Ошибка сети. Проверьте интернет.', permErr:'Сервер отклонил запрос (вход или правила базы). Обновите игру и попробуйте снова.',
     codeCopied:'📋 Скопировано: ',
     lvSubPvp:'Выберите размер поля', lvSubPve:'Выберите размер поля битвы',
     yourTurn:'Ваш ход ▶', oppTurn:'Ждём соперника…',
@@ -1584,7 +1589,7 @@ var TR = {
 };
 function T(k){ return (TR[lang]&&TR[lang][k]) || TR.en[k] || k; }
 
-var TEXT_IDS = ['mTag','stLang','accNameLbl','accWhy','gLbl','tcWhy','mSetLbl','mAchLbl','achTitle','achOk','accOk','stAccH','tcLbl','tcEnterLbl','soLbl','dlyTitle','dlyIntro','dlyClose','mDlyT','btnQuick','btnTop','topTitle','topOk','stgTitle','stgSub','btnFree','btnBackStg','stAssist','stAchH','stTheme','btnRematch','shareLbl','stTitle','stSound','stVibe','stTimer','stStatsH','stOk','gUndo','btnBackLv','mPveT','mPveS','mPvpT','mPvpS','mOnT','mOnS',
+var TEXT_IDS = ['mTag','stLang','aLbl','accNameLbl','accWhy','gLbl','tcWhy','mSetLbl','mAchLbl','achTitle','achOk','accOk','stAccH','tcLbl','tcEnterLbl','soLbl','dlyTitle','dlyIntro','dlyClose','mDlyT','btnQuick','btnTop','topTitle','topOk','stgTitle','stgSub','btnFree','btnBackStg','stAssist','stAchH','stTheme','btnRematch','shareLbl','stTitle','stSound','stVibe','stTimer','stStatsH','stOk','gUndo','btnBackLv','mPveT','mPveS','mPvpT','mPvpS','mOnT','mOnS',
   'mRulesBtn','lvTitle','lvSub','lv1n','lv2n','lv3n',
   'btnStart','nameTitle','nameSub','lbl1','lbl2','ne1','ne2','btnCont',
   'olTitle','olSub','tCreate','tJoin','fldSizeLbl','codeLbl','codeHint',
@@ -1745,8 +1750,12 @@ function pushProgress(now){
   if(now) doPush(); else progressTimer=setTimeout(doPush,1500);
 }
 // Google sign-in: web = popup; Android app = native bridge (Google blocks OAuth inside WebViews)
+// native wrappers: Android exposes AndroidBridge, iOS exposes webkit.messageHandlers.ios
+function iosBridge(){ try{ return window.webkit&&webkit.messageHandlers&&webkit.messageHandlers.ios; }catch(e){ return null; } }
+function iosPost(msg){ var b=iosBridge(); if(b){ try{ b.postMessage(msg); return true; }catch(e){} } return false; }
 function signInGoogle(){
   if(window.AndroidBridge&&AndroidBridge.googleSignIn){ try{ AndroidBridge.googleSignIn(); }catch(e){ showToast(T('gFail')); } return; }
+  if(iosBridge()){ iosPost({cmd:'google'}); return; }
   loadFirebase().then(function(){
     if(!getDB()||!firebase.auth) throw 0;
     var provider=new firebase.auth.GoogleAuthProvider();
@@ -1771,6 +1780,23 @@ function onGoogleIdToken(idToken){
   .catch(function(e){ console.warn('google token',e); showToast(T('gFail')); });
 }
 window.onGoogleIdToken=onGoogleIdToken;
+// Sign in with Apple (iOS wrapper): identity token + the raw nonce used for the request
+function signInApple(){ if(!iosPost({cmd:'apple'})) showToast(T('gFail')); }
+function onAppleIdToken(idToken,rawNonce){
+  loadFirebase().then(function(){
+    if(!getDB()||!firebase.auth) throw 0;
+    var prov=new firebase.auth.OAuthProvider('apple.com');
+    var cred=prov.credential({idToken:idToken,rawNonce:rawNonce});
+    var cur=firebase.auth().currentUser;
+    var pr=cur&&cur.isAnonymous ? cur.linkWithCredential(cred) : firebase.auth().signInWithCredential(cred);
+    return pr.catch(function(err){ if(err&&err.code==='auth/credential-already-in-use') return firebase.auth().signInWithCredential(cred); throw err; });
+  }).then(function(res){ if(res&&res.user) onSignedIn(res.user); showToast(T('gOk')); })
+  .catch(function(e){ console.warn('apple sign-in',e); showToast(T('gFail')+(e&&e.code?' ('+e.code+')':'')); });
+}
+window.onAppleIdToken=onAppleIdToken;
+function nativeSignInFailed(msg){ showToast(T('gFail')+(msg?' — '+msg:''),6000); }
+window.nativeSignInFailed=nativeSignInFailed;
+document.addEventListener('DOMContentLoaded',function(){ if(iosBridge()){ document.body.classList.add('ios'); } });
 // Transfer code = hidden email/password identity: dw-<id>@dotswar.app / <secret>
 function randCode(n,alpha){ var out=''; for(var i=0;i<n;i++) out+=alpha.charAt((Math.random()*alpha.length)|0); return out; }
 function showTransferCode(){
@@ -1853,8 +1879,8 @@ function openLeaderboard(){
 function quickMatch(){
   leaveRoom(); setOS(T('quickSearch'),'wdots');
   document.getElementById('btnQuick').disabled=true;
-  loadFirebase().then(function(){
-    if(!getDB()){ setOS(T('netErr'),'err'); document.getElementById('btnQuick').disabled=false; return; }
+  loadFirebase().then(function(){ if(!getDB()) throw 0; return waitAuth(); }).then(function(ok){
+    if(!ok){ setOS(T('permErr'),'err'); document.getElementById('btnQuick').disabled=false; return; }
     return db.ref('queue').once('value').then(function(snap){
       var q=snap.val()||{}, pick=null, now=serverNow();
       Object.keys(q).forEach(function(k){ var e=q[k]; if(!e||k===UID||!e.code) return; if(typeof e.t==='number'&&now-e.t>180000) return; if(!pick||(e.t||0)<(pick.t||0)) pick={uid:k,code:e.code,t:e.t}; });
@@ -1885,7 +1911,7 @@ var pressActive=false, pressTimer=null, pressX=0, pressY=0, loupeShow=false, lou
 var HOLD_MS=300, PRESS_SLOP=6;
 var curScreen='screen-menu', _cfCb=null;
 var turnTimerId=null, turnGraceId=null, TURN_SECS=15, TURN_GRACE=5, TURN_WARN=5;
-var APP_VERSION='2.6.0';
+var APP_VERSION='2.6.1';
 var SET={sound:true,vibe:true,pveTimer:15,theme:'world',assist:true};
 (function(){ try{ var v=JSON.parse(localStorage.getItem('dwSet')||'{}'); for(var k in v) if(k in SET) SET[k]=v[k]; if(!localStorage.getItem('dwTheme24')){ SET.theme='world'; localStorage.setItem('dwTheme24','1'); } if(SET.theme!=='neon'&&SET.theme!=='world') SET.theme='world'; }catch(e){} })();
 function saveSet(){ try{localStorage.setItem('dwSet',JSON.stringify(SET));}catch(e){} }
@@ -3924,6 +3950,22 @@ function loadFirebase(){
     .catch(function(e){ fbLoading=null; throw e; });
   return fbLoading;
 }
+// resolves once Firebase Auth has a user (anonymous or real); rules need auth != null
+function waitAuth(ms){
+  return new Promise(function(res){
+    try{
+      if(!firebase.auth) return res(false);
+      var u=firebase.auth().currentUser; if(u) return res(true);
+      ensureAuth();
+      var done=false, off=firebase.auth().onAuthStateChanged(function(x){ if(x&&!done){ done=true; off(); res(true); } });
+      setTimeout(function(){ if(!done){ done=true; off(); res(!!firebase.auth().currentUser); } }, ms||8000);
+    }catch(e){ res(false); }
+  });
+}
+function dbErrText(err){
+  var c=String(err&&(err.code||err.message)||'');
+  return /PERMISSION_DENIED|permission/i.test(c)?T('permErr'):T('netErr');
+}
 function getDB(){
   if(db) return db;
   if(!fbReady()) return null;
@@ -4154,8 +4196,8 @@ function createRoom(){
   leaveRoom();_ca=0;
   setOS(T('creating'),'');
   document.getElementById('btnCreate').style.display='none';
-  loadFirebase().then(function(){
-    if(!getDB()){setOS(T('netErr'),'err');document.getElementById('btnCreate').style.display='block';return;}
+  loadFirebase().then(function(){ if(!getDB()) throw 0; return waitAuth(); }).then(function(ok){
+    if(!ok){setOS(T('permErr'),'err');document.getElementById('btnCreate').style.display='block';return;}
     _dc();
   }).catch(function(){ setOS(T('netErr'),'err');document.getElementById('btnCreate').style.display='block'; });
 }
@@ -4172,6 +4214,7 @@ function _dc(){
     clearTimeout(ot);
     if(err||!committed){
       _ca++;
+      if(err&&/PERMISSION_DENIED|permission/i.test(String(err.code||err.message))){ setOS(T('permErr'),'err');document.getElementById('btnCreate').style.display='block'; return; }
       if(_ca<6){_dc();}
       else{setOS(T('netErr'),'err');document.getElementById('btnCreate').style.display='block';}
       return;
@@ -4210,8 +4253,8 @@ function joinRoom(){
   if(code.length<4){setOS(T('enterCodeLbl'),'err');return;}
   leaveRoom();
   setOS(T('connecting'),'');
-  loadFirebase().then(function(){
-    if(!getDB()){setOS(T('netErr'),'err');return;}
+  loadFirebase().then(function(){ if(!getDB()) throw 0; return waitAuth(); }).then(function(ok){
+    if(!ok){setOS(T('permErr'),'err');return;}
     _join(code);
   }).catch(function(){ setOS(T('netErr'),'err'); });
 }
