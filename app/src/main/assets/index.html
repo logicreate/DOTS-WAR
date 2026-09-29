@@ -1181,7 +1181,7 @@ body[data-theme=paper] .tring .tfg{stroke:#e0a000}
     </div>
     <div class="hud-mid">
       <div class="stage-tag" id="stageTag"></div>
-      <div class="turn-t" id="turnT">—</div>
+      <div class="turn-t" id="turnT" onclick="showOlLog()">—</div>
       <div class="turn-timer" id="turnTimer"></div>
     </div>
     <div class="phud phud-r" id="phud2">
@@ -1441,7 +1441,7 @@ var TR = {
     enterCodeLbl:'Enter 4-digit code:', btnJoin:'Join', btnBackOl:'← Back',
     creating:'Creating room…', waiting:'Waiting for opponent',
     connecting:'Connecting…', connected:'Opponent connected!', started:'Battle started!',
-    notFound:'Room not found. Check the code.', netErr:'Network error. Check internet.', permErr:'Server refused the request (sign-in / database rules). Update the app and try again.',
+    notFound:'Room not found. Check the code.', netErr:'Network error. Check internet.', permErr:'Database refused the request: the current rules (firebase-rules.json) are not published in Firebase.',
     codeCopied:'📋 Copied: ',
     lvSubPvp:'Choose field size', lvSubPve:'Choose battle size',
     yourTurn:'Your move ▶', oppTurn:'Waiting for opponent…',
@@ -1479,7 +1479,7 @@ var TR = {
     oppResigned:'Opponent resigned — you win!',
     connLost:'Connection lost. Returning to menu…',
     moveFailed:'Move failed to send, retrying…',
-    moveFailedFinal:'Could not send your move. Check connection.',
+    moveFailedFinal:'Could not send your move. Check connection.', moveNoAck:'The server has not confirmed your move — resending…',
     youTag:' (you)', oppStalled:'Opponent is not moving…',
     oppTimeout:'Opponent ran out of time — you win!', youTimeout:'You ran out of time.', timeoutTag:'Timeout',
     noConn:'⚠ No connection…', connBack:'Connection restored',
@@ -1549,7 +1549,7 @@ var TR = {
     enterCodeLbl:'Введите 4-значный код:', btnJoin:'Войти', btnBackOl:'← Назад',
     creating:'Создаём комнату…', waiting:'Ждём соперника',
     connecting:'Подключаемся…', connected:'Соперник подключился!', started:'Битва началась!',
-    notFound:'Комната не найдена. Проверьте код.', netErr:'Ошибка сети. Проверьте интернет.', permErr:'Сервер отклонил запрос (вход или правила базы). Обновите игру и попробуйте снова.',
+    notFound:'Комната не найдена. Проверьте код.', netErr:'Ошибка сети. Проверьте интернет.', permErr:'База отклонила запрос: в Firebase не опубликованы актуальные правила (firebase-rules.json).',
     codeCopied:'📋 Скопировано: ',
     lvSubPvp:'Выберите размер поля', lvSubPve:'Выберите размер поля битвы',
     yourTurn:'Ваш ход ▶', oppTurn:'Ждём соперника…',
@@ -1587,7 +1587,7 @@ var TR = {
     oppResigned:'Соперник сдался — вы победили!',
     connLost:'Соединение потеряно. Возврат в меню…',
     moveFailed:'Ход не отправился, повтор…',
-    moveFailedFinal:'Не удалось отправить ход. Проверьте соединение.',
+    moveFailedFinal:'Не удалось отправить ход. Проверьте соединение.', moveNoAck:'Сервер не подтвердил ход — отправляю снова…',
     youTag:' (вы)', oppStalled:'Соперник не ходит…',
     oppTimeout:'У соперника вышло время — вы победили!', youTimeout:'У вас вышло время.', timeoutTag:'Таймаут',
     noConn:'⚠ Нет связи…', connBack:'Связь восстановлена',
@@ -1924,7 +1924,7 @@ var pressActive=false, pressTimer=null, pressX=0, pressY=0, loupeShow=false, lou
 var HOLD_MS=300, PRESS_SLOP=6;
 var curScreen='screen-menu', _cfCb=null;
 var turnTimerId=null, turnGraceId=null, TURN_SECS=15, TURN_GRACE=5, TURN_WARN=5;
-var APP_VERSION='2.7.0';
+var APP_VERSION='2.7.1';
 var SET={sound:true,vibe:true,pveTimer:15,theme:'world',assist:true};
 (function(){ try{ var v=JSON.parse(localStorage.getItem('dwSet')||'{}'); for(var k in v) if(k in SET) SET[k]=v[k]; if(!localStorage.getItem('dwTheme24')){ SET.theme='world'; localStorage.setItem('dwTheme24','1'); } SET.theme='world'; }catch(e){} })();
 function saveSet(){ try{localStorage.setItem('dwSet',JSON.stringify(SET));}catch(e){} }
@@ -3992,6 +3992,7 @@ function getDB(){
     try{ db.ref('.info/serverTimeOffset').on('value',function(s){ var v=s.val(); if(typeof v==='number') serverOffset=v; }); }catch(e){}
     try{ db.ref('.info/connected').on('value',function(s){
       var v=s.val();
+      olLog('connected='+v);
       if(v===false&&olReady&&G&&!G.over&&!offline){ offline=true; showToast(T('noConn'),4000); updateHUD(); }
       else if(v===true&&offline){ offline=false; showToast(T('connBack')); updateHUD(); }
     }); }catch(e){}
@@ -4082,12 +4083,14 @@ function listenMoves(){
       var d=snap.val();
       if(!d||d.p===myPNum) return;          // own moves are applied locally
       if(!G||G.over) return;
+      olLog('recv '+(snap.key||'?')+' p'+d.p+' seq'+d.seq+' cur'+G.cur+' mc'+G.moveCount);
       if(typeof d.seq==='number'&&d.seq>G.moveCount){ resyncMoves(); return; }   // we missed something: catch up
-      applyRemoteMove(d);
+      if(!applyRemoteMove(d)) olLog('skip '+(snap.key||'?'));
     }catch(err){
       console.warn('listenMoves handler error',err);
     }
   },function(err){
+    olLog('moves listener error '+String(err&&(err.code||err.message)||err));
     console.warn('listenMoves detached',err);
     if(gameMode==='online'&&G&&!G.over){
       showToast(T('connLost'));
@@ -4106,7 +4109,8 @@ function startOnlineGame(){
   hideRematchUI();
   startGame();
   if(isHost) setTurn(1);
-  olWatchId=setInterval(function(){ watchOpponentClock(); if(G&&!G.over&&G.cur!==myPNum&&(Date.now()%3000)<1000) resyncMoves(); },1000);
+  olLogArr=[]; pendingMove=null; olLog('game start as P'+myPNum+' room '+roomCode);
+  olWatchId=setInterval(function(){ watchOpponentClock(); checkMoveAck(); if(G&&!G.over&&G.cur!==myPNum&&(Date.now()%3000)<1000) resyncMoves(); },1000);
 }
 function setTurn(p){
   try{ if(roomRef) roomRef.child('turn').set({p:p,t:firebase.database.ServerValue.TIMESTAMP}); }catch(e){}
@@ -4206,27 +4210,40 @@ function listenResign(){
     console.warn('listenResign detached',err);
   });
 }
+// online diagnostics: last events, shown in the banner when a move does not get through
+var olLogArr=[], lastAck=0, pendingMove=null;
+function olLog(m){ var t=new Date(); olLogArr.push(('0'+t.getMinutes()).slice(-2)+':'+('0'+t.getSeconds()).slice(-2)+' '+m); if(olLogArr.length>30) olLogArr.shift(); }
 function pushMove(r,c,_retry){
-  if(!movesRef) return;
+  if(!movesRef){ olLog('no movesRef'); showToast(T('moveFailedFinal')+' (no room)',6000); return; }
+  var seq=G.moveCount-1, key='m'+seq, obj={p:myPNum,r:r,c:c,seq:seq};
+  pendingMove={key:key,obj:obj,t:Date.now(),tries:(_retry|0)+1};
+  olLog('send '+key+' p'+myPNum+' '+r+','+c);
   try{
-    var res=movesRef.push({p:myPNum,r:r,c:c,seq:G.moveCount-1});
+    var res=movesRef.child(key).set(obj);
     if(!_retry) setTurn(3-myPNum);
     if(res&&typeof res.then==='function'){
-      res.catch(function(err){
-        console.warn('pushMove failed',err);
-        if(!_retry){
+      res.then(function(){ lastAck=Date.now(); if(pendingMove&&pendingMove.key===key) pendingMove=null; olLog('ack '+key); })
+      .catch(function(err){
+        olLog('FAIL '+key+' '+String(err&&(err.code||err.message)||err));
+        if((_retry|0)<2){
           showToast(T('moveFailed')+' ('+dbErrText(err)+')',5000);
-          setTimeout(function(){pushMove(r,c,true);},1200);
+          setTimeout(function(){pushMove(r,c,(_retry|0)+1);},1500);
         } else {
-          showToast(T('moveFailedFinal')+' ('+dbErrText(err)+')',7000);
+          showToast(T('moveFailedFinal')+' ('+dbErrText(err)+')',8000);
         }
       });
     }
   }catch(e){
-    console.warn('pushMove threw',e);
-    if(!_retry) setTimeout(function(){pushMove(r,c,true);},1200);
-    else showToast(T('moveFailedFinal'));
+    olLog('THROW '+e); if((_retry|0)<2) setTimeout(function(){pushMove(r,c,(_retry|0)+1);},1500); else showToast(T('moveFailedFinal'));
   }
+}
+// no server acknowledgement for 6 s → tell the player and resend the same key (idempotent)
+function showOlLog(){ if(gameMode!=='online') return; showBanner('P'+myPNum+' '+(roomCode||'')+' · '+(olLogArr.slice(-6).join(' · ')||'—'),8000); }
+function checkMoveAck(){
+  if(!pendingMove||!G||G.over||gameMode!=='online') return;
+  var age=Date.now()-pendingMove.t;
+  if(age>6000&&pendingMove.tries<4){ olLog('no ack, resend '+pendingMove.key); var pm=pendingMove; pendingMove=null; pushMove(pm.obj.r,pm.obj.c,pm.tries); showToast(T('moveNoAck'),4000); }
+  else if(age>6000) showBanner(T('moveNoAck')+' · '+olLogArr.slice(-2).join(' · '),0,true);
 }
 var _ca=0;
 function createRoom(){
