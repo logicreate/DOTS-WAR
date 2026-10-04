@@ -1395,7 +1395,7 @@ var TR = {
     stOn:'On', stOff:'Off', stStatsH:'📊 Your statistics', stOk:'OK',
     signIn:'Sign in', accSigned:'Signed in', accNameLbl:'Your name', accWhy:'Sign in to keep your progress on any device.',
     gLbl:'Sign in with Google', aLbl:'Sign in with Apple', aFail:'Could not sign in with Apple', tcWhy:'No Google account? Use a transfer code: get it here, enter it on your other device — your progress follows you.',
-    nameSaved:'Name saved', nameEmpty:'Enter a name',
+    nameSaved:'Name saved', nameEmpty:'Enter a name', nameTaken:'This name is already taken — choose another', nameInvalid:'Name: 2–18 letters, digits, spaces, - or _', nameOffline:'Cannot check the name right now — check your connection', nameChecking:'Checking the name…',
     stGames:'Battles', stWins:'Wins', stPct:'Win rate', stStreak:'Current streak', stBest:'Best streak', stRating:'Rating', stOnline:'Rated battles', stStars:'Campaign stars', stAch:'Achievements', stDaily:'Daily streak', mSetLbl:'Settings', mAchLbl:'Achievements', achTitle:'🏆 Achievements', achOk:'OK', accOk:'OK',
     achCount:'Unlocked: {u} of {t}',
     stAccH:'👤 Account', accGuest:'Guest — progress is saved on this device only', accCloud:'Guest — progress is synced to the cloud', accGoogle:'Signed in with Google: {e}',
@@ -1503,7 +1503,7 @@ var TR = {
     stOn:'Вкл', stOff:'Выкл', stStatsH:'📊 Ваша статистика', stOk:'ОК',
     signIn:'Войти', accSigned:'В аккаунте', accNameLbl:'Ваше имя', accWhy:'Войдите, чтобы прогресс сохранялся на любом устройстве.',
     gLbl:'Войти через Google', aLbl:'Войти через Apple', aFail:'Не удалось войти через Apple', tcWhy:'Нет аккаунта Google? Используйте код переноса: получите его здесь, введите на другом телефоне — прогресс перейдёт туда.',
-    nameSaved:'Имя сохранено', nameEmpty:'Введите имя',
+    nameSaved:'Имя сохранено', nameEmpty:'Введите имя', nameTaken:'Это имя уже занято — выберите другое', nameInvalid:'Имя: 2–18 букв, цифр, пробелов, - или _', nameOffline:'Не удалось проверить имя — проверьте соединение', nameChecking:'Проверяю имя…',
     stGames:'Битв', stWins:'Побед', stPct:'Процент побед', stStreak:'Серия сейчас', stBest:'Лучшая серия', stRating:'Рейтинг', stOnline:'Рейтинговых битв', stStars:'Звёзды кампании', stAch:'Достижения', stDaily:'Серия заданий', mSetLbl:'Настройки', mAchLbl:'Достижения', achTitle:'🏆 Достижения', achOk:'ОК', accOk:'ОК',
     achCount:'Открыто: {u} из {t}',
     stAccH:'👤 Аккаунт', accGuest:'Гость — прогресс хранится только на этом устройстве', accCloud:'Гость — прогресс сохраняется в облаке', accGoogle:'Вход через Google: {e}',
@@ -1744,7 +1744,13 @@ function mergeProgress(c){
 }
 function onSignedIn(u){
   authUser=u; UID=u.uid; try{localStorage.setItem('dwUid',u.uid);}catch(e){}
-  if(u.displayName&&!localStorage.getItem('dwName')) try{localStorage.setItem('dwName',u.displayName.slice(0,18));}catch(e){}
+  if(u.displayName&&!localStorage.getItem('dwName')){
+    var base=u.displayName.replace(/[.#$\[\]\/]/g,'').trim().slice(0,15)||'Player', tries=0;
+    (function tryName(n){ claimName(n).then(function(r){
+      if(r.ok){ try{localStorage.setItem('dwName',n);}catch(e){} playerNames[0]=n; refreshProfileChip(); renderAccount(); pushProgress(); }
+      else if(r.reason==='taken'&&tries<20){ tries++; tryName(base+(tries+1)); }
+    }); })(base);
+  }
   renderAccount();
   try{
     db.ref('players/'+u.uid).once('value').then(function(snap){
@@ -1924,7 +1930,7 @@ var pressActive=false, pressTimer=null, pressX=0, pressY=0, loupeShow=false, lou
 var HOLD_MS=300, PRESS_SLOP=6;
 var curScreen='screen-menu', _cfCb=null;
 var turnTimerId=null, turnGraceId=null, TURN_SECS=15, TURN_GRACE=5, TURN_WARN=5;
-var APP_VERSION='2.7.1';
+var APP_VERSION='2.7.2';
 var SET={sound:true,vibe:true,pveTimer:15,theme:'world',assist:true};
 (function(){ try{ var v=JSON.parse(localStorage.getItem('dwSet')||'{}'); for(var k in v) if(k in SET) SET[k]=v[k]; if(!localStorage.getItem('dwTheme24')){ SET.theme='world'; localStorage.setItem('dwTheme24','1'); } SET.theme='world'; }catch(e){} })();
 function saveSet(){ try{localStorage.setItem('dwSet',JSON.stringify(SET));}catch(e){} }
@@ -1940,11 +1946,41 @@ function tpl(str,o){ return str.replace(/\{(\w+)\}/g,function(_,k){return o[k];}
 // ── settings modal ──
 function openSettings(){ renderSettings(); document.getElementById('settingsModal').classList.add('open'); }
 function myName(){ try{ return (localStorage.getItem('dwName')||'').trim(); }catch(e){ return ''; } }
+// ── Unique player names. usernames/<key> holds the uid of the owner; a name is
+//    claimed with a transaction so two players can never take the same one.
+//    key = lower-case, spaces collapsed, dots/#/$/[/] removed (Firebase key rules).
+function nameKey(n){ return String(n||'').trim().toLowerCase().replace(/\s+/g,' ').replace(/[.#$\[\]\/]/g,'').slice(0,18); }
+function validName(n){ n=String(n||'').trim(); return n.length>=2&&n.length<=18&&/^[\p{L}\p{N} _\-]+$/u.test(n); }
+function claimName(name){
+  // resolves {ok:true} | {ok:false,reason:'taken'|'invalid'|'offline'}
+  if(!validName(name)) return Promise.resolve({ok:false,reason:'invalid'});
+  var key=nameKey(name);
+  return loadFirebase().then(function(){ if(!getDB()) throw 0; return waitAuth(6000); }).then(function(okAuth){
+    if(!okAuth) return {ok:false,reason:'offline'};
+    var me=UID, ref=db.ref('usernames/'+key), old=null; try{ old=nameKey(localStorage.getItem('dwName')||''); }catch(e){}
+    return new Promise(function(res){
+      var done=false, t=setTimeout(function(){ if(!done){ done=true; res({ok:false,reason:'offline'}); } },8000);
+      ref.transaction(function(cur){ if(cur===null||cur===me) return me; return; },function(err,committed){
+        if(done) return; done=true; clearTimeout(t);
+        if(err) return res({ok:false,reason:/PERMISSION/i.test(String(err))?'offline':'offline'});
+        if(!committed) return res({ok:false,reason:'taken'});
+        if(old&&old!==key){ try{ db.ref('usernames/'+old).transaction(function(cur){ return cur===me?null:undefined; }); }catch(e){} }
+        res({ok:true});
+      });
+    });
+  }).catch(function(){ return {ok:false,reason:'offline'}; });
+}
+function nameProblemText(reason){ return reason==='taken'?T('nameTaken'):reason==='invalid'?T('nameInvalid'):T('nameOffline'); }
 function saveMyName(){
   var v=(document.getElementById('accName').value||'').trim().slice(0,18);
   if(!v){ showToast(T('nameEmpty')); return; }
-  try{localStorage.setItem('dwName',v);}catch(e){}
-  playerNames[0]=v; refreshProfileChip(); pushProgress(); showToast(T('nameSaved'));
+  var btn=document.getElementById('accSave'); if(btn) btn.disabled=true;
+  claimName(v).then(function(r){
+    if(btn) btn.disabled=false;
+    if(!r.ok){ showToast(nameProblemText(r.reason),5000); return; }
+    try{localStorage.setItem('dwName',v);}catch(e){}
+    playerNames[0]=v; refreshProfileChip(); pushProgress(); showToast(T('nameSaved'));
+  });
 }
 function renderStats(){
   var g=document.getElementById('statGrid'); if(!g) return;
@@ -3203,9 +3239,15 @@ function confirmNames(){
   var n1=document.getElementById('ni1').value.trim();
   document.getElementById('ni1').classList.remove('bad');document.getElementById('ne1').classList.remove('show');
   if(!n1){document.getElementById('ni1').classList.add('bad');document.getElementById('ne1').classList.add('show');document.getElementById('ni1').focus();return;}
-  playerNames[0]=n1;
-  try{localStorage.setItem('dwName',n1);}catch(e){}
-  buildOlLvs();SS('screen-online');setOS('','');
+  var same=false; try{ same=nameKey(localStorage.getItem('dwName')||'')===nameKey(n1); }catch(e){}
+  if(same){ playerNames[0]=n1; buildOlLvs();SS('screen-online');setOS('',''); return; }
+  showToast(T('nameChecking'),2000);
+  claimName(n1).then(function(r){
+    if(!r.ok){ showToast(nameProblemText(r.reason),5000); document.getElementById('ni1').classList.add('bad'); return; }
+    playerNames[0]=n1;
+    try{localStorage.setItem('dwName',n1);}catch(e){}
+    buildOlLvs();SS('screen-online');setOS('','');
+  });
   refreshOlMe(); ensureAuth(); loadFirebase().then(function(){ syncMyPlayer(); }).catch(function(){});
   document.getElementById('codeBox').style.display='none';
   document.getElementById('btnCreate').style.display='block';
@@ -3671,12 +3713,17 @@ function screenPos(e){
   var rect=baseRect(), q=unproj(e.clientX,e.clientY,rect);
   return {x:(q.x-rect.left)*VW/rect.width, y:(q.y-rect.top)*VH/rect.height};
 }
-function rotStart(a,b){ rot={ang:Math.atan2(b.clientY-a.clientY,b.clientX-a.clientX),my:(a.clientY+b.clientY)/2,ax:V3.ax,az:V3.az}; }
+function rotStart(a,b){ rot={ids:(a.identifier|0)+'/'+(b.identifier|0),ang:Math.atan2(b.clientY-a.clientY,b.clientX-a.clientX),my:(a.clientY+b.clientY)/2}; }
 function rotMove(a,b){
-  if(!rot) return;
+  var ids=(a.identifier|0)+'/'+(b.identifier|0);
+  if(!rot||rot.ids!==ids){ rotStart(a,b); return; }   // the pair of fingers changed: new baseline, no jump
   var ang=Math.atan2(b.clientY-a.clientY,b.clientX-a.clientX), my=(a.clientY+b.clientY)/2;
-  V3.az=rot.az+(ang-rot.ang)*180/Math.PI*0.4;
-  V3.ax=Math.max(12,Math.min(70,rot.ax-(my-rot.my)*0.08));
+  var d=ang-rot.ang; while(d>Math.PI) d-=2*Math.PI; while(d<-Math.PI) d+=2*Math.PI;   // shortest way round, no ±360° jumps
+  if(Math.abs(d)>0.6) d=0;                                                              // a finger slipped: ignore the spike
+  var dy=my-rot.my; if(Math.abs(dy)>80) dy=0;
+  V3.az+=d*180/Math.PI*0.4;
+  V3.ax=Math.max(12,Math.min(70,V3.ax-dy*0.08));
+  rot.ang=ang; rot.my=my;
   v3apply(true);
 }
 function boardScrollable(){ return BW>VW+0.5||BH>VH+0.5; }
@@ -4403,10 +4450,10 @@ cv.addEventListener('touchmove',function(e){
 },{passive:false});
 cv.addEventListener('touchend',function(e){
   e.preventDefault();
-  if(e.touches.length<2) pinch=null;
+  if(e.touches.length<2){ pinch=null; rot=null; }
   if(e.touches.length===0) pressEnd(false);
 },{passive:false});
-cv.addEventListener('touchcancel',function(e){ pinch=null; pressEnd(true); },{passive:false});
+cv.addEventListener('touchcancel',function(e){ pinch=null; rot=null; pressEnd(true); },{passive:false});
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape') closeAllModals();
   if(e.key==='r'&&gameMode!=='online'&&document.getElementById('screen-game').classList.contains('active')&&!document.querySelector('.overlay.open')) askRestart();
