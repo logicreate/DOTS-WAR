@@ -17,7 +17,7 @@
      Файлы preview.png и favicon.png положи в ту же папку репозитория, где лежит игра -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="DOTS WAR">
-<meta property="og:description" content="Окружай и захватывай точки соперника! Кампания против ИИ, задания дня и онлайн-битвы.">
+<meta property="og:description" content="Окружай и захватывай точки соперника! Три мира с боссами, туман войны, материки, задания дня и онлайн.">
 <meta property="og:image" content="https://logicreate.github.io/dots-game/preview.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -924,6 +924,51 @@ body[data-theme=world] .lv-ico{filter:drop-shadow(0 4px 6px rgba(0,0,0,.5))}
     mask-image:linear-gradient(90deg,transparent calc(50% - 28.5vh),#000 calc(50% - 25.5vh),#000 calc(50% + 25.5vh),transparent calc(50% + 28.5vh))}
   body[data-theme=world] #screen-menu::after{background:radial-gradient(circle at 50% 20%,rgba(255,224,151,.15),transparent 31%),linear-gradient(180deg,rgba(20,25,19,.22),rgba(20,25,19,0) 38%,rgba(15,25,20,.28) 75%,rgba(10,18,15,.6)),var(--garden) center/auto 100% no-repeat}
 }
+/* ── 2.8: crystals, shop, boosters, daily login, expedition ── */
+.mseg{background:none;border:0;color:inherit;display:flex;align-items:center;gap:6px;padding:0;cursor:pointer;font:inherit}
+.mseg b{font-size:.84rem;font-weight:900;letter-spacing:.02em}
+.mcry{font-style:normal;color:#8fe3ff;text-shadow:0 0 8px rgba(120,220,255,.7);font-size:.95rem;line-height:1}
+.mseg-cry b{color:#c9f3ff}
+.msep{width:1px;align-self:stretch;margin:8px 2px;background:rgba(255,235,177,.35)}
+body[data-theme=world] .mchip-rate{gap:9px;padding:0 14px}
+body[data-theme=world] .mchip{min-width:150px}
+.mchip.pulse{animation:cryPulse .7s ease}
+@keyframes cryPulse{0%{transform:scale(1)}40%{transform:scale(1.08);box-shadow:0 0 22px rgba(120,220,255,.7)}100%{transform:scale(1)}}
+.res-cry{text-align:center;font-weight:900;color:#c9f3ff;margin:-6px 0 12px;font-size:.95rem;text-shadow:0 0 10px rgba(120,220,255,.5)}
+.res-cry:empty{display:none}
+.btn-boost{color:#c9f3ff!important;font-size:1rem!important}
+.shop-bal{text-align:center;font-size:1.25rem;font-weight:900;margin:-4px 0 10px;color:#c9f3ff}
+.shop-tabs{margin:0 auto 10px;justify-content:center}
+.shop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.shop-it{display:flex;flex-direction:column;align-items:center;gap:5px;padding:9px 6px;border-radius:14px;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,225,159,.3);cursor:pointer;color:var(--text);font:inherit}
+.shop-it img,.shop-it canvas{width:54px;height:54px;object-fit:contain;border-radius:10px}
+.shop-it .si-n{font-size:.74rem;font-weight:800;text-align:center}
+.shop-it .si-p{font-size:.72rem;font-weight:900;color:#c9f3ff}
+.shop-it.own .si-p{color:var(--sub)}
+.shop-it.eq{border-color:#f4ce7a;box-shadow:0 0 16px rgba(244,206,122,.4)}
+.shop-it.eq .si-p{color:#f4ce7a}
+.shop-note{font-size:.78rem!important;color:var(--muted)!important;margin-top:10px!important;line-height:1.45!important}
+.bst-row{display:flex;align-items:center;gap:12px;padding:11px 13px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,225,159,.3);color:var(--text);cursor:pointer;width:100%;text-align:left;font:inherit}
+.bst-row:disabled{opacity:.45;cursor:default}
+.bst-row .bi{font-size:1.5rem}.bst-row .bn{font-weight:900}.bst-row .bd{font-size:.76rem;color:var(--muted)}
+.bst-row .bp{margin-left:auto;font-weight:900;color:#c9f3ff;white-space:nowrap}
+.lg-days{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin:4px 0 12px}
+.lg-d{border-radius:11px;padding:7px 2px;background:rgba(255,255,255,.05);border:1px solid rgba(255,225,159,.25);font-size:.62rem;font-weight:800;color:var(--muted)}
+.lg-d b{display:block;font-size:.82rem;color:#c9f3ff;margin-top:3px}
+.lg-d.done{opacity:.55}
+.lg-d.today{border-color:#f4ce7a;background:rgba(244,206,122,.16);box-shadow:0 0 16px rgba(244,206,122,.35);color:var(--text)}
+.exp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;width:100%;max-width:520px;margin-bottom:12px}
+.exp-card{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px;border-radius:16px;background:rgba(40,28,18,.72);border:1.5px solid rgba(255,225,159,.35);cursor:pointer;color:var(--text);font:inherit;box-shadow:0 6px 14px rgba(0,0,0,.3)}
+.exp-card canvas{width:100%;aspect-ratio:1;border-radius:10px;display:block}
+.exp-card .en{font-weight:900;font-size:.9rem}.exp-card .ed{font-size:.7rem;color:var(--muted);text-align:center}
+.exp-card .ew{font-size:.66rem;color:var(--sub)}
+.exp-card.sel{border-color:#f4ce7a;box-shadow:0 0 20px rgba(244,206,122,.45)}
+.exp-lands{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;width:100%;max-width:520px;margin:-2px 0 12px}
+.exp-lands button{font:inherit;font-size:.74rem;font-weight:700;padding:6px 10px;border-radius:999px;border:1.5px solid rgba(255,225,159,.35);background:rgba(40,28,18,.72);color:var(--text);cursor:pointer}
+.exp-lands button.on{border-color:#f4ce7a;background:linear-gradient(#f6d58a,#c9953f);color:#2a1a08}
+.exp-dice{position:absolute;top:12px;right:12px;font-size:1rem;background:rgba(30,20,10,.65);border-radius:10px;padding:2px 5px;pointer-events:none}
+.exp-opts{width:100%;max-width:520px}
+.exp-reward{margin-top:8px;font-weight:900;color:#c9f3ff;text-align:center}
 body{background:var(--bg);color:var(--text)}
 #screen-menu{background:var(--bg)}
 #screen-game,#screen-stages,#screen-level,#screen-name,#screen-online,#screen-result{background:var(--bg2)}
@@ -1019,6 +1064,18 @@ body[data-theme=paper] .btn-sm:active{transform:none;box-shadow:none}
 body[data-theme=paper] .btn-resign{background:#f0ece0!important;color:#8c1400!important;box-shadow:none!important}
 body[data-theme=paper] .tring .tbg{stroke:rgba(0,0,0,.1)}
 body[data-theme=paper] .tring .tfg{stroke:#e0a000}
+.wtabs{display:flex;gap:8px;width:100%;max-width:420px;margin:0 0 12px}
+.wtab{flex:1;border-radius:14px;padding:7px 4px 6px;text-align:center;cursor:pointer;font:inherit;color:var(--text);background:rgba(40,28,18,.72);border:1.5px solid rgba(255,225,159,.3);box-shadow:0 4px 10px rgba(0,0,0,.25)}
+.wtab .wi{font-size:1.25rem;display:block;line-height:1.2}.wtab .wn{font-size:.7rem;font-weight:800;display:block}.wtab .ws{font-size:.62rem;color:var(--sub)}
+.wtab.on{border-color:#f4ce7a;box-shadow:0 0 18px rgba(244,206,122,.45)}
+.wtab[data-w="2"].on{border-color:#8cc8ff;box-shadow:0 0 18px rgba(110,180,255,.5)}
+.wtab.locked{opacity:.5}
+.stg.boss{border-color:rgba(255,140,90,.85)!important;background:linear-gradient(160deg,rgba(130,36,20,.82),rgba(50,14,8,.88))!important}
+.stg.boss .stg-n{font-size:1.5rem}
+body[data-world="2"] #screen-game,body[data-world="2"] #screen-stages,body[data-world="2"] #screen-result{background:linear-gradient(180deg,rgba(8,30,72,.74),rgba(4,14,42,.9)),var(--garden) center/cover no-repeat #0b1a33}
+body[data-world="3"] #screen-game,body[data-world="3"] #screen-stages,body[data-world="3"] #screen-result{background:linear-gradient(180deg,rgba(92,58,6,.66),rgba(50,30,2,.88)),var(--garden) center/cover no-repeat #2a1a05}
+body[data-world="2"] .stg{background:linear-gradient(160deg,rgba(20,50,96,.8),rgba(8,22,50,.85))}
+body[data-world="3"] .stg{background:linear-gradient(160deg,rgba(96,66,14,.8),rgba(52,32,4,.85))}
 </style>
 </head>
 <body>
@@ -1026,7 +1083,7 @@ body[data-theme=paper] .tring .tfg{stroke:#e0a000}
   <div class="menu-inner">
     <div class="mtop">
       <button class="mchip mchip-prof" onclick="openAccount()"><span class="mav" id="mStarsNum">0</span><b id="mProfName">—</b></button>
-      <button class="mchip mchip-rate" onclick="openLeaderboard()" id="mRateChip"><span class="msun">☀</span><b id="mRateNum">1000</b></button>
+      <div class="mchip mchip-rate" id="mRateChip"><button class="mseg mseg-cry" onclick="openShop()"><i class="mcry">◆</i><b id="mCryNum">0</b></button><span class="msep"></span><button class="mseg" onclick="openLeaderboard()"><span class="msun">☀</span><b id="mRateNum">1000</b></button></div>
     </div>
     <div class="logo-section">
       <img class="trademark-img" data-img="logo" alt="DOTS WAR">
@@ -1071,9 +1128,10 @@ body[data-theme=paper] .tring .tfg{stroke:#e0a000}
 <div id="screen-stages" class="screen iscr">
   <div class="stitle" id="stgTitle">⚔ Campaign</div>
   <div class="ssub" id="stgSub">12 battles — earn stars, unlock the next one</div>
+  <div class="wtabs" id="wTabs"></div>
   <div class="stg-grid" id="stgGrid"></div>
   <div class="row" style="margin-top:6px">
-    <button class="btn btn-blue" onclick="SS('screen-level')" id="btnFree">🎮 Free battle</button>
+    <button class="btn btn-blue" onclick="openExpedition()" id="btnFree">🧭 Expedition</button>
     <button class="btn btn-ghost" onclick="SS('screen-menu')" id="btnBackStg">← Back</button>
   </div>
 </div>
@@ -1159,6 +1217,36 @@ body[data-theme=paper] .tring .tfg{stroke:#e0a000}
   </div>
 </div>
 
+<!-- SHOP -->
+<div class="overlay" id="shopModal" onclick="if(event.target===this)closeAllModals()">
+  <div class="modal" style="max-width:440px">
+    <h2 id="shopH">◆ Shop</h2>
+    <div class="shop-bal"><i class="mcry">◆</i> <b id="shopBal">0</b></div>
+    <div class="seg shop-tabs" id="shopTabs"></div>
+    <div class="shop-grid" id="shopGrid"></div>
+    <p class="shop-note" id="shopNote"></p>
+    <button class="btn btn-gold" onclick="closeAllModals()" style="width:100%;margin-top:10px" id="shopOk">OK</button>
+  </div>
+</div>
+<!-- BOOSTERS -->
+<div class="overlay" id="boostModal" onclick="if(event.target===this)closeAllModals()">
+  <div class="modal" style="max-width:400px">
+    <h2 id="boostH">◆ Boosters</h2>
+    <div class="shop-bal"><i class="mcry">◆</i> <b id="boostBal">0</b></div>
+    <div class="dly-list" id="boostList"></div>
+    <button class="btn btn-ghost" onclick="closeAllModals()" style="width:100%;margin-top:10px" id="boostClose">Close</button>
+  </div>
+</div>
+<!-- DAILY LOGIN -->
+<div class="overlay" id="loginModal" onclick="if(event.target===this)closeAllModals()">
+  <div class="modal" style="max-width:420px;text-align:center">
+    <h2 id="loginH">🎁 Daily reward</h2>
+    <div class="lg-days" id="lgDays"></div>
+    <p class="rgoal" id="lgTxt"></p>
+    <button class="btn btn-gold" onclick="closeAllModals()" style="width:100%;margin-top:8px" id="lgOk">Collect</button>
+  </div>
+</div>
+
 <!-- LEADERBOARD -->
 <div class="overlay" id="topModal" onclick="if(event.target===this)closeAllModals()">
   <div class="modal" style="max-width:420px">
@@ -1201,10 +1289,29 @@ body[data-theme=paper] .tring .tfg{stroke:#e0a000}
     <button class="btn btn-sm btn-resign" onclick="askResign()">🏳 <span id="gResign">Resign</span></button>
     <button class="btn btn-sm" onclick="openRules()" title="Rules">📜 <span class="btxt" id="gRules">Rules</span></button>
     <button class="btn btn-sm" id="btn3d" onclick="toggle3D()" title="3D">⬢ <span class="btxt">3D</span></button>
+    <button class="btn btn-sm btn-boost" id="btnBoost" onclick="openBoost()" title="Boosters">◆</button>
     <div class="zoom-row">
       <button class="btn btn-sm zoom-btn" onclick="zoomBy(1/1.3)" id="zoomOut" title="Zoom out">−</button>
       <button class="btn btn-sm zoom-btn" onclick="zoomBy(1.3)" id="zoomIn" title="Zoom in">+</button>
     </div>
+  </div>
+</div>
+
+<!-- EXPEDITION -->
+<div id="screen-exp" class="screen iscr">
+  <div class="stitle" id="expTitle">🧭 Expedition</div>
+  <div class="ssub" id="expSub"></div>
+  <div class="exp-grid" id="expGrid"></div>
+  <div class="exp-lands" id="expLands"></div>
+  <div class="exp-opts">
+    <div class="st-row"><span id="expOppL">Opponent</span><div class="seg" id="segExpLv"></div></div>
+    <div class="st-row"><span id="expSizeL">Board</span><div class="seg" id="segExpN"></div></div>
+    <div class="st-row"><span id="expFogL">Fog</span><div class="seg" id="segExpFog"></div></div>
+  </div>
+  <div class="exp-reward" id="expReward"></div>
+  <div class="row" style="margin-top:8px">
+    <button class="btn btn-gold" onclick="startExpedition()" id="expGo">⚔ Start</button>
+    <button class="btn btn-ghost" onclick="initMode('pve')" id="expBack">← Back</button>
   </div>
 </div>
 
@@ -1227,6 +1334,7 @@ body[data-theme=paper] .tring .tfg{stroke:#e0a000}
   <div class="res-detail" id="resD" style="display:none"></div>
   <div class="res-stats" id="resS"></div>
   <div class="res-rating" id="resR"></div>
+  <div class="res-cry" id="resC"></div>
   <div class="res-btns">
     <button class="btn btn-gold" id="btnNext" style="display:none;width:100%">Play Again →</button>
     <button class="btn btn-blue" id="btnRematch" style="display:none;width:100%" onclick="askRematch()">🔁 Rematch</button>
@@ -1262,6 +1370,7 @@ body[data-theme=paper] .tring .tfg{stroke:#e0a000}
   <div class="modal" style="max-width:420px">
     <h2 id="stTitle">⚙ Settings</h2>
     <div class="st-row"><span id="stSound">Sound</span><div class="seg" id="segSound"></div></div>
+    <div class="st-row"><span id="stMusic">Music</span><div class="seg" id="segMusic"></div></div>
     <div class="st-row"><span id="stVibe">Vibration</span><div class="seg" id="segVibe"></div></div>
     <div class="st-row"><span id="stTimer">Move timer vs AI</span><div class="seg" id="segTimer"></div></div>
     <div class="st-row" style="display:none"><span id="stTheme">Board style</span><div class="seg" id="segTheme"></div></div>
@@ -1385,224 +1494,224 @@ var lang = (function(){ try{ return localStorage.getItem('dwl')||detectLang(); }
 var TR = {
   en:{
    
-    mTag:'The art of surrounding',
+    stMusic:'Music', world1:'Green World', world2:'Blue World', world3:'Gold World', wsub1:'A garden by the sea. 12 battles and a boss.', wsub2:'Islands, rivers, continents. Blue is stronger.', wsub3:'Fog, volcanoes and gold. Legends only.', worldLocked:'First beat the boss of the {w}', btnNextWorld:'New world →', boss1:'Forest Warden', boss2:'Captain Storm', boss3:'Golden Pharaoh', bossIntro:'👑 Boss: {b}. No hints!', bossReward:'👑 Boss defeated! +{n} ◆ and the «{s}» skin', fogIntro:'🌫 Fog! Rival stones hide in it. Play near the fog to clear it.', fogEnemy:'🌫 A rival stone was hiding here!', fogTerrain:'🌫 No way through here', expFog:'Fog', bScout:'Scout', bScoutD:'Clears the fog where the rival hides', bScoutOn:'🔭 Fog cleared', ldRand:'Any', ld_africa:'Africa', ld_europe:'Europe', ld_asia:'Asia', ld_namerica:'North America', ld_samerica:'South America', ld_australia:'Australia', ld_antarctica:'Antarctica', ld_greenland:'Greenland', ld_madagascar:'Madagascar', ld_britain:'Great Britain', ld_iceland:'Iceland', ld_borneo:'Borneo', ld_srilanka:'Sri Lanka', ld_newzealand:'New Zealand', mp_volcano:'Volcano', mpd_volcano:'Lava and ◆ crystals', sk_sunstone:'Sunstone', sk_rose:'Rose quartz', shopBossTip:'Reward for the boss of the {w}', ach_world2:'Wave master|Finish the Blue World', ach_world3:'Golden emperor|Finish the Gold World', ach_fogwin:'Through the fog|Win in the fog', mTag:'The art of surrounding',
     mPveT:'PLAY', mPveS:'Campaign vs AI',
-    mPvpT:'BATTLE 1x1', mPvpS:'Duel on one device',
+    mPvpT:'DUEL', mPvpS:'Two players, one screen',
     mOnT:'ONLINE', mOnS:'Friends & rating',
     mRulesBtn:'How to play',
-    lvTitle:'Choose Your Opponent', lvSub:'Beat a level to unlock the next one',
-    stTitle:'⚙ Settings', stSound:'Sound', stVibe:'Vibration', stTimer:'Move timer vs AI',
-    stOn:'On', stOff:'Off', stStatsH:'📊 Your statistics', stOk:'OK',
-    signIn:'Sign in', accSigned:'Signed in', accNameLbl:'Your name', accWhy:'Sign in to keep your progress on any device.',
-    gLbl:'Sign in with Google', aLbl:'Sign in with Apple', aFail:'Could not sign in with Apple', tcWhy:'No Google account? Use a transfer code: get it here, enter it on your other device — your progress follows you.',
-    nameSaved:'Name saved', nameEmpty:'Enter a name', nameTaken:'This name is already taken — choose another', nameInvalid:'Name: 2–18 letters, digits, spaces, - or _', nameOffline:'Cannot check the name right now — check your connection', nameChecking:'Checking the name…',
-    stGames:'Battles', stWins:'Wins', stPct:'Win rate', stStreak:'Current streak', stBest:'Best streak', stRating:'Rating', stOnline:'Rated battles', stStars:'Campaign stars', stAch:'Achievements', stDaily:'Daily streak', mSetLbl:'Settings', mAchLbl:'Achievements', achTitle:'🏆 Achievements', achOk:'OK', accOk:'OK',
+    lvTitle:'Choose a rival', lvSub:'Win to unlock the next',
+    stTitle:'⚙ Settings', stSound:'Sound', stVibe:'Vibration', stTimer:'Move timer',
+    stOn:'On', stOff:'Off', stStatsH:'📊 Statistics', stOk:'OK',
+    signIn:'Sign in', accSigned:'Signed in', accNameLbl:'Name', accWhy:'Sign in to keep progress on every device.',
+    cryGot:'+{n} ◆', cryNotEnough:'Not enough ◆', shopTitle:'◆ Shop', shopStones:'Stones', shopBoards:'Boards', shopEquip:'Use', shopEquipped:'In use', shopSoon:'Crystal packs come in 3.0. Earn ◆ for wins, stars, puzzles, the daily chest, logins and achievements.', sk_base:'Classic', sk_ruby:'Ruby', sk_amethyst:'Amethyst', sk_gold:'Gold', sk_obsidian:'Obsidian', bd_base:'Sandstone', bd_marble:'Marble', bd_sand:'Gold sand', bd_terra:'Terracotta', bd_slate:'Slate', boostTitle:'◆ Boosters', bHint:'Hint', bHintD:'Shows a strong move', bDouble:'Double move', bDoubleD:'Two dots in a row, once a battle', bUndo:'Undo move', bUndoD:'Take back your move', bUsed:'Already used', bNoUndo:'Nothing to undo', bNotNow:'Wait for your turn', bHintOn:'💡 Gold ring = strong move', bDoubleOn:'⚡ One more dot!', loginTitle:'🎁 Daily reward', loginDay:'Day {d}', loginGot:'+{n} ◆ — more tomorrow!', loginOk:'Claim', chestOpen:'🎁 Chest: +{n} ◆', chestProg:'🎁 Chest {w}/3', resCry:'+{n} ◆', expTitle:'🧭 Expedition', expSub:'Pick a land and a rival. Maps are new every time. Take ◆ on the volcano!', expOpp:'Rival', expSize:'Board', expGo:'⚔ Fight', expBack:'← Back', expWins:'Wins: {w}', expReward:'Victory: +{n} ◆', expAnother:'🧭 New map', mp_plain:'Plains', mp_island:'Island', mp_river:'River', mp_lake:'Lake', mp_forest:'Forest', mpd_plain:'Open field', mpd_island:'Continents & islands', mpd_river:'Two banks, few fords', mpd_lake:'Fight around the water', mpd_forest:'Trees break lines', gLbl:'Sign in with Google', aLbl:'Sign in with Apple', aFail:'Apple sign-in failed', tcWhy:'No Google? Take a transfer code and enter it on another device.',
+    nameSaved:'Saved', nameEmpty:'Enter a name', nameTaken:'Name taken — try another', nameInvalid:'2–18 letters, digits, space, - or _', nameOffline:'Offline — can\'t check the name', nameChecking:'Checking…',
+    stGames:'Battles', stWins:'Wins', stPct:'Win %', stStreak:'Streak', stBest:'Best streak', stRating:'Rating', stOnline:'Rated', stStars:'Stars', stAch:'Achievements', stDaily:'Puzzle streak', mSetLbl:'Settings', mAchLbl:'Achievements', achTitle:'🏆 Achievements', achOk:'OK', accOk:'OK',
     achCount:'Unlocked: {u} of {t}',
-    stAccH:'👤 Account', accGuest:'Guest — progress is saved on this device only', accCloud:'Guest — progress is synced to the cloud', accGoogle:'Signed in with Google: {e}',
-    accCode:'Signed in with a transfer code', tcLbl:'My transfer code', tcEnterLbl:'Enter a code', soLbl:'Sign out',
-    tcHint:'Enter this code on another device to continue with your progress. Keep it private.', tcPrompt:'Enter the transfer code (XXXXXX-XXXXXXXX):',
-    tcBad:'Code not recognized', tcOk:'Progress restored!', gOk:'Signed in with Google — progress synced', gFail:'Google sign-in failed', netNeed:'Internet connection required',
-    soConfirm:'Sign out? You will continue as a new guest on this device.',
+    stAccH:'👤 Account', accGuest:'Guest — saved on this device only', accCloud:'Guest — saved in the cloud', accGoogle:'Google: {e}',
+    accCode:'Signed in by code', tcLbl:'My code', tcEnterLbl:'Enter code', soLbl:'Sign out',
+    tcHint:'Enter this code on another device to continue. Keep it secret.', tcPrompt:'Transfer code (XXXXXX-XXXXXXXX):',
+    tcBad:'Wrong code', tcOk:'Progress restored!', gOk:'Signed in with Google', aOk:'Signed in with Apple', accApple:'Apple: {e}', accAppleHidden:'Apple ID (hidden email)', gFail:'Google sign-in failed', netNeed:'No internet',
+    soConfirm:'Sign out? You\'ll continue as a new guest.',
     stTheme:'Style', thNeon:'Neon', thWorld:'Living World', stLang:'Language',
-    stStatsTxt:'Games: {g} · Wins: {w} ({p}%) · Current streak: {s} · Best streak: {b}',
-    gUndo:'Undo', resStats:'Moves: {m} · Time: {t} · Biggest capture: {c}',
-    mDlyT:'DAILY PUZZLES', dlyStreak:'Streak: {s} 🔥', dlyDone:'All done today ✔', dlyNew:'3 new puzzles!', dlyProg:'{d}/3 today',
-    dlyTitle:'🧩 Daily puzzles', dlyIntro:'Three new puzzles every day. Solve any of them to keep your streak.', dlyClose:'Close',
-    dlyE:'Easy', dlyEd:'Force a capture in 2 moves', dlyM:'Medium', dlyMd:'Force a capture in 3 moves', dlyH:'Hard', dlyHd:'3 moves, traps and decoys — no hints',
-    pzTitle1:'Find the best capture in 1 move', pzTitle2:'Force a capture in 2 moves', pzTitle3:'Force a capture in 3 moves', pzTitleH:'Force a capture in 3 moves — beware the traps', pzWin:'🧩 Puzzle solved!', pzFail:'Not this time…',
-    pzDetail:'Captured {c} of {t}', pzRetry:'🔄 Try again', pzStreakUp:'Daily streak: {s} 🔥', pzSub:'Red to move · {m} move(s)', pzNext:'Next puzzle →',
-    ach_daily3:'Triple crown|Solve all 3 daily puzzles in one day', ach_daily7:'Regular|7-day puzzle streak', ach_daily30:'Devoted|30-day puzzle streak',
-    btnQuick:'⚡ Quick match', quickSearch:'Looking for an opponent…', quickWait:'No one online yet — waiting. Share the code with a friend!',
-    btnTop:'🏆 Top 20', topTitle:'🏆 Top 20 players', topEmpty:'No ratings yet — win an online battle!', topOk:'OK',
-    myRating:'Your rating: {r} · Rated battles: {g} · Wins: {w}', ratingLine:'Rating: {r} ({d})',
-    stgTitle:'⚔ Campaign', stgSub:'12 battles — earn stars, unlock the next one', btnFree:'🎮 Free battle', btnBackStg:'← Back',
-    stgLocked:'Win the previous battle first', stgName:'Battle {n}', btnNextStage:'Next battle →', btnStages:'🗺 Campaign map',
-    condFirst:'First to {k} captures', condHandicap:'AI starts with {k} dots', condBlitz:'Blitz: {k}s per move',
-    goalReached:'Goal reached', campaignDone:'🏆 Campaign complete!',
-    stAssist:'Hints (Rookie / Warrior)', stAchH:'🏆 Achievements', achUnlocked:'Achievement unlocked',
-    ach_cap1:'First blood|Capture your first dot', ach_cap3:'Triple hit|Capture 3 dots in one move', ach_cap5:'Big bang|Capture 5+ dots in one move',
-    ach_flawless:'Untouchable|Win without losing a single dot', ach_streak3:'On fire|Win 3 in a row', ach_streak10:'Dragon|Win 10 in a row',
-    ach_legend:'Legend slayer|Beat the Legend AI', ach_campaign:'Champion|Finish the campaign', ach_online1:'Gladiator|Win an online battle',
-    ach_games50:'Veteran|Play 50 battles', ach_stars36:'Perfectionist|3 stars on every battle', ach_blitz:'Lightning|Win a blitz battle',
-    lvHintRookie:'Hints on: gold = capture now, red = in danger',
-    lvLocked:'Beat the previous level first', btnBackLv:'← Back',
+    stStatsTxt:'Games {g} · Wins {w} ({p}%) · Streak {s} · Best {b}',
+    gUndo:'Undo', resStats:'Moves {m} · Time {t} · Best capture {c}',
+    mDlyT:'DAILY PUZZLES', dlyStreak:'Streak: {s} 🔥', dlyDone:'All solved ✔', dlyNew:'3 new!', dlyProg:'{d}/3 today',
+    dlyTitle:'🧩 Daily puzzles', dlyIntro:'Three new puzzles daily. Solve one to keep your streak.', dlyClose:'Close',
+    dlyE:'Easy', dlyEd:'Capture in 2 moves', dlyM:'Medium', dlyMd:'Capture in 3 moves', dlyH:'Hard', dlyHd:'3 moves, with traps',
+    pzTitle1:'Best capture in 1 move', pzTitle2:'Capture in 2 moves', pzTitle3:'Capture in 3 moves', pzTitleH:'Capture in 3 — mind the traps', pzWin:'🧩 Solved!', pzFail:'Not quite…',
+    pzDetail:'Captured {c} of {t}', pzRetry:'🔄 Retry', pzStreakUp:'Streak: {s} 🔥', pzSub:'Red to play · moves: {m}', pzNext:'Next →',
+    ach_daily3:'Triple crown|All 3 puzzles in a day', ach_daily7:'Regular|7-day streak', ach_daily30:'Devoted|30-day streak',
+    btnQuick:'⚡ Quick match', quickSearch:'Searching…', quickWait:'No one yet. Send the code to a friend!',
+    btnTop:'🏆 Top 20', topTitle:'🏆 Top 20 players', topEmpty:'No ratings yet — win online!', topOk:'OK',
+    myRating:'Rating {r} · Rated {g} · Wins {w}', ratingLine:'Rating: {r} ({d})',
+    stgTitle:'⚔ Campaign', stgSub:'12 battles. Earn stars, open the next.', btnFree:'🧭 Expedition', btnBackStg:'← Back',
+    stgLocked:'Win the previous battle', stgName:'Battle {n}', btnNextStage:'Next battle →', btnStages:'🗺 Map',
+    condFirst:'First to {k} captures', condHandicap:'AI starts with {k} dots', condBlitz:'Blitz: {k}s a move',
+    goalReached:'Goal reached', campaignDone:'🏆 Campaign done!',
+    stAssist:'Hints', stAchH:'🏆 Achievements', achUnlocked:'Achievement!',
+    ach_cap1:'First blood|Capture a dot', ach_cap3:'Triple hit|3 dots in one move', ach_cap5:'Big bang|5+ dots in one move',
+    ach_flawless:'Untouchable|Win without losses', ach_streak3:'On fire|3 wins in a row', ach_streak10:'Dragon|10 wins in a row',
+    ach_legend:'Legend slayer|Beat the Legend', ach_campaign:'Champion|Finish the campaign', ach_online1:'Gladiator|Win online',
+    ach_games50:'Veteran|Play 50 battles', ach_stars36:'Perfectionist|3 stars everywhere', ach_blitz:'Lightning|Win a blitz',
+    lvHintRookie:'Gold = capture now, red = in danger',
+    lvLocked:'Beat the previous level', btnBackLv:'← Back',
     lv1n:'Rookie',
     lv2n:'Warrior',
     lv3n:'Legend',
-    btnStart:'⚔️ Start Battle!', btnBack:'← Back',
-    nameTitle:'Your Name', nameSub:'How should your opponent see you?',
-    lbl1:'Your Name', lbl2:'Player 2',
-    ne1:'⚠ Enter a name to continue', ne2:'⚠ Enter Player 2 name',
-    btnCont:'▶ Continue',
-    olTitle:'🌐 Online Battle', olSub:'Play with a friend over the internet',
-    tCreate:'🏠 Create Room', tJoin:'🔗 Join by Code',
-    fldSizeLbl:'Field size:', codeLbl:'ROOM CODE — tap to copy',
-    codeHint:'📋 Share with your friend', btnCreateLbl:'🌐 Create Room',
-    enterCodeLbl:'Enter 4-digit code:', btnJoin:'Join', btnBackOl:'← Back',
-    creating:'Creating room…', waiting:'Waiting for opponent',
-    connecting:'Connecting…', connected:'Opponent connected!', started:'Battle started!',
-    notFound:'Room not found. Check the code.', netErr:'Network error. Check internet.', permErr:'Database refused the request: the current rules (firebase-rules.json) are not published in Firebase.',
+    btnStart:'⚔️ Fight!', btnBack:'← Back',
+    nameTitle:'Your name', nameSub:'How rivals will see you',
+    lbl1:'Your name', lbl2:'Player 2',
+    ne1:'⚠ Enter a name', ne2:'⚠ Enter Player 2\'s name',
+    btnCont:'▶ Next',
+    olTitle:'🌐 Online', olSub:'Play a friend online',
+    tCreate:'🏠 New room', tJoin:'🔗 Join',
+    fldSizeLbl:'Board:', codeLbl:'ROOM CODE — tap to copy',
+    codeHint:'📋 Send to a friend', btnCreateLbl:'🌐 Create room',
+    enterCodeLbl:'4-digit code:', btnJoin:'Join', btnBackOl:'← Back',
+    creating:'Creating…', waiting:'Waiting for a rival',
+    connecting:'Connecting…', connected:'Rival joined!', started:'Fight!',
+    notFound:'No such room. Check the code.', netErr:'Network error.', permErr:'Database refused: publish firebase-rules.json in Firebase.',
     codeCopied:'📋 Copied: ',
-    lvSubPvp:'Choose field size', lvSubPve:'Choose battle size',
-    yourTurn:'Your move ▶', oppTurn:'Waiting for opponent…',
-    aiTurn:'⚔️ Thinking…', gameOver:'Battle over!',
-    draw:'TIE — Equal warriors!', wins:' — victory!',
-    drawD:'Both captured ', andPts:' points.',
-    winD:': ', pts:' pts, ', only:' ',
+    lvSubPvp:'Board size', lvSubPve:'Board size',
+    yourTurn:'Your move ▶', oppTurn:'Rival\'s move…',
+    aiTurn:'⚔️ Thinking…', gameOver:'Game over!',
+    draw:'DRAW!', wins:' wins!',
+    drawD:'Even: ', andPts:' each',
+    winD:' ', pts:', ', only:' ',
     gMenu:'Menu', gRestart:'Restart', gRules:'Rules',
-    rPlayAgain:'🔄 Play Again', rMenu:'🏠 Main Menu',
-    earlyWin:'Early Victory',
-    btnNextLevel:'Next Level →', btnRestartCampaign:'🔄 New Campaign', campaignWin:'🏆 Campaign Complete!',
+    rPlayAgain:'🔄 Again', rMenu:'🏠 Menu',
+    earlyWin:'early',
+    btnNextLevel:'Next Level →', btnRestartCampaign:'🔄 Start over', campaignWin:'🏆 Campaign done!',
     rulesH:'📜 How to play',
-    rGoalT:'Capture more enemy dots than your opponent. Only captured dots score!',
-    rs1t:'You and your opponent take turns placing one dot',
-    rs2t:'Surround an enemy dot with a chain of yours — diagonals count',
-    rs3t:'The dot inside is captured: +1 point. More dots inside = more points',
-    rr1:'Dots on the board edge can never be captured',
-    rr2:'Free your captured dots by surrounding the enemy chain around them',
-    rr3:'The battle ends as soon as one side can no longer catch up',
+    rGoalT:'Capture more enemy dots. Only captures score!',
+    rs1t:'Take turns placing one dot',
+    rs2t:'Surround enemy dots with your chain — diagonals count',
+    rs3t:'Every dot inside: +1 point',
+    rr1:'Edge dots can\'t be captured',
+    rr2:'Surround the enemy chain to free your dots',
+    rr3:'The game ends when one side can\'t catch up',
     rHow:'📱 Controls',
-    rl5:'Press, aim, release to place a dot. Two fingers: move and zoom the board. The 3D button tilts the board — then two fingers (or right-drag) rotate it.',
-    firstHint:'Your move! Tap the board to place a dot. Surround the green dots to capture them.',
-    rOnline:'🌐 Online', rol1:'Create room → share 4-digit code',
-    rol2:'Friend enters code → battle begins!', rLvl:'⚔️ AI Levels',
-    rlv1n:'Rookie', rlv1d:'random, great for kids',
-    rlv2n:'Warrior', rlv2d:'sees your captures and blocks them — but sometimes slips',
-    rlv3n:'Legend', rlv3d:'reads many moves ahead, sets traps and builds walls',
-    rOkBtn:'Got it — let\'s play! ⚔️',
+    rl5:'Press, aim, release to place a dot. Two fingers: move and zoom. 3D tilts the board; then two fingers (or right-drag) turn it.',
+    firstHint:'Your move! Tap to place a dot. Surround green dots to capture them.',
+    rOnline:'🌐 Online', rol1:'New room → send the 4-digit code',
+    rol2:'Friend enters it → fight!', rLvl:'⚔️ AI Levels',
+    rlv1n:'Rookie', rlv1d:'random moves, for kids',
+    rlv2n:'Warrior', rlv2d:'blocks your captures, sometimes slips',
+    rlv3n:'Legend', rlv3d:'thinks ahead, sets traps, builds walls',
+    rOkBtn:'Got it! ⚔️',
     aiThinkTxt:'⚔️ Thinking…',
-    oppLeft:'Opponent left the battle.',
+    oppLeft:'Rival left.',
     copyR:'© All rights reserved',
     gLoupe:'Loupe', gResign:'Resign',
-    resignTitle:'🏳 Resign?', resignText:'Are you sure you want to resign? This counts as a loss.',
-    resignYesBtn:'Yes, resign', resignNoBtn:'Cancel', resignedTag:'Resigned',
-    oppResigned:'Opponent resigned — you win!',
-    connLost:'Connection lost. Returning to menu…',
-    moveFailed:'Move failed to send, retrying…',
-    moveFailedFinal:'Could not send your move. Check connection.', moveNoAck:'The server has not confirmed your move — resending…',
-    youTag:' (you)', oppStalled:'Opponent is not moving…',
-    oppTimeout:'Opponent ran out of time — you win!', youTimeout:'You ran out of time.', timeoutTag:'Timeout',
-    noConn:'⚠ No connection…', connBack:'Connection restored',
-    btnRematch:'🔁 Rematch', rematchWait:'Waiting for opponent…', rematchOffer:'Opponent wants a rematch!',
-    shareLbl:'Share link', shareText:'Join my DOTS WAR battle! Room code: ', linkCopied:'🔗 Link copied',
-    cfMenuT:'Leave the battle?', cfMenuTx:'Current progress will be lost. A started battle counts as a loss for your rating.',
-    cfMenuTxOnl:'Leaving counts as a loss — your opponent wins.',
-    cfRestartT:'Restart the battle?', cfRestartTx:'Current progress will be lost. A started battle counts as a loss for your rating.',
+    resignTitle:'🏳 Resign?', resignText:'This counts as a loss.',
+    resignYesBtn:'Resign', resignNoBtn:'Cancel', resignedTag:'resigned',
+    oppResigned:'Rival resigned — you win!',
+    connLost:'Connection lost. Back to menu…',
+    moveFailed:'Resending…',
+    moveFailedFinal:'Move not sent. Check connection.', moveNoAck:'Not confirmed — resending…',
+    youTag:' (you)', oppStalled:'Rival is idle…',
+    oppTimeout:'Rival timed out — you win!', youTimeout:'Time\'s up.', timeoutTag:'time',
+    noConn:'⚠ Offline…', connBack:'Back online',
+    btnRematch:'🔁 Rematch', rematchWait:'Waiting for rival…', rematchOffer:'Rival wants a rematch!',
+    shareLbl:'Share', shareText:'Fight me in DOTS WAR! Room code: ', linkCopied:'🔗 Link copied',
+    cfMenuT:'Leave?', cfMenuTx:'A started battle counts as a loss.',
+    cfMenuTxOnl:'Leaving is a loss — your rival wins.',
+    cfRestartT:'Restart?', cfRestartTx:'A started battle counts as a loss.',
     cfYes:'Yes', cfNo:'Cancel',
     fieldSizes:['10×10','15×15','20×20','25×25','30×30'],
   },
   ru:{
    
-    mTag:'Искусство окружать',
+    stMusic:'Музыка', world1:'Зелёный мир', world2:'Синий мир', world3:'Золотой мир', wsub1:'Сад над морем. 12 битв и босс.', wsub2:'Острова, реки и материки. Синие сильнее.', wsub3:'Туман, вулканы и золото. Только для легенд.', worldLocked:'Сначала победите босса: {w}', btnNextWorld:'Новый мир →', boss1:'Лесной Страж', boss2:'Капитан Шторм', boss3:'Золотой Фараон', bossIntro:'👑 Босс: {b}. Без подсказок!', bossReward:'👑 Босс повержен! +{n} ◆ и скин «{s}»', fogIntro:'🌫 Туман! В нём прячутся камни соперника. Ходите рядом — туман рассеется.', fogEnemy:'🌫 Здесь прятался соперник!', fogTerrain:'🌫 Здесь не пройти', expFog:'Туман', bScout:'Разведка', bScoutD:'Рассеет туман там, где прячется соперник', bScoutOn:'🔭 Туман рассеян', ldRand:'Любой', ld_africa:'Африка', ld_europe:'Европа', ld_asia:'Азия', ld_namerica:'Северная Америка', ld_samerica:'Южная Америка', ld_australia:'Австралия', ld_antarctica:'Антарктида', ld_greenland:'Гренландия', ld_madagascar:'Мадагаскар', ld_britain:'Великобритания', ld_iceland:'Исландия', ld_borneo:'Калимантан', ld_srilanka:'Шри-Ланка', ld_newzealand:'Новая Зеландия', mp_volcano:'Вулкан', mpd_volcano:'Лава и кристаллы ◆', sk_sunstone:'Солнечный камень', sk_rose:'Розовый кварц', shopBossTip:'Награда за босса: {w}', ach_world2:'Повелитель волн|Пройдите Синий мир', ach_world3:'Золотой император|Пройдите Золотой мир', ach_fogwin:'Сквозь туман|Победа в тумане', mTag:'Искусство окружать',
     mPveT:'ИГРАТЬ', mPveS:'Кампания против ИИ',
-    mPvpT:'БОЙ 1х1', mPvpS:'Дуэль на одном устройстве',
+    mPvpT:'ДУЭЛЬ', mPvpS:'Вдвоём на одном экране',
     mOnT:'ОНЛАЙН', mOnS:'Друзья и рейтинг',
     mRulesBtn:'Как играть',
-    lvTitle:'Выберите противника', lvSub:'Победите, чтобы открыть следующий уровень',
-    stTitle:'⚙ Настройки', stSound:'Звук', stVibe:'Вибрация', stTimer:'Таймер хода против ИИ',
-    stOn:'Вкл', stOff:'Выкл', stStatsH:'📊 Ваша статистика', stOk:'ОК',
-    signIn:'Войти', accSigned:'В аккаунте', accNameLbl:'Ваше имя', accWhy:'Войдите, чтобы прогресс сохранялся на любом устройстве.',
-    gLbl:'Войти через Google', aLbl:'Войти через Apple', aFail:'Не удалось войти через Apple', tcWhy:'Нет аккаунта Google? Используйте код переноса: получите его здесь, введите на другом телефоне — прогресс перейдёт туда.',
-    nameSaved:'Имя сохранено', nameEmpty:'Введите имя', nameTaken:'Это имя уже занято — выберите другое', nameInvalid:'Имя: 2–18 букв, цифр, пробелов, - или _', nameOffline:'Не удалось проверить имя — проверьте соединение', nameChecking:'Проверяю имя…',
-    stGames:'Битв', stWins:'Побед', stPct:'Процент побед', stStreak:'Серия сейчас', stBest:'Лучшая серия', stRating:'Рейтинг', stOnline:'Рейтинговых битв', stStars:'Звёзды кампании', stAch:'Достижения', stDaily:'Серия заданий', mSetLbl:'Настройки', mAchLbl:'Достижения', achTitle:'🏆 Достижения', achOk:'ОК', accOk:'ОК',
+    lvTitle:'Выбор соперника', lvSub:'Победите — откроется следующий',
+    stTitle:'⚙ Настройки', stSound:'Звук', stVibe:'Вибрация', stTimer:'Таймер хода',
+    stOn:'Вкл', stOff:'Выкл', stStatsH:'📊 Статистика', stOk:'ОК',
+    signIn:'Войти', accSigned:'В аккаунте', accNameLbl:'Имя', accWhy:'Войдите — прогресс сохранится на всех устройствах.',
+    cryGot:'+{n} ◆', cryNotEnough:'Мало кристаллов', shopTitle:'◆ Магазин', shopStones:'Камни', shopBoards:'Доски', shopEquip:'Выбрать', shopEquipped:'Выбрано', shopSoon:'Наборы кристаллов — в версии 3.0. Пока ◆ дают победы, звёзды, задания, сундук, вход и достижения.', sk_base:'Классика', sk_ruby:'Рубин', sk_amethyst:'Аметист', sk_gold:'Золото', sk_obsidian:'Обсидиан', bd_base:'Песчаник', bd_marble:'Мрамор', bd_sand:'Золотой песок', bd_terra:'Терракота', bd_slate:'Сланец', boostTitle:'◆ Усилители', bHint:'Подсказка', bHintD:'Покажет сильный ход', bDouble:'Двойной ход', bDoubleD:'Две точки подряд, раз за бой', bUndo:'Отмена хода', bUndoD:'Вернуть свой ход', bUsed:'Уже использован', bNoUndo:'Нечего отменять', bNotNow:'Дождитесь хода', bHintOn:'💡 Золотое кольцо — сильный ход', bDoubleOn:'⚡ Ставьте ещё точку!', loginTitle:'🎁 Награда дня', loginDay:'День {d}', loginGot:'+{n} ◆ — завтра будет больше!', loginOk:'Забрать', chestOpen:'🎁 Сундук: +{n} ◆', chestProg:'🎁 Сундук {w}/3', resCry:'+{n} ◆', expTitle:'🧭 Экспедиция', expSub:'Выберите землю и соперника. Карта всегда новая. На вулкане — кристаллы ◆!', expOpp:'Соперник', expSize:'Поле', expGo:'⚔ В бой', expBack:'← Назад', expWins:'Побед: {w}', expReward:'Победа: +{n} ◆', expAnother:'🧭 Новая карта', mp_plain:'Равнина', mp_island:'Остров', mp_river:'Река', mp_lake:'Озеро', mp_forest:'Лес', mpd_plain:'Открытое поле', mpd_island:'Материки и острова', mpd_river:'Два берега и броды', mpd_lake:'Бой вокруг воды', mpd_forest:'Деревья рвут линии', gLbl:'Войти через Google', aLbl:'Войти через Apple', aFail:'Apple: вход не удался', tcWhy:'Нет Google? Возьмите код переноса и введите его на другом устройстве.',
+    nameSaved:'Сохранено', nameEmpty:'Введите имя', nameTaken:'Имя занято — выберите другое', nameInvalid:'2–18 знаков: буквы, цифры, пробел, - _', nameOffline:'Нет связи — имя не проверить', nameChecking:'Проверяю…',
+    stGames:'Битвы', stWins:'Победы', stPct:'% побед', stStreak:'Серия', stBest:'Рекорд серии', stRating:'Рейтинг', stOnline:'Рейтинговые', stStars:'Звёзды', stAch:'Достижения', stDaily:'Серия заданий', mSetLbl:'Настройки', mAchLbl:'Достижения', achTitle:'🏆 Достижения', achOk:'ОК', accOk:'ОК',
     achCount:'Открыто: {u} из {t}',
-    stAccH:'👤 Аккаунт', accGuest:'Гость — прогресс хранится только на этом устройстве', accCloud:'Гость — прогресс сохраняется в облаке', accGoogle:'Вход через Google: {e}',
-    accCode:'Вход по коду переноса', tcLbl:'Мой код переноса', tcEnterLbl:'Ввести код', soLbl:'Выйти',
-    tcHint:'Введите этот код на другом устройстве, чтобы продолжить со своим прогрессом. Никому его не показывайте.', tcPrompt:'Введите код переноса (XXXXXX-XXXXXXXX):',
-    tcBad:'Код не подошёл', tcOk:'Прогресс восстановлен!', gOk:'Вход через Google выполнен — прогресс синхронизирован', gFail:'Не удалось войти через Google', netNeed:'Нужно подключение к интернету',
-    soConfirm:'Выйти? На этом устройстве вы продолжите как новый гость.',
+    stAccH:'👤 Аккаунт', accGuest:'Гость — прогресс только на этом устройстве', accCloud:'Гость — прогресс в облаке', accGoogle:'Google: {e}',
+    accCode:'Вход по коду', tcLbl:'Мой код', tcEnterLbl:'Ввести код', soLbl:'Выйти',
+    tcHint:'Введите код на другом устройстве, чтобы продолжить. Никому не показывайте.', tcPrompt:'Код переноса (XXXXXX-XXXXXXXX):',
+    tcBad:'Неверный код', tcOk:'Прогресс восстановлен!', gOk:'Вход через Google выполнен', aOk:'Вход через Apple выполнен', accApple:'Apple: {e}', accAppleHidden:'Apple ID (почта скрыта)', gFail:'Google: вход не удался', netNeed:'Нет интернета',
+    soConfirm:'Выйти? Продолжите как новый гость.',
     stTheme:'Стиль', thNeon:'Неон', thWorld:'Живой мир', stLang:'Язык',
-    stStatsTxt:'Партий: {g} · Побед: {w} ({p}%) · Серия: {s} · Лучшая серия: {b}',
-    gUndo:'Отменить', resStats:'Ходов: {m} · Время: {t} · Крупнейший захват: {c}',
-    mDlyT:'ЗАДАНИЯ ДНЯ', dlyStreak:'Серия: {s} 🔥', dlyDone:'Все решены ✔', dlyNew:'3 новых задания!', dlyProg:'{d}/3 сегодня',
-    dlyTitle:'🧩 Задания дня', dlyIntro:'Каждый день три новые головоломки. Решите любую, чтобы сохранить серию.', dlyClose:'Закрыть',
-    dlyE:'Лёгкое', dlyEd:'Добейтесь захвата за 2 хода', dlyM:'Среднее', dlyMd:'Добейтесь захвата за 3 хода', dlyH:'Сложное', dlyHd:'3 хода, ловушки и обманки — без подсказок',
-    pzTitle1:'Найдите лучший захват за 1 ход', pzTitle2:'Добейтесь захвата за 2 хода', pzTitle3:'Добейтесь захвата за 3 хода', pzTitleH:'Захват за 3 хода — осторожно, ловушки', pzWin:'🧩 Задание выполнено!', pzFail:'Не вышло…',
-    pzDetail:'Захвачено {c} из {t}', pzRetry:'🔄 Ещё попытка', pzStreakUp:'Серия дней: {s} 🔥', pzSub:'Ход красных · {m} ход(а)', pzNext:'Следующее задание →',
-    ach_daily3:'Тройная корона|Решите все 3 задания за день', ach_daily7:'Постоянство|Серия заданий 7 дней', ach_daily30:'Преданность|Серия заданий 30 дней',
-    btnQuick:'⚡ Быстрая игра', quickSearch:'Ищем соперника…', quickWait:'Пока никого нет — ждём. Отправьте код другу!',
-    btnTop:'🏆 Топ-20', topTitle:'🏆 Топ-20 игроков', topEmpty:'Рейтингов пока нет — выиграйте онлайн-битву!', topOk:'ОК',
-    myRating:'Ваш рейтинг: {r} · Рейтинговых битв: {g} · Побед: {w}', ratingLine:'Рейтинг: {r} ({d})',
-    stgTitle:'⚔ Кампания', stgSub:'12 битв — собирайте звёзды, открывайте следующую', btnFree:'🎮 Свободный бой', btnBackStg:'← Назад',
-    stgLocked:'Сначала выиграйте предыдущую битву', stgName:'Битва {n}', btnNextStage:'Следующая битва →', btnStages:'🗺 Карта кампании',
-    condFirst:'Первый до {k} захватов', condHandicap:'ИИ начинает с {k} точками', condBlitz:'Блиц: {k} с на ход',
+    stStatsTxt:'Битв {g} · Побед {w} ({p}%) · Серия {s} · Рекорд {b}',
+    gUndo:'Отмена', resStats:'Ходов {m} · Время {t} · Лучший захват {c}',
+    mDlyT:'ЗАДАНИЯ ДНЯ', dlyStreak:'Серия: {s} 🔥', dlyDone:'Всё решено ✔', dlyNew:'3 новых!', dlyProg:'{d}/3 сегодня',
+    dlyTitle:'🧩 Задания дня', dlyIntro:'Каждый день — три новые задачи. Решите одну, чтобы сохранить серию.', dlyClose:'Закрыть',
+    dlyE:'Лёгкое', dlyEd:'Захват за 2 хода', dlyM:'Среднее', dlyMd:'Захват за 3 хода', dlyH:'Сложное', dlyHd:'3 хода, есть ловушки',
+    pzTitle1:'Лучший захват за 1 ход', pzTitle2:'Захват за 2 хода', pzTitle3:'Захват за 3 хода', pzTitleH:'Захват за 3 хода — берегитесь ловушек', pzWin:'🧩 Решено!', pzFail:'Не вышло…',
+    pzDetail:'Захвачено {c} из {t}', pzRetry:'🔄 Ещё раз', pzStreakUp:'Серия: {s} 🔥', pzSub:'Ходят красные · ходов: {m}', pzNext:'Дальше →',
+    ach_daily3:'Тройная корона|Все 3 задания за день', ach_daily7:'Постоянство|7 дней подряд', ach_daily30:'Преданность|30 дней подряд',
+    btnQuick:'⚡ Быстрый бой', quickSearch:'Ищем соперника…', quickWait:'Пока никого. Отправьте код другу!',
+    btnTop:'🏆 Топ-20', topTitle:'🏆 Топ-20 игроков', topEmpty:'Рейтинга пока нет — победите онлайн!', topOk:'ОК',
+    myRating:'Рейтинг {r} · Рейтинговых {g} · Побед {w}', ratingLine:'Рейтинг: {r} ({d})',
+    stgTitle:'⚔ Кампания', stgSub:'12 битв. Собирайте звёзды.', btnFree:'🧭 Экспедиция', btnBackStg:'← Назад',
+    stgLocked:'Сначала выиграйте предыдущую', stgName:'Битва {n}', btnNextStage:'Дальше →', btnStages:'🗺 Карта',
+    condFirst:'Первым до {k} захватов', condHandicap:'Фора ИИ: {k} точ.', condBlitz:'Блиц: {k} с на ход',
     goalReached:'Цель достигнута', campaignDone:'🏆 Кампания пройдена!',
-    stAssist:'Подсказки (Новичок / Воин)', stAchH:'🏆 Достижения', achUnlocked:'Достижение открыто',
-    ach_cap1:'Первая кровь|Захватите первую точку', ach_cap3:'Тройной удар|Захватите 3 точки за ход', ach_cap5:'Большой взрыв|Захватите 5+ точек за ход',
-    ach_flawless:'Неприкасаемый|Победа без потерянных точек', ach_streak3:'В огне|3 победы подряд', ach_streak10:'Дракон|10 побед подряд',
-    ach_legend:'Победитель Легенды|Обыграйте ИИ «Легенда»', ach_campaign:'Чемпион|Пройдите кампанию', ach_online1:'Гладиатор|Победа в онлайн-битве',
-    ach_games50:'Ветеран|Сыграйте 50 битв', ach_stars36:'Перфекционист|3 звезды в каждой битве', ach_blitz:'Молния|Победа в блиц-битве',
-    lvHintRookie:'Подсказки: золото — можно захватить, красное — под угрозой',
-    lvLocked:'Сначала пройдите предыдущий уровень', btnBackLv:'← Назад',
+    stAssist:'Подсказки', stAchH:'🏆 Достижения', achUnlocked:'Достижение!',
+    ach_cap1:'Первая кровь|Первый захват', ach_cap3:'Тройной удар|3 точки за ход', ach_cap5:'Большой взрыв|5+ точек за ход',
+    ach_flawless:'Неприкасаемый|Победа без потерь', ach_streak3:'В огне|3 победы подряд', ach_streak10:'Дракон|10 побед подряд',
+    ach_legend:'Гроза Легенды|Обыграйте Легенду', ach_campaign:'Чемпион|Пройдите кампанию', ach_online1:'Гладиатор|Победа онлайн',
+    ach_games50:'Ветеран|50 битв', ach_stars36:'Перфекционист|3 звезды везде', ach_blitz:'Молния|Победа в блице',
+    lvHintRookie:'Золото — можно взять, красное — под угрозой',
+    lvLocked:'Сначала пройдите прошлый уровень', btnBackLv:'← Назад',
     lv1n:'Новичок',
     lv2n:'Воин',
     lv3n:'Легенда',
     btnStart:'⚔️ В бой!', btnBack:'← Назад',
-    nameTitle:'Ваше имя', nameSub:'Как вас будет видеть соперник?',
+    nameTitle:'Ваше имя', nameSub:'Так вас увидит соперник',
     lbl1:'Ваше имя', lbl2:'Игрок 2',
-    ne1:'⚠ Введите имя, чтобы продолжить', ne2:'⚠ Введите имя второго игрока',
-    btnCont:'▶ Продолжить',
-    olTitle:'🌐 Онлайн Битва', olSub:'Играйте с другом через интернет',
-    tCreate:'🏠 Создать комнату', tJoin:'🔗 Войти по коду',
-    fldSizeLbl:'Размер поля:', codeLbl:'КОД — нажмите скопировать',
-    codeHint:'📋 Поделитесь с другом', btnCreateLbl:'🌐 Создать комнату',
-    enterCodeLbl:'Введите 4-значный код:', btnJoin:'Войти', btnBackOl:'← Назад',
-    creating:'Создаём комнату…', waiting:'Ждём соперника',
-    connecting:'Подключаемся…', connected:'Соперник подключился!', started:'Битва началась!',
-    notFound:'Комната не найдена. Проверьте код.', netErr:'Ошибка сети. Проверьте интернет.', permErr:'База отклонила запрос: в Firebase не опубликованы актуальные правила (firebase-rules.json).',
+    ne1:'⚠ Введите имя', ne2:'⚠ Имя второго игрока',
+    btnCont:'▶ Дальше',
+    olTitle:'🌐 Онлайн', olSub:'Игра с другом по сети',
+    tCreate:'🏠 Создать', tJoin:'🔗 По коду',
+    fldSizeLbl:'Поле:', codeLbl:'КОД — нажмите, чтобы скопировать',
+    codeHint:'📋 Отправьте другу', btnCreateLbl:'🌐 Создать комнату',
+    enterCodeLbl:'Код из 4 цифр:', btnJoin:'Войти', btnBackOl:'← Назад',
+    creating:'Создаём…', waiting:'Ждём соперника',
+    connecting:'Подключаемся…', connected:'Соперник здесь!', started:'В бой!',
+    notFound:'Комнаты нет. Проверьте код.', netErr:'Ошибка сети.', permErr:'База отклонила запрос: опубликуйте firebase-rules.json в Firebase.',
     codeCopied:'📋 Скопировано: ',
-    lvSubPvp:'Выберите размер поля', lvSubPve:'Выберите размер поля битвы',
-    yourTurn:'Ваш ход ▶', oppTurn:'Ждём соперника…',
-    aiTurn:'⚔️ ИИ думает…', gameOver:'Битва завершена!',
-    draw:'НИЧЬЯ — Равные воины!', wins:' — победа!',
-    drawD:'У обоих по ', andPts:' очк.',
-    winD:': ', pts:' очк., ', only:' ',
+    lvSubPvp:'Размер поля', lvSubPve:'Размер поля',
+    yourTurn:'Ваш ход ▶', oppTurn:'Ход соперника…',
+    aiTurn:'⚔️ ИИ думает…', gameOver:'Битва окончена!',
+    draw:'НИЧЬЯ!', wins:' — победа!',
+    drawD:'Поровну — по ', andPts:'.',
+    winD:' ', pts:', ', only:' ',
     gMenu:'Меню', gRestart:'Заново', gRules:'Правила',
-    rPlayAgain:'🔄 Сыграть снова', rMenu:'🏠 Главное меню',
-    earlyWin:'Досрочная победа',
-    btnNextLevel:'Следующий уровень →', btnRestartCampaign:'🔄 Новая кампания', campaignWin:'🏆 Кампания пройдена!',
+    rPlayAgain:'🔄 Ещё раз', rMenu:'🏠 Меню',
+    earlyWin:'досрочно',
+    btnNextLevel:'Новый уровень →', btnRestartCampaign:'🔄 Сначала', campaignWin:'🏆 Кампания пройдена!',
     rulesH:'📜 Как играть',
-    rGoalT:'Захватите больше точек соперника, чем он. Очки дают только захваченные точки!',
-    rs1t:'Вы и соперник по очереди ставите по одной точке',
-    rs2t:'Окружите точку соперника цепочкой своих — по диагонали тоже считается',
-    rs3t:'Точка внутри захвачена: +1 очко. Больше точек внутри — больше очков',
-    rr1:'Точки на краю поля захватить нельзя',
-    rr2:'Свои захваченные точки можно освободить — окружите цепочку соперника вокруг них',
-    rr3:'Битва заканчивается, как только одна сторона уже не может догнать другую',
+    rGoalT:'Захватите больше точек соперника. Очки — только за захват!',
+    rs1t:'Ходите по очереди, по одной точке',
+    rs2t:'Окружите точки соперника цепью своих — диагонали считаются',
+    rs3t:'Каждая точка внутри — +1 очко',
+    rr1:'Точки на краю не захватить',
+    rr2:'Окружите цепь соперника — и ваши пленные точки свободны',
+    rr3:'Битва кончается, когда отстающему уже не догнать',
     rHow:'📱 Управление',
-    rl5:'Нажмите, прицельтесь, отпустите — точка поставлена. Двумя пальцами: двигать и масштабировать поле. Кнопка 3D наклоняет доску — тогда два пальца (или правая кнопка мыши) вращают её.',
-    firstHint:'Ваш ход! Коснитесь поля, чтобы поставить точку. Окружайте зелёные точки, чтобы захватить их.',
-    rOnline:'🌐 Онлайн', rol1:'Создайте комнату → поделитесь 4-значным кодом',
-    rol2:'Друг вводит код → битва начинается!', rLvl:'⚔️ Уровни ИИ',
+    rl5:'Нажмите, прицельтесь, отпустите. Два пальца — двигать и приближать. Кнопка 3D наклоняет доску, тогда два пальца (или правая кнопка мыши) вращают её.',
+    firstHint:'Ваш ход! Коснитесь поля. Окружайте зелёные точки.',
+    rOnline:'🌐 Онлайн', rol1:'Создайте комнату → отправьте код',
+    rol2:'Друг вводит код → бой!', rLvl:'⚔️ Уровни ИИ',
     rlv1n:'Новичок', rlv1d:'случайные ходы, для детей',
-    rlv2n:'Воин', rlv2d:'видит ваши захваты и перекрывает их — но иногда ошибается',
-    rlv3n:'Легенда', rlv3d:'просчитывает много ходов вперёд, строит стены и ловушки',
-    rOkBtn:'Понятно — играем! ⚔️',
+    rlv2n:'Воин', rlv2d:'мешает захватам, но ошибается',
+    rlv3n:'Легенда', rlv3d:'думает наперёд, ставит ловушки и стены',
+    rOkBtn:'Понятно! ⚔️',
     aiThinkTxt:'⚔️ ИИ думает…',
-    oppLeft:'Соперник покинул битву.',
+    oppLeft:'Соперник ушёл.',
     copyR:'© Все права защищены',
     gLoupe:'Лупа', gResign:'Сдаться',
-    resignTitle:'🏳 Сдаться?', resignText:'Вы уверены, что хотите сдаться? Это засчитается как поражение.',
-    resignYesBtn:'Да, сдаюсь', resignNoBtn:'Отмена', resignedTag:'Сдался',
-    oppResigned:'Соперник сдался — вы победили!',
-    connLost:'Соединение потеряно. Возврат в меню…',
-    moveFailed:'Ход не отправился, повтор…',
-    moveFailedFinal:'Не удалось отправить ход. Проверьте соединение.', moveNoAck:'Сервер не подтвердил ход — отправляю снова…',
-    youTag:' (вы)', oppStalled:'Соперник не ходит…',
-    oppTimeout:'У соперника вышло время — вы победили!', youTimeout:'У вас вышло время.', timeoutTag:'Таймаут',
-    noConn:'⚠ Нет связи…', connBack:'Связь восстановлена',
-    btnRematch:'🔁 Реванш', rematchWait:'Ждём соперника…', rematchOffer:'Соперник хочет реванш!',
-    shareLbl:'Отправить ссылку', shareText:'Сыграй со мной в DOTS WAR! Код комнаты: ', linkCopied:'🔗 Ссылка скопирована',
-    cfMenuT:'Выйти из битвы?', cfMenuTx:'Прогресс будет потерян. Начатая битва засчитается как поражение для рейтинга.',
-    cfMenuTxOnl:'Выход засчитается как поражение — победит соперник.',
-    cfRestartT:'Начать заново?', cfRestartTx:'Прогресс будет потерян. Начатая битва засчитается как поражение для рейтинга.',
+    resignTitle:'🏳 Сдаться?', resignText:'Это засчитается как поражение.',
+    resignYesBtn:'Сдаться', resignNoBtn:'Отмена', resignedTag:'сдался',
+    oppResigned:'Соперник сдался — победа!',
+    connLost:'Связь потеряна. В меню…',
+    moveFailed:'Повторяю отправку…',
+    moveFailedFinal:'Ход не отправлен. Проверьте связь.', moveNoAck:'Ход не подтверждён — повторяю…',
+    youTag:' (вы)', oppStalled:'Соперник молчит…',
+    oppTimeout:'У соперника вышло время — победа!', youTimeout:'Время вышло.', timeoutTag:'время',
+    noConn:'⚠ Нет связи…', connBack:'Связь есть',
+    btnRematch:'🔁 Реванш', rematchWait:'Ждём соперника…', rematchOffer:'Соперник зовёт на реванш!',
+    shareLbl:'Поделиться', shareText:'Сразимся в DOTS WAR? Код комнаты: ', linkCopied:'🔗 Ссылка скопирована',
+    cfMenuT:'Выйти?', cfMenuTx:'Начатая битва засчитается как поражение.',
+    cfMenuTxOnl:'Выход — поражение, победа сопернику.',
+    cfRestartT:'Заново?', cfRestartTx:'Начатая битва засчитается как поражение.',
     cfYes:'Да', cfNo:'Отмена',
     fieldSizes:['10×10','15×15','20×20','25×25','30×30'],
   }
 };
 function T(k){ return (TR[lang]&&TR[lang][k]) || TR.en[k] || k; }
 
-var TEXT_IDS = ['mTag','stLang','aLbl','accNameLbl','accWhy','gLbl','tcWhy','mSetLbl','mAchLbl','achTitle','achOk','accOk','stAccH','tcLbl','tcEnterLbl','soLbl','dlyTitle','dlyIntro','dlyClose','mDlyT','btnQuick','btnTop','topTitle','topOk','stgTitle','stgSub','btnFree','btnBackStg','stAssist','stAchH','stTheme','btnRematch','shareLbl','stTitle','stSound','stVibe','stTimer','stStatsH','stOk','gUndo','btnBackLv','mPveT','mPveS','mPvpT','mPvpS','mOnT','mOnS',
+var TEXT_IDS = ['mTag','stLang','aLbl','accNameLbl','accWhy','gLbl','tcWhy','mSetLbl','mAchLbl','achTitle','achOk','accOk','stAccH','tcLbl','tcEnterLbl','soLbl','dlyTitle','dlyIntro','dlyClose','mDlyT','btnQuick','btnTop','topTitle','topOk','stgTitle','stgSub','btnFree','btnBackStg','stAssist','stAchH','stTheme','btnRematch','shareLbl','stTitle','stSound','stMusic','stVibe','stTimer','stStatsH','stOk','gUndo','btnBackLv','mPveT','mPveS','mPvpT','mPvpS','mOnT','mOnS',
   'mRulesBtn','lvTitle','lvSub','lv1n','lv2n','lv3n',
   'btnStart','nameTitle','nameSub','lbl1','lbl2','ne1','ne2','btnCont',
   'olTitle','olSub','tCreate','tJoin','fldSizeLbl','codeLbl','codeHint',
@@ -1642,7 +1751,7 @@ function toggleLang(){ setLang(lang==='ru'?'en':'ru'); }
 // ═══════════════════════
 //  CONSTANTS
 // ═══════════════════════
-var EMPTY=0,P1=1,P2=2,T1=3,T2=4,C1=-1,C2=-2;
+var EMPTY=0,P1=1,P2=2,T1=3,T2=4,C1=-1,C2=-2,BLK=5;
 var FIELD_SIZES=[11,16,21,26,31];
 // Two visual themes for the battlefield. "neon" (default): dark glass board,
 // glossy 3D spheres, glowing walls. "paper": the classic squared notebook.
@@ -1685,7 +1794,21 @@ function applyTheme(name){
 var G=null, gameMode='pve', selLv=1, olFSz=1;
 var aiTimer=null, aiLock=false;
 var playerNames=['Red Dots','Green Pix'];
-function p2Name(){ return lang==='ru'?'Зелёные':'Green Pix'; }
+var curWorld=1;
+var WORLD_PAL={
+  2:{p2:'#2a7fd6',p2d:'rgba(42,127,214,',p2l:'rgba(130,195,255,0.98)',s2:{hi:'#e0f0ff',lt:'#80bdf2',mid:'#2a7fd6',dk:'#0b2f5a',glow:'rgba(95,170,255,0.85)',dead:'#2a6fb8'},glow2:['rgba(42,127,214,0.42)','rgba(42,127,214,0.13)']},
+  3:{p2:'#d9a21b',p2d:'rgba(217,162,27,',p2l:'rgba(255,218,110,0.98)',s2:{hi:'#fff6d6',lt:'#ffd56a',mid:'#d9a21b',dk:'#6a4a06',glow:'rgba(255,205,85,0.85)',dead:'#b8861b'},glow2:['rgba(217,162,27,0.42)','rgba(217,162,27,0.13)']}
+};
+function oppTokImg(){ if(curWorld===2) return tintedImg('tokG',{id:'w2',h:0.6,s:1.15,l:1.0}); if(curWorld===3) return tintedImg('tokG',{id:'w3',h:0.13,s:1.35,l:1.22}); return imgEl('tokG'); }
+function setWorldLook(w){
+  w=w||1; document.body.setAttribute('data-world',String(w));
+  if(curWorld===w&&CC&&CC.name===(w>1?'world'+w:'world')) return;
+  curWorld=w; var base=THEMES.world; CC=w>1?Object.assign({},base,WORLD_PAL[w]):base; CC.name=w>1?'world'+w:'world';
+  spriteCache={}; layerKey='';
+  var av=document.querySelector('.p-avatar.p2');
+  if(av){ if(w>1){ var u=canvasURL(oppTokImg()); if(u){ av.src=u; av.setAttribute('data-cur','tokG-w'+w); } } else if(av.getAttribute('data-cur')!=='tokG'){ av.setAttribute('data-cur','tokG'); av.src='data:image/webp;base64,'+IMG.tokG; } }
+}
+function p2Name(){ var ru=lang==='ru'; return curWorld===2?(ru?'Синие':'Blue'):curWorld===3?(ru?'Золотые':'Gold'):(ru?'Зелёные':'Green'); }
 var db=null, roomRef=null, movesRef=null, resignRef=null, myPNum=1, isHost=false, olReady=false;
 var serverOffset=0, turnInfo=null, olWatchId=null, claimSent=false, offline=false, olGen=0, roomCode='', pendingRoom=null;
 var olRefs=[];   // listeners attached for the current game (detached on rematch/leave)
@@ -1704,7 +1827,9 @@ var authUser=null, authStarted=false, progressTimer=null;
 function accountStatusText(){
   if(!authUser) return T('accGuest');
   var prov=(authUser.providerData||[]).map(function(p){return p.providerId;});
-  if(prov.indexOf('google.com')>=0) return tpl(T('accGoogle'),{e:authUser.email||''});
+  var pe=function(id){ var d=(authUser.providerData||[]).filter(function(p){return p.providerId===id;})[0]; return (d&&d.email)||authUser.email||''; };
+  if(prov.indexOf('google.com')>=0) return tpl(T('accGoogle'),{e:pe('google.com')});
+  if(prov.indexOf('apple.com')>=0){ var ae=pe('apple.com'); return tpl(T('accApple'),{e:/privaterelay\.appleid\.com$/i.test(ae)?T('accAppleHidden'):(ae||'Apple ID')}); }
   if(prov.indexOf('password')>=0) return T('accCode');
   return T('accCloud');
 }
@@ -1712,9 +1837,11 @@ function renderAccount(){
   refreshProfileChip();
   var st=document.getElementById('accStatus'); if(!st) return;
   st.textContent=accountStatusText();
-  var isG=authUser&&(authUser.providerData||[]).some(function(p){return p.providerId==='google.com';});
-  document.getElementById('btnGoogle').style.display=isG?'none':'flex';
-  var why=document.getElementById('accWhy'); if(why) why.style.display=isG?'none':'';
+  var pids=authUser?(authUser.providerData||[]).map(function(p){return p.providerId;}):[];
+  var isG=pids.indexOf('google.com')>=0, isA=pids.indexOf('apple.com')>=0, signed=isG||isA;
+  document.getElementById('btnGoogle').style.display=signed?'none':'flex';
+  var ab=document.getElementById('btnApple'); if(ab) ab.style.display=signed?'none':'';
+  var why=document.getElementById('accWhy'); if(why) why.style.display=signed?'none':'';
   document.getElementById('btnSignOut').style.display=authUser&&!authUser.isAnonymous?'':'none';
   document.getElementById('accCode').style.display='none'; document.getElementById('accHint').textContent='';
 }
@@ -1730,7 +1857,7 @@ function ensureAuth(){
 }
 function collectProgress(){
   return {stats:{g:STATS.g,w:STATS.w,s:STATS.s,b:STATS.b},stars:STARS.slice(),ach:ACHV,daily:{day:DAILY.day,streak:DAILY.streak,best:DAILY.best,e:DAILY.e,m:DAILY.m,h:DAILY.h},
-          pveMax:pveMax,pveChamp:pveChamp?1:0,set:{theme:SET.theme,assist:SET.assist},name:(playerNames[0]||''),v:APP_VERSION,t:Date.now()};
+          pveMax:pveMax,pveChamp:pveChamp?1:0,set:{theme:SET.theme,assist:SET.assist},wallet:WALLET,name:(playerNames[0]||''),v:APP_VERSION,t:Date.now()};
 }
 // merge cloud + local: keep the best of both, never lose anything
 function mergeProgress(c){
@@ -1739,13 +1866,19 @@ function mergeProgress(c){
   if(Array.isArray(c.stars)){ for(var i=0;i<STARS.length;i++) STARS[i]=Math.max(STARS[i],c.stars[i]|0); saveStars(); }
   if(c.ach){ for(var k in c.ach) if(!ACHV[k]) ACHV[k]=c.ach[k]; try{localStorage.setItem('dwAch',JSON.stringify(ACHV));}catch(e){} }
   if(c.daily){ var cd=c.daily; if((cd.day|0)>DAILY.day||((cd.day|0)===DAILY.day&&(cd.streak|0)>DAILY.streak)){ DAILY.day=cd.day|0; DAILY.streak=cd.streak|0; DAILY.e=cd.e|0; DAILY.m=cd.m|0; DAILY.h=cd.h|0; } DAILY.best=Math.max(DAILY.best,cd.best|0); saveDaily(); }
+  if(c.wallet&&typeof c.wallet.c==='number'){
+    var own=Object.assign({},WALLET.owned||{},c.wallet.owned||{});
+    if((c.wallet.t|0)>(WALLET.t|0)){ var keepT=WALLET.t; for(var wk in c.wallet) WALLET[wk]=c.wallet[wk]; }
+    WALLET.owned=own; try{localStorage.setItem('dwWallet',JSON.stringify(WALLET));}catch(e){} refreshCry(); spriteCache={}; layerKey=''; applySkinImgs();
+  }
   if((c.pveMax|0)>pveMax) pveMax=c.pveMax|0; if(c.pveChamp) pveChamp=true; savePveProgress();
   if(c.name&&!localStorage.getItem('dwName')) try{localStorage.setItem('dwName',c.name);}catch(e){}
 }
 function onSignedIn(u){
   authUser=u; UID=u.uid; try{localStorage.setItem('dwUid',u.uid);}catch(e){}
-  if(u.displayName&&!localStorage.getItem('dwName')){
-    var base=u.displayName.replace(/[.#$\[\]\/]/g,'').trim().slice(0,15)||'Player', tries=0;
+  var dn=u.displayName||u._dwName||'';
+  if(dn&&!localStorage.getItem('dwName')){
+    var base=dn.replace(/[.#$\[\]\/]/g,'').trim().slice(0,15)||'Player', tries=0;
     (function tryName(n){ claimName(n).then(function(r){
       if(r.ok){ try{localStorage.setItem('dwName',n);}catch(e){} playerNames[0]=n; refreshProfileChip(); renderAccount(); pushProgress(); }
       else if(r.reason==='taken'&&tries<20){ tries++; tryName(base+(tries+1)); }
@@ -1800,17 +1933,38 @@ function onGoogleIdToken(idToken){
 }
 window.onGoogleIdToken=onGoogleIdToken;
 // Sign in with Apple (iOS wrapper): identity token + the raw nonce used for the request
-function signInApple(){ if(!iosPost({cmd:'apple'})) showToast(T('gFail')); }
-function onAppleIdToken(idToken,rawNonce){
+// Sign in with Apple. An Apple ID token carries a one-time nonce: Firebase accepts it ONCE.
+// So when linking the anonymous account fails because this Apple ID already has a DOTS WAR
+// account, we must NOT resend the same token (→ auth/missing-or-invalid-nonce). Firebase hands
+// back a fresh credential in the error; if it does not, we ask iOS for a new token and sign in.
+var appleMode='link';
+function signInApple(){ appleMode='link'; if(!iosPost({cmd:'apple'})) showToast(T('aFail')); }
+function onAppleIdToken(idToken,rawNonce,appleName){
   loadFirebase().then(function(){
     if(!getDB()||!firebase.auth) throw 0;
     var prov=new firebase.auth.OAuthProvider('apple.com');
     var cred=prov.credential({idToken:idToken,rawNonce:rawNonce});
-    var cur=firebase.auth().currentUser;
-    var pr=cur&&cur.isAnonymous ? cur.linkWithCredential(cred) : firebase.auth().signInWithCredential(cred);
-    return pr.catch(function(err){ if(err&&err.code==='auth/credential-already-in-use') return firebase.auth().signInWithCredential(cred); throw err; });
-  }).then(function(res){ if(res&&res.user) onSignedIn(res.user); showToast(T('gOk')); })
-  .catch(function(e){ console.warn('apple sign-in',e); showToast(T('aFail')+(e&&e.code?' ('+e.code+')':''),7000); });
+    var cur=firebase.auth().currentUser, mode=appleMode; appleMode='link';
+    if(mode==='signin'||!cur||!cur.isAnonymous) return firebase.auth().signInWithCredential(cred);
+    return cur.linkWithCredential(cred).catch(function(err){
+      if(err&&(err.code==='auth/credential-already-in-use'||err.code==='auth/email-already-in-use'||err.code==='auth/account-exists-with-different-credential')){
+        var fresh=null;
+        try{ fresh=firebase.auth.OAuthProvider.credentialFromError?firebase.auth.OAuthProvider.credentialFromError(err):null; }catch(e){}
+        fresh=fresh||err.credential||null;
+        if(fresh) return firebase.auth().signInWithCredential(fresh);
+        appleMode='signin'; iosPost({cmd:'apple'});           // get a brand-new token and sign in with it
+        return {pending:true};
+      }
+      throw err;
+    });
+  }).then(function(res){
+    if(res&&res.pending) return;
+    var u=res&&res.user;
+    if(u&&appleName&&!u.displayName){ try{ u.updateProfile({displayName:appleName}); }catch(e){} u._dwName=appleName; }
+    if(u) onSignedIn(u);
+    showToast(T('aOk'),4000); renderAccount();
+  })
+  .catch(function(e){ console.warn('apple sign-in',e); appleMode='link'; showToast(T('aFail')+(e&&e.code?' ('+e.code+')':''),7000); });
 }
 window.onAppleIdToken=onAppleIdToken;
 function nativeSignInFailed(msg,which){ if(/cancel/i.test(msg||'')) return; showToast(T(which==='apple'?'aFail':'gFail')+(msg?' — '+msg:''),6000); }
@@ -1930,8 +2084,489 @@ var pressActive=false, pressTimer=null, pressX=0, pressY=0, loupeShow=false, lou
 var HOLD_MS=300, PRESS_SLOP=6;
 var curScreen='screen-menu', _cfCb=null;
 var turnTimerId=null, turnGraceId=null, TURN_SECS=15, TURN_GRACE=5, TURN_WARN=5;
-var APP_VERSION='2.7.2';
-var SET={sound:true,vibe:true,pveTimer:15,theme:'world',assist:true};
+var APP_VERSION='3.0.0';
+// ═══════════════════════
+//  CRYSTALS — soft currency. Earned by playing, spent on boosters (vs AI only) and skins.
+//  Stored locally and in the cloud (progress.wallet); the newest copy wins (t = last change).
+// ═══════════════════════
+var WALLET={c:0,owned:{st_base:1,bd_base:1},eq:{st:'base',bd:'base'},t:0,login:{day:0,streak:0},chest:{day:0,w:0,got:0}};
+(function(){ try{ var raw=localStorage.getItem('dwWallet'); if(raw){ var v=JSON.parse(raw); for(var k in v) WALLET[k]=v[k]; } else { WALLET.c=50; WALLET.t=Date.now(); localStorage.setItem('dwWallet',JSON.stringify(WALLET)); } }catch(e){} })();
+function saveWallet(){ WALLET.t=Date.now(); try{localStorage.setItem('dwWallet',JSON.stringify(WALLET));}catch(e){} if(typeof pushProgress==='function') pushProgress(); refreshCry(); }
+function fmtN(v){ return String(Math.round(v)).replace(/\B(?=(\d{3})+(?!\d))/g,'\u2009'); }
+function refreshCry(){ ['mCryNum','shopBal','boostBal'].forEach(function(id){ var e=document.getElementById(id); if(e) e.textContent=fmtN(WALLET.c); }); }
+function addCrystals(n,silent){
+  n=Math.round(n); if(!(n>0)) return 0;
+  WALLET.c+=n; saveWallet();
+  var ch=document.getElementById('mRateChip'); if(ch){ ch.classList.remove('pulse'); void ch.offsetWidth; ch.classList.add('pulse'); }
+  if(!silent) showToast(tpl(T('cryGot'),{n:n}),2200);
+  return n;
+}
+function spendCrystals(n){
+  if(WALLET.c<n){ showToast(T('cryNotEnough')+' (◆ '+WALLET.c+'/'+n+')',3200); return false; }
+  WALLET.c-=n; saveWallet(); return true;
+}
+function todayKey(){ return dayKey(); }
+function yesterdayKey(){ var d=new Date(); d.setDate(d.getDate()-1); return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate(); }
+// daily chest: 3 wins a day → 30 ◆
+function chestStep(){
+  var t=todayKey(); if(WALLET.chest.day!==t) WALLET.chest={day:t,w:0,got:0};
+  WALLET.chest.w++; var bonus=0;
+  if(WALLET.chest.w>=3&&!WALLET.chest.got){ WALLET.chest.got=1; bonus=30; }
+  saveWallet(); return bonus;
+}
+function chestText(){ var t=todayKey(), w=WALLET.chest.day===t?WALLET.chest.w:0; return WALLET.chest.day===t&&WALLET.chest.got?'🎁 ✓':tpl(T('chestProg'),{w:Math.min(3,w)}); }
+// daily login reward (7-day cycle)
+var LOGIN_R=[5,10,15,20,25,30,60];
+function checkDailyLogin(){
+  var t=todayKey(); if(WALLET.login.day===t) return;
+  if(curScreen!=='screen-menu'||document.querySelector('.overlay.open')) return;
+  var streak=WALLET.login.day===yesterdayKey()?(WALLET.login.streak|0)+1:1;
+  var idx=(streak-1)%7, n=LOGIN_R[idx];
+  WALLET.login={day:t,streak:streak}; addCrystals(n,true);
+  var h=''; for(var i=0;i<7;i++) h+='<div class="lg-d'+(i<idx?' done':i===idx?' today':'')+'">'+tpl(T('loginDay'),{d:i+1})+'<b>'+(i<idx?'✓':'◆'+LOGIN_R[i])+'</b></div>';
+  document.getElementById('lgDays').innerHTML=h;
+  document.getElementById('lgTxt').textContent=tpl(T('loginGot'),{n:n});
+  document.getElementById('loginH').textContent=T('loginTitle'); document.getElementById('lgOk').textContent=T('loginOk');
+  document.getElementById('loginModal').classList.add('open');
+}
+// ── skins (pixel-tinted from the art set, so they work on every WebView) ──
+var ST_SKINS=[{id:'base',p:0},{id:'ruby',p:250,h:0.985,s:1.25,l:0.82,acc:'#c0182a'},{id:'amethyst',p:400,h:0.78,s:0.95,l:1.0,acc:'#9b4dd8'},
+  {id:'gold',p:450,h:0.115,s:1.15,l:1.12,acc:'#e0a020'},{id:'obsidian',p:600,h:null,s:0.12,l:0.5,acc:'#2a2a33'},
+  {id:'sunstone',p:-1,boss:1,h:0.075,s:1.35,l:1.08,acc:'#ff7a1a'},{id:'rose',p:-1,boss:2,h:0.93,s:0.9,l:1.12,acc:'#ff6fae'}];
+var BD_SKINS=[{id:'base',p:0,lift:'rgba(255,246,222,0.30)'},{id:'marble',p:300,s:0.25,l:1.18,lift:'rgba(250,250,255,0.34)'},
+  {id:'sand',p:300,h:0.11,s:1.35,l:1.04,lift:'rgba(255,236,190,0.26)'},{id:'terra',p:400,h:0.04,s:1.5,l:0.92,lift:'rgba(255,220,200,0.20)'},
+  {id:'slate',p:600,h:0.58,s:0.25,l:0.62,lift:'rgba(200,215,230,0.10)'}];
+function curStSkin(){ var id=WALLET.eq&&WALLET.eq.st||'base'; return ST_SKINS.filter(function(x){return x.id===id;})[0]||ST_SKINS[0]; }
+function curBdSkin(){ var id=WALLET.eq&&WALLET.eq.bd||'base'; return BD_SKINS.filter(function(x){return x.id===id;})[0]||BD_SKINS[0]; }
+function rgb2hsl(r,g,b){ r/=255;g/=255;b/=255; var mx=Math.max(r,g,b),mn=Math.min(r,g,b),h=0,s=0,l=(mx+mn)/2; if(mx!==mn){ var d=mx-mn; s=l>0.5?d/(2-mx-mn):d/(mx+mn); h=mx===r?(g-b)/d+(g<b?6:0):mx===g?(b-r)/d+2:(r-g)/d+4; h/=6; } return [h,s,l]; }
+function hue2rgb(p,q,t){ if(t<0)t+=1; if(t>1)t-=1; if(t<1/6) return p+(q-p)*6*t; if(t<1/2) return q; if(t<2/3) return p+(q-p)*(2/3-t)*6; return p; }
+function hsl2rgb(h,s,l){ if(s===0){ var v=l*255; return [v,v,v]; } var q=l<0.5?l*(1+s):l+s-l*s, p=2*l-q; return [hue2rgb(p,q,h+1/3)*255,hue2rgb(p,q,h)*255,hue2rgb(p,q,h-1/3)*255]; }
+var TINT={};
+function tintedImg(key,sk){
+  if(!sk||(sk.h===undefined&&sk.s===undefined&&sk.l===undefined)) return imgEl(key);
+  var ck=key+'|'+sk.id; if(TINT[ck]) return TINT[ck];
+  var src=imgEl(key); if(!src) return null;
+  try{
+    var cv=document.createElement('canvas'); cv.width=src.naturalWidth||src.width; cv.height=src.naturalHeight||src.height;
+    var c=cv.getContext('2d'); c.drawImage(src,0,0);
+    var id=c.getImageData(0,0,cv.width,cv.height), d=id.data;
+    for(var i=0;i<d.length;i+=4){ if(!d[i+3]) continue;
+      var hsl=rgb2hsl(d[i],d[i+1],d[i+2]); var h=sk.h===null||sk.h===undefined?hsl[0]:sk.h, s2=Math.min(1,hsl[1]*(sk.s||1)), l2=Math.min(1,hsl[2]*(sk.l||1));
+      var o=hsl2rgb(h,s2,l2); d[i]=o[0]; d[i+1]=o[1]; d[i+2]=o[2]; }
+    c.putImageData(id,0,0); TINT[ck]=cv; return cv;
+  }catch(e){ return src; }
+}
+function skinTokImg(){ var sk=curStSkin(); return sk.id==='base'?imgEl('tokR'):tintedImg('tokR',sk); }
+function boardStoneImg(){ var sk=curBdSkin(); return sk.id==='base'?imgEl('stone'):tintedImg('stone',sk); }
+function canvasURL(cv){ try{ return cv&&cv.toDataURL?cv.toDataURL('image/png'):''; }catch(e){ return ''; } }
+function applySkinImgs(){
+  var sk=curStSkin(); var url=sk.id==='base'?'':canvasURL(skinTokImg());
+  document.querySelectorAll('img[data-cur="tokR"]').forEach(function(el){ el.src=url||('data:image/webp;base64,'+IMG.tokR); });
+}
+function equipSkin(kind,id){ WALLET.eq[kind]=id; saveWallet(); spriteCache={}; layerKey=''; applySkinImgs(); if(typeof G!=='undefined'&&G&&canvas) draw(G); }
+// ── shop ──
+var shopTab='st';
+function openShop(){ renderShop(); document.getElementById('shopModal').classList.add('open'); }
+function renderShop(){
+  refreshCry();
+  document.getElementById('shopH').textContent=T('shopTitle'); document.getElementById('shopNote').textContent=T('shopSoon');
+  document.getElementById('shopTabs').innerHTML='<button class="'+(shopTab==='st'?'on':'')+'" onclick="shopTab=\'st\';renderShop()">'+T('shopStones')+'</button><button class="'+(shopTab==='bd'?'on':'')+'" onclick="shopTab=\'bd\';renderShop()">'+T('shopBoards')+'</button>';
+  var list=shopTab==='st'?ST_SKINS:BD_SKINS, pre=shopTab==='st'?'st_':'bd_', cur=WALLET.eq[shopTab];
+  var g=document.getElementById('shopGrid'); g.innerHTML='';
+  list.forEach(function(sk){
+    var own=!!WALLET.owned[pre+sk.id]||sk.p===0, eq=cur===sk.id;
+    var b=document.createElement('button'); b.className='shop-it'+(own?' own':'')+(eq?' eq':'');
+    var im=shopTab==='st'?(sk.id==='base'?imgEl('tokR'):tintedImg('tokR',sk)):(sk.id==='base'?imgEl('stone'):tintedImg('stone',sk));
+    var url=im&&im.tagName==='IMG'?im.src:canvasURL(im);
+    b.innerHTML='<img alt="" src="'+(url||'')+'"><span class="si-n">'+T((shopTab==='st'?'sk_':'bd_')+sk.id)+'</span><span class="si-p">'+(eq?T('shopEquipped'):own?T('shopEquip'):sk.p<0?'👑 '+T('world'+sk.boss):'◆ '+sk.p)+'</span>';
+    b.onclick=function(){
+      if(eq) return;
+      if(!own&&sk.p<0){ showToast(tpl(T('shopBossTip'),{w:T('world'+sk.boss)}),2600); return; }
+      if(!own){ if(!spendCrystals(sk.p)) return; WALLET.owned[pre+sk.id]=1; saveWallet(); showToast('✓ '+T((shopTab==='st'?'sk_':'bd_')+sk.id),2200); }
+      equipSkin(shopTab,sk.id); renderShop();
+    };
+    g.appendChild(b);
+  });
+}
+// ── boosters (vs AI only; online and puzzles stay pure) ──
+var HINT=null;
+var BOOST={hint:15,dbl:50,undo:10,scout:25};
+function boostAvailable(){ return gameMode==='pve'&&!!G&&!G.over; }
+function openBoost(){
+  if(!boostAvailable()) return;
+  refreshCry(); document.getElementById('boostH').textContent=T('boostTitle'); document.getElementById('boostClose').textContent=T('dlyClose');
+  var my=G.cur===1&&!aiLock;
+  var rows=[
+    {k:'hint',i:'💡',n:T('bHint'),d:T('bHintD'),p:BOOST.hint,ok:my},
+    {k:'dbl',i:'⚡',n:T('bDouble'),d:G.dblUsed?T('bUsed'):T('bDoubleD'),p:BOOST.dbl,ok:my&&!G.dblUsed&&!G.dblArmed},
+    {k:'undo',i:'↶',n:T('bUndo'),d:undoStack.length?T('bUndoD'):T('bNoUndo'),p:BOOST.undo,ok:undoStack.length>0&&!G.over}
+  ];
+  if(G.fog) rows.unshift({k:'scout',i:'🔭',n:T('bScout'),d:T('bScoutD'),p:BOOST.scout,ok:my});
+  var L=document.getElementById('boostList'); L.innerHTML='';
+  rows.forEach(function(r){ var b=document.createElement('button'); b.className='bst-row'; b.disabled=!r.ok;
+    b.innerHTML='<span class="bi">'+r.i+'</span><span><div class="bn">'+r.n+'</div><div class="bd">'+r.d+'</div></span><span class="bp">◆ '+r.p+'</span>';
+    b.onclick=function(){ useBoost(r.k); }; L.appendChild(b); });
+  document.getElementById('boostModal').classList.add('open');
+}
+function useBoost(k){
+  if(!boostAvailable()) return;
+  if((k==='hint'||k==='dbl')&&(G.cur!==1||aiLock)){ showToast(T('bNotNow')); return; }
+  if(k==='undo'&&!undoStack.length){ showToast(T('bNoUndo')); return; }
+  if(k==='dbl'&&(G.dblUsed||G.dblArmed)) return;
+  var mv=null;
+  if(k==='hint'){
+    var bc=bestCapNow(G,1); mv=bc.v>0?bc.mv:null;
+    if(!mv){ var res=thinkLocal({n:G.n,board:flatBoard(G),cur:1,sc:G.sc.slice(),timeMs:350,maxDepth:4,rootWidth:12}); if(res&&typeof res.i==='number') mv=[(res.i/G.n)|0,res.i%G.n]; }
+    if(!mv){ var vm=vMoves(G); mv=vm[(Math.random()*vm.length)|0]; }
+    if(!mv) return;
+  }
+  if(!spendCrystals(BOOST[k])) return;
+  closeAllModals();
+  if(k==='scout'){ scoutFog(G); layerKey=''; draw(G); showBanner(T('bScoutOn'),2500); return; }
+  if(k==='hint'){ HINT={r:mv[0],c:mv[1],ver:G._ver}; draw(G); showBanner(T('bHintOn'),3500); }
+  else if(k==='dbl'){ G.dblArmed=true; showBanner(T('bDoubleOn'),0); }
+  else if(k==='undo'){ undoLeft++; undoMove(); }
+}
+function drawHint(c){
+  if(!HINT||!G||HINT.ver!==G._ver||G.cur!==1) return;
+  var xy=n2x(HINT.r,HINT.c), R=Math.max(6,CS*0.46);
+  c.save(); c.shadowColor='rgba(255,210,90,0.95)'; c.shadowBlur=R*0.9;
+  c.strokeStyle='#ffd65a'; c.lineWidth=Math.max(2,CS*0.12); c.beginPath(); c.arc(xy[0],xy[1],R,0,Math.PI*2); c.stroke();
+  c.fillStyle='rgba(255,214,90,0.28)'; c.fill(); c.restore();
+}
+// ═══════════════════════
+//  MAPS — terrain cells (water / trees) where nobody can place a dot.
+//  Terrain is neutral: it neither closes a loop nor blocks one.
+// ═══════════════════════
+var MAPS=['plain','island','river','lake','forest','volcano'];
+var MAP_ICO={plain:'🌾',island:'🏝',river:'🌊',lake:'💧',forest:'🌲',volcano:'🌋'};
+// trees/water/rocks enclosed by a player's wall count as that player's captured land (drawn filled, fenced)
+function mapTitle(g){ var id=g.mapId||curMap||'plain'; if(id==='island'&&g.landId&&g.landId!=='blob') return (LANDS[g.landId].ico||'🏝')+' '+landName(g.landId); return MAP_ICO[id]+' '+T('mp_'+id); }
+function blkOwner(g){
+  if(!g||!g.terrain) return null;
+  if(g._bo&&g._boV===g._ver) return g._bo;
+  var n=g.n, o={}, f1=flood(g,1), f2=flood(g,2), b=g.board;
+  for(var k in g.terrain){ var r=(k/n)|0, c=k%n, a=!f1[r][c], e=!f2[r][c];
+    if(a&&!e) o[k]=1; else if(e&&!a) o[k]=2;
+    else if(a&&e){ var s1=0,s2=0; [[1,0],[-1,0],[0,1],[0,-1]].forEach(function(d){ var rr=r+d[0],cc=c+d[1]; if(rr<0||cc<0||rr>=n||cc>=n) return; var v=b[rr][cc]; if(v===T1||v===C1||v===P1) s1++; if(v===T2||v===C2||v===P2) s2++; }); o[k]=s1>=s2?1:2; } }
+  g._bo=o; g._boV=g._ver; return o;
+}
+var LANDS={
+ africa:{ico:'🌍',p:[[-17.1,21],[-16,24],[-13,27.5],[-9.8,29.5],[-9.5,32.5],[-5.9,35.8],[-1,35.3],[3,36.8],[10,37.2],[11,35],[10.2,33.5],[13,32.8],[15.5,31.5],[19,30.3],[20.1,32],[25,31.6],[29,30.9],[32.3,31.3],[34.2,27.8],[35.5,24],[37.2,21],[38.5,18],[39.5,15.5],[41.7,13.5],[43.3,12.6],[44.5,10.4],[51.2,11.8],[51,10.4],[49.5,6.5],[48,4.5],[44,1],[41.5,-1.7],[39.3,-6.5],[39.8,-9],[40.5,-10.5],[40.6,-15.5],[37,-18],[35.5,-21.5],[35.5,-24],[32.9,-26.5],[32.5,-29],[30.5,-31],[27.5,-33.5],[25.6,-34],[20,-34.8],[18.4,-33.9],[17.8,-31],[16.5,-28.5],[15,-26.5],[14.5,-22.9],[13.2,-20],[11.8,-17],[12.3,-13.5],[13.4,-11],[13.2,-8.5],[12.2,-5.9],[11.2,-3.8],[9.4,-0.5],[9.6,2.5],[9.6,3.9],[8.5,4.5],[6.1,4.3],[3,6.4],[1,6],[-1.9,4.8],[-4.5,5.2],[-7.5,4.4],[-9.5,5.5],[-12.5,7.5],[-13.3,9],[-15,11],[-16.7,12.5],[-17.2,14.7],[-16.5,16.5],[-16.5,19.5]]},
+ europe:{ico:'🏰',p:[[-9.5,37.0],[-8.9,38.6],[-9.5,40.5],[-8.8,42.5],[-9.3,43.2],[-7.5,43.7],[-4,43.4],[-1.8,43.4],[-1.2,44.6],[-1.2,46.2],[-2.5,47.3],[-4.6,47.9],[-4.7,48.6],[-1.6,48.7],[-1.3,49.7],[1.5,50.2],[2.5,51.1],[4.2,51.9],[4.8,53.0],[7,53.6],[8.6,53.9],[8.6,55.5],[8.1,56.6],[9.9,57.6],[10.6,57.4],[10.3,56.3],[10.9,55.0],[10.9,54.3],[12.5,54.4],[14.2,53.9],[16.5,54.5],[18.6,54.7],[19.9,54.9],[21.1,55.7],[21,56.8],[22.6,57.6],[24.4,57.2],[23.9,58.3],[23.5,59.2],[25.5,59.6],[28,59.5],[30.2,59.9],[29,60.5],[26.5,60.4],[23,59.9],[21.4,60.7],[21.5,61.7],[21.2,62.7],[22.5,63.8],[24.7,64.9],[25.4,65.3],[24.2,65.8],[22.2,65.6],[21.5,64.5],[20.5,63.8],[18.5,62.9],[17.4,61.6],[17.2,60.7],[18.6,60.1],[18.8,59.4],[16.9,58.6],[16.5,57.1],[15.9,56.1],[14.3,55.6],[12.9,55.4],[12.7,56.2],[11.9,57.4],[11.2,58.8],[10.5,59.5],[9.5,59.0],[8.2,58.2],[6.6,58.1],[5.6,58.8],[5,60.4],[5.2,61.9],[6.5,62.6],[8.5,63.4],[10.5,64.5],[12.5,66],[14,67.5],[15.6,68.6],[18,69.7],[21.5,70.3],[25.7,71.1],[28,71],[31,70.2],[33,69.4],[36.5,69],[40.5,67.7],[44,68.5],[46,68.2],[53.5,68.3],[57,68.6],[60,69.5],[60,58],[58,52],[52,49],[47.5,46],[46.5,44],[45,43.3],[41.6,41.6],[40,43.6],[38.2,44.4],[37.4,45.3],[38.5,47.1],[36,46.7],[35.5,45.1],[33.6,44.5],[32.6,45.4],[33.6,46.1],[31.7,46.6],[30.2,45.9],[29.6,45.3],[28.7,44.3],[28,43],[27.9,42],[28.9,41.3],[26.2,40.9],[24.4,40.9],[23,40.4],[22.6,40.0],[22.9,39.4],[24,38.2],[23,37.9],[22.8,36.5],[21.7,36.9],[21.1,38.3],[20,39.6],[19.4,41.0],[19.5,42.0],[18.5,42.5],[16.5,43.5],[15,44.6],[13.7,45.1],[13.6,45.8],[12.3,45.4],[12.3,44.5],[13.6,43.6],[15.0,42.0],[16.1,41.9],[18.5,40.2],[17.2,40.5],[16.5,39.6],[17.1,39.1],[16.6,38.4],[15.7,38.0],[15.8,39.9],[14.8,40.6],[13.7,41.2],[12.4,41.7],[11.1,42.4],[10.5,43.0],[10.2,43.9],[8.7,44.4],[7.5,43.8],[6.2,43.1],[4.6,43.4],[3.1,43.1],[3.2,41.9],[1,41.0],[0.1,39.9],[-0.5,38.5],[-0.7,37.6],[-2.1,36.7],[-4.4,36.7],[-5.6,36.0],[-6.4,36.8],[-7.4,37.2],[-8.9,37.0]]},
+ asia:{ico:'🏯',p:[[60,69.5],[66,69.5],[68.5,68.2],[70,73],[73.5,71.5],[72.5,68.8],[74,67.5],[77,68.5],[80.5,73.5],[87,74],[97,76],[104,77.7],[113,73.7],[120,73],[128.5,72.8],[131,70.8],[141,72.5],[150,71.6],[160,69.6],[170,70],[180,68.9],[178,64.6],[176,62.3],[173,61.5],[170,60],[164,59.9],[162.5,57],[163.5,55.8],[156.6,51],[155.6,55.5],[156,57.8],[160,61],[154,59.2],[151,59.1],[143,59.3],[140,57.4],[137,54],[141,52.5],[140.5,48.5],[138,45.5],[135.1,43.3],[131,42.6],[129.6,41],[128,39],[129.4,36],[129.3,35.1],[126.4,34.5],[126.5,37.6],[124.7,39.6],[122.1,39],[121.6,40.9],[118,39.2],[117.8,38.2],[118.9,37.4],[122.5,37.4],[120.3,36],[119.2,34.8],[120.7,32],[121.9,30.9],[121.5,28.4],[119.6,25.6],[117,23.6],[114,22.3],[111,21.5],[108.5,21.6],[106.6,20.5],[105.7,19],[106.8,17.2],[109.3,13.4],[109.2,11.6],[106.7,10.4],[105,8.6],[104.8,10.1],[102.6,12.2],[100.9,13.4],[100,12.5],[99.2,10],[101.3,6.9],[102.3,6.2],[103.4,4.9],[104.2,1.4],[103.4,1.3],[101.3,2.9],[100.4,4.5],[98.3,7.9],[98.5,10.3],[98.6,12.9],[97.7,16.5],[94.3,16.0],[94.4,18.8],[92.3,20.8],[91.8,22.3],[89,21.9],[86.9,20.7],[85,19.3],[82.3,16.6],[80.3,15.5],[80.3,13.1],[79.8,10.3],[78.2,8.9],[77.5,8.1],[76.5,9.1],[75.4,11.8],[73.5,16],[72.8,19.0],[72.6,21.4],[70.4,20.8],[68.9,22.4],[67.4,23.9],[66.6,25.4],[61.6,25.2],[57.3,25.8],[56.4,27.1],[54,26.6],[51.6,27.8],[50.2,30.0],[48.5,29.9],[48.3,28.5],[50.1,26.5],[51.6,24.2],[54.1,24.1],[56.1,26.1],[56.4,24.9],[58.7,23.6],[59.8,22.5],[58.5,20.4],[57.8,19],[55.3,17.3],[52.2,15.7],[49.6,14.7],[45,12.8],[43.5,12.7],[42.7,15.7],[41.2,19],[39.1,21.3],[38,24],[36,26.9],[35,28.1],[34.6,29.5],[34.2,31.3],[35,32.8],[35.9,35.9],[35.8,36.8],[34.6,36.8],[32.5,36.1],[30.4,36.3],[28.3,36.8],[27.2,37.5],[26.3,38.3],[26.6,39.6],[26.2,40.6],[29,41.1],[31.3,41.1],[33.5,42],[36.1,41.7],[38.3,40.9],[41.6,41.6],[45,43.3],[46.5,44],[47.5,46],[52,49],[58,52],[60,58]]},
+ namerica:{ico:'🦅',p:[[-168,65.6],[-166,68.9],[-162,70.2],[-156.5,71.3],[-151,70.4],[-141,69.6],[-135,69.4],[-128,70.2],[-120,69.4],[-114,68.5],[-108,68.6],[-102,68],[-96,68.2],[-92,68.9],[-88,68.5],[-89,66],[-90.5,64],[-94,61],[-94.5,59],[-92.5,57.2],[-88,56.4],[-82.3,55],[-82,52.7],[-79.5,51.5],[-78.8,54.5],[-77,56.5],[-77.7,58.5],[-77.5,60.5],[-78,62.3],[-73.5,62.2],[-70,61],[-69.5,59],[-67.5,58.3],[-65,60.2],[-61.8,56.3],[-59,55],[-56,52.5],[-57.3,51.4],[-62,47.5],[-64.5,46.2],[-61,45.5],[-63.5,44.6],[-65.6,43.6],[-66.6,44.8],[-69.8,43.9],[-70.6,42.6],[-70,41.6],[-71.8,41.3],[-74,40.5],[-74.2,39.4],[-75.9,37.0],[-75.5,35.3],[-77.3,34.5],[-79,33.4],[-81.1,31.8],[-81.4,30.2],[-80.6,28.2],[-80.1,26.7],[-80.4,25.2],[-81.2,25.3],[-82.3,26.9],[-82.8,28.6],[-84,30.0],[-86.5,30.4],[-89,30.3],[-89.6,29.2],[-91.5,29.5],[-94,29.6],[-95.5,28.8],[-97.3,27.4],[-97.6,25.6],[-97.7,22.1],[-97.2,20.7],[-96.1,19.1],[-94.5,18.2],[-92,18.7],[-90.7,19.6],[-90.4,21.1],[-87.5,21.5],[-87.6,19.0],[-88.3,16.1],[-86,15.9],[-83.3,15.0],[-83.6,12.6],[-83.7,10.9],[-82.2,9.2],[-79.5,9.6],[-77.4,8.6],[-78.2,7.5],[-80.5,7.3],[-81.6,8.0],[-83.6,8.4],[-85.7,9.9],[-85.8,11.2],[-87.5,13.1],[-89.3,13.5],[-91.4,13.9],[-93.9,15.9],[-96.5,15.7],[-99.7,16.7],[-103.5,18.3],[-105.3,20.3],[-105.6,22.7],[-109.4,26.3],[-111.0,27.9],[-112.8,30.0],[-114.6,31.4],[-114.0,28.6],[-112.2,26.2],[-109.9,22.9],[-112.1,24.9],[-114.2,27.7],[-115.7,29.8],[-117.1,32.5],[-118.5,34.0],[-120.6,34.5],[-121.9,36.6],[-122.5,37.8],[-123.8,39.8],[-124.3,40.4],[-124.1,43],[-124,46.3],[-124.7,48.4],[-125.5,50.0],[-127.5,50.6],[-128.2,52.3],[-130.4,54.5],[-133,56.5],[-135,58.2],[-137.5,58.8],[-140,59.7],[-144,60],[-147.5,60.8],[-150,61],[-151.5,59.3],[-154,57.6],[-157.6,56.8],[-162,55.2],[-164.8,54.4],[-161.5,56.1],[-158,58.6],[-161.9,58.7],[-163.8,59.9],[-165.4,61],[-166,62.6],[-164.8,63.4],[-161,64.5],[-163.4,64.6],[-166.5,64.6]]},
+ samerica:{ico:'🦜',p:[[-77.3,8.6],[-75.5,10.5],[-71.5,12.4],[-68,10.6],[-63,10.7],[-60,8.5],[-57,6],[-51.5,4.5],[-50,1.5],[-50,0],[-48,-1],[-44,-2.5],[-41,-2.9],[-38.5,-3.7],[-35,-5.5],[-35,-9],[-37.2,-11.5],[-39,-13.5],[-39.2,-16],[-39.6,-17.9],[-40.6,-20.5],[-41,-22.5],[-44.6,-23.3],[-48.5,-26],[-48.8,-28.5],[-50,-31],[-53,-34],[-55,-35],[-57,-36],[-57.6,-38],[-62,-39],[-62.3,-40.6],[-65,-42],[-64.2,-43],[-65.5,-45],[-67.5,-46.5],[-66,-48],[-69,-51],[-68.3,-52.3],[-70,-53.5],[-71.5,-54],[-74.5,-52],[-75.5,-48],[-74,-44],[-73.5,-41],[-73.5,-37],[-71.5,-30],[-71.4,-25],[-70.3,-18.5],[-72.5,-17],[-75,-15.5],[-76.3,-13],[-79.5,-7.5],[-81.2,-5.5],[-80.3,-3.4],[-80,-2.5],[-80.9,-1],[-80,0.8],[-78.8,1.6],[-77.4,4],[-77.4,6.6]]},
+ australia:{ico:'🦘',p:[[113.5,-22],[113.3,-24.5],[114,-26.5],[114.9,-29.5],[115,-34.2],[118,-35],[121,-33.9],[123.5,-33.9],[126,-32.3],[129,-31.6],[131.5,-31.5],[134,-32.5],[135.6,-34.8],[137.7,-35.6],[138.5,-34.8],[140,-38],[143.5,-38.8],[146.5,-39],[148,-37.8],[150,-37.5],[151.3,-33.8],[152.6,-32],[153.6,-28.2],[153,-25],[150.8,-22.5],[149.5,-21.5],[146.3,-19],[145.4,-14.8],[143.8,-14.3],[142.5,-10.7],[141.6,-13],[141.5,-17],[139.5,-17.5],[137,-16],[135.5,-15],[136.8,-12.2],[135,-12],[132.5,-11.5],[130,-13],[129.5,-14.9],[127,-14],[125,-15],[122.5,-17],[121,-19.5],[118.7,-20.4],[116.7,-20.6],[114,-21.8]]},
+ antarctica:{ico:'🐧',polar:1,p:[[-180,-78],[-165,-78.3],[-150,-76.5],[-135,-74.5],[-120,-73.8],[-105,-74.2],[-90,-72.8],[-80,-73],[-72,-71],[-67,-67.5],[-62,-64],[-58,-63.5],[-57.5,-66],[-60,-70],[-57,-74],[-45,-78],[-35,-77.5],[-28,-76],[-18,-73],[-10,-71],[0,-70],[15,-70],[30,-69.5],[40,-68.5],[50,-67],[60,-67.5],[70,-69.5],[75,-69.5],[80,-67],[90,-66.5],[105,-66.2],[120,-66.8],[135,-66],[145,-67],[155,-69],[163,-71.5],[167,-73.5],[170,-76],[178,-78]]},
+ greenland:{ico:'🧊',p:[[-73,78],[-68,80.5],[-60,82],[-45,82.6],[-30,83.5],[-20,82],[-12,81.5],[-18,77],[-19.5,74],[-22,70.5],[-26,68.5],[-32,68],[-35,66],[-40,65],[-43,60],[-48,61],[-51,64],[-53.5,67],[-54,70.5],[-56,72.5],[-58,75.5],[-66,76.2]]},
+ madagascar:{ico:'🐒',p:[[49.3,-12],[50.2,-15],[50.5,-15.5],[49.5,-17.5],[48.5,-20.5],[47.2,-24.8],[45,-25.5],[43.7,-23.5],[43.4,-21.5],[44.4,-19.5],[44,-17],[46.3,-15.8],[47.8,-14.5],[48.8,-12.5]]},
+ britain:{ico:'💂',p:[[-5.7,50],[-3,50.6],[1.4,51.2],[1.7,52.6],[0.3,53.4],[-0.2,54.5],[-1.6,55.6],[-2.1,57.1],[-1.8,57.6],[-3.7,57.7],[-3,58.6],[-5,58.6],[-5.6,57.5],[-6.2,56.5],[-5.5,55.5],[-4.8,54.8],[-3.4,54.9],[-3.2,54.1],[-3,53.4],[-4.6,53.3],[-4.2,52.5],[-5.3,51.8],[-3.2,51.4],[-4.2,51.2]]},
+ iceland:{ico:'🌋',p:[[-22.5,63.9],[-20,63.5],[-17,63.8],[-14.5,64.5],[-13.5,65.2],[-14.8,66.3],[-16.5,66.5],[-19,66.1],[-21.5,65.6],[-23.8,66.1],[-24.3,65.4],[-22.4,64.9],[-22.5,64.2]]},
+ borneo:{ico:'🦧',p:[[109,1.5],[109.6,-1],[110.2,-3],[114.5,-3.8],[116.5,-2.8],[116,-1],[117.5,0.8],[118.8,1],[117.8,2.5],[119.2,5.4],[117,7],[116,6],[115.3,5],[113.9,4.5],[111.3,2.5],[109.6,2]]},
+ srilanka:{ico:'🐘',p:[[79.85,6.2],[80.6,5.9],[81.8,7],[81.4,8.5],[80.3,9.8],[79.9,8.5]]},
+ newzealand:{ico:'🥝',p:[[166.5,-46],[169,-46.6],[171,-45.5],[171.3,-44],[173,-43.7],[174.3,-41.8],[173.8,-40.9],[172.7,-40.5],[170.8,-42.5],[168.3,-44],[166.5,-45.3]]}
+};
+var LAND_IDS=['africa','europe','asia','namerica','samerica','australia','antarctica','greenland','madagascar','britain','iceland','borneo','srilanka','newzealand'];
+function pickLand(seed,land){ if(land&&land!=='rand') return land; var all=['blob'].concat(LAND_IDS); return all[(seed>>>0)%all.length]; }
+function landName(id){ return T('ld_'+id); }
+function landMask(id,n){
+  var L=LANDS[id], P=[], mx=1e9,my=1e9,Mx=-1e9,My=-1e9;
+  if(L.polar) L.p.forEach(function(q){ var rr=90+q[1], a=q[0]*Math.PI/180; P.push([rr*Math.sin(a),-rr*Math.cos(a)]); });
+  else { var la=0; L.p.forEach(function(q){ la+=q[1]; }); var k=Math.cos(la/L.p.length*Math.PI/180); L.p.forEach(function(q){ P.push([q[0]*k,-q[1]]); }); }
+  P.forEach(function(q){ mx=Math.min(mx,q[0]); my=Math.min(my,q[1]); Mx=Math.max(Mx,q[0]); My=Math.max(My,q[1]); });
+  var sc=(n-(n<=11?1.7:2.2))/Math.max(Mx-mx,My-my), ox=(n-1-(Mx-mx)*sc)/2, oy=(n-1-(My-my)*sc)/2, mask=new Uint8Array(n*n);
+  function pip(x,y){ var ins=false; for(var i=0,j=P.length-1;i<P.length;j=i++){ var xi=P[i][0],yi=P[i][1],xj=P[j][0],yj=P[j][1]; if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi)) ins=!ins; } return ins; }
+  for(var r=0;r<n;r++) for(var c=0;c<n;c++){ var x=mx+(c-ox)/sc, y=my+(r-oy)/sc; if(pip(x,y)) mask[r*n+c]=1; }
+  // keep the biggest piece of land so every point can be reached
+  var seen=new Int32Array(n*n), best=0, bestId=0, id2=0;
+  for(var i=0;i<n*n;i++){ if(!mask[i]||seen[i]) continue; id2++; var st=[i], cnt=0; seen[i]=id2;
+    while(st.length){ var q=st.pop(), r=(q/n)|0, c=q%n; cnt++; for(var dr=-1;dr<=1;dr++) for(var dc=-1;dc<=1;dc++){ var rr=r+dr,cc=c+dc,kk=rr*n+cc; if(rr>=0&&rr<n&&cc>=0&&cc<n&&mask[kk]&&!seen[kk]){ seen[kk]=id2; st.push(kk); } } }
+    if(cnt>best){ best=cnt; bestId=id2; } }
+  for(var i=0;i<n*n;i++) if(mask[i]&&seen[i]!==bestId) mask[i]=0;
+  return mask;
+}
+// v2.9: every expedition map is generated from a random seed and checked for playability
+function mkRng(seed){ var x=(seed>>>0)||1; return function(){ x=(x+0x6D2B79F5)>>>0; var t=x; t=Math.imul(t^(t>>>15),t|1); t^=t+Math.imul(t^(t>>>7),t|61); return ((t^(t>>>14))>>>0)/4294967296; }; }
+function newMapSeed(){ return ((Math.random()*4294967295)>>>0)||1; }
+function mapRaw(id,n,rnd,land){
+  var o={}, m=(n-1)/2, PI2=Math.PI*2;
+  function add(r,c,k){ r=Math.round(r); c=Math.round(c); if(r>=0&&r<n&&c>=0&&c<n) o[r*n+c]=k; }
+  function wob(cnt,amp){ var h=[]; for(var k=2;k<2+cnt;k++) h.push([k,amp*(0.4+rnd()*0.6)/(k*0.6),rnd()*PI2]); return function(th){ var v=1; h.forEach(function(q){ v+=q[1]*Math.cos(q[0]*th+q[2]); }); return v; }; }
+  if(id==='island'&&land&&land!=='blob'){
+    var lm=landMask(land,n); for(var i=0;i<n*n;i++) if(!lm[i]) o[i]='w';
+  } else if(id==='island'){
+    var cr=m+(rnd()-0.5)*n*0.1, cc=m+(rnd()-0.5)*n*0.1, R=m*(0.62+rnd()*0.14), W=wob(4,0.2), sx=0.85+rnd()*0.3;
+    for(var r=0;r<n;r++) for(var c=0;c<n;c++){ var dr=(r-cr)/sx, dc=(c-cc)*sx, d=Math.sqrt(dr*dr+dc*dc); if(d>R*W(Math.atan2(dr,dc))||r===0||c===0||r===n-1||c===n-1) add(r,c,'w'); }
+    // sometimes a small bay cuts into the island
+    if(rnd()<0.5){ var th=rnd()*PI2, br=cr+Math.sin(th)*R*0.75, bc=cc+Math.cos(th)*R*0.75, bR=Math.max(1.2,n*0.07);
+      for(var r=0;r<n;r++) for(var c=0;c<n;c++){ var a1=r-br,b1=c-bc; if(a1*a1+b1*b1<=bR*bR) add(r,c,'w'); } }
+  } else if(id==='river'){
+    var vert=rnd()<0.5, A=n*(0.05+rnd()*0.09), f=0.5+rnd()*0.9, ph=rnd()*PI2, base=m+(rnd()-0.5)*n*0.24, sl=(rnd()-0.5)*0.5,
+        w=(n>=16||rnd()<0.5)?2:1, nf=n>=21?3:2, fords=[], prev=null;
+    for(var t=0;t<60&&fords.length<nf;t++){ var p=2+Math.floor(rnd()*(n-4)); if(fords.every(function(q){ return Math.abs(q-p)>=Math.max(3,n/(nf+1.5)); })) fords.push(p); }
+    for(var i=0;i<n;i++){
+      var ctr=base+sl*(i-m)+A*Math.sin(i/(n-1)*PI2*f+ph), lo=Math.round(ctr-(w-1)/2), hi=lo+w-1;
+      lo=Math.max(1,Math.min(n-1-w,lo)); hi=lo+w-1;
+      if(prev!==null){ if(lo>prev[1]) lo=prev[1]; if(hi<prev[0]) hi=prev[0]; }   // banks stay continuous
+      prev=[lo,hi];
+      if(fords.indexOf(i)>=0) continue;
+      for(var j=lo;j<=hi;j++) vert?add(i,j,'w'):add(j,i,'w');
+    }
+  } else if(id==='lake'){
+    var cnt=(n>=16&&rnd()<0.45)?2:1;
+    for(var L=0;L<cnt;L++){
+      var sc=cnt===2?0.75:1, lr=n*(0.25+rnd()*0.5), lc=n*(0.25+rnd()*0.5), rx=Math.max(1.5,n*(0.12+rnd()*0.1)*sc), ry=Math.max(1.3,n*(0.09+rnd()*0.08)*sc), rot=rnd()*Math.PI, W=wob(3,0.2), co=Math.cos(rot), si=Math.sin(rot);
+      for(var r=0;r<n;r++) for(var c=0;c<n;c++){ var dr=r-lr, dc=c-lc, u=(dr*co+dc*si)/ry, v=(-dr*si+dc*co)/rx; if(u*u+v*v<=Math.pow(W(Math.atan2(u,v)),2)) add(r,c,'w'); }
+    }
+  } else if(id==='volcano'){
+    var vr=m+(rnd()-0.5)*n*0.24, vc=m+(rnd()-0.5)*n*0.24, R=Math.max(1.25,n*(0.08+rnd()*0.05)), W=wob(3,0.22);
+    for(var r=0;r<n;r++) for(var c=0;c<n;c++){ var dr=r-vr, dc=c-vc; if(Math.sqrt(dr*dr+dc*dc)<=R*W(Math.atan2(dr,dc))) add(r,c,'l'); }
+    var flows=2+Math.floor(rnd()*2), a0=rnd()*PI2;
+    for(var f=0;f<flows;f++){ var a=a0+f*PI2/flows+(rnd()-0.5)*0.8, x=vc+Math.cos(a)*R, y=vr+Math.sin(a)*R, len=n*(0.22+rnd()*0.2), pr=Math.round(y), pc=Math.round(x);
+      for(var t=0;t<len*2;t++){ a+=(rnd()-0.5)*0.45; x+=Math.cos(a)*0.5; y+=Math.sin(a)*0.5; var rr=Math.round(y), cc=Math.round(x);
+        if(rr<1||cc<1||rr>n-2||cc>n-2) break; if(rr!==pr&&cc!==pc) add(pr,cc,'l'); add(rr,cc,'l'); pr=rr; pc=cc; } }
+    for(var r=1;r<n-1;r++) for(var c=1;c<n-1;c++){ if(o[r*n+c]) continue; var dr=r-vr, dc=c-vc, d=Math.sqrt(dr*dr+dc*dc), e=R*W(Math.atan2(dr,dc));
+      if((d>e&&d<=e+1.5&&rnd()<0.32)||rnd()<0.025) add(r,c,'r'); }
+  } else if(id==='forest'){
+    var groves=Math.round(n/5)+Math.floor(rnd()*3);
+    for(var g=0;g<groves;g++){ var gr=1+rnd()*(n-3), gc=1+rnd()*(n-3), R2=Math.max(1.2,n*(0.06+rnd()*0.07));
+      for(var r=1;r<n-1;r++) for(var c=1;c<n-1;c++){ var a1=r-gr,b1=c-gc, d=Math.sqrt(a1*a1+b1*b1); if(d<=R2&&rnd()<0.78-0.3*d/R2) add(r,c,'t'); } }
+    for(var r=1;r<n-1;r++) for(var c=1;c<n-1;c++) if(rnd()<0.025) add(r,c,'t');
+  }
+  return o;
+}
+function mapOk(o,n,id){
+  var keys=Object.keys(o), free=n*n-keys.length, frac=keys.length/(n*n);
+  if(id==='island'&&(frac<0.3||frac>0.66)) return false;
+  if(id==='river'&&keys.length<n*1.3) return false;
+  if(id==='lake'&&(frac<0.06||frac>0.3)) return false;
+  if(id==='forest'&&(frac<0.07||frac>0.22)) return false;
+  if(id==='volcano'&&(frac<0.05||frac>0.3)) return false;
+  if(id==='island_land'&&frac>0.85) return false;
+  // all free points must form one region (dots link diagonally too)
+  var start=-1; for(var i=0;i<n*n;i++) if(!(i in o)){ start=i; break; }
+  if(start<0) return false;
+  var seen={}, st=[start], cnt=0; seen[start]=1;
+  while(st.length){ var k=st.pop(), r=(k/n)|0, c=k%n; cnt++;
+    for(var dr=-1;dr<=1;dr++) for(var dc=-1;dc<=1;dc++){ var rr=r+dr, cc=c+dc, kk=rr*n+cc; if((dr||dc)&&rr>=0&&rr<n&&cc>=0&&cc<n&&!(kk in o)&&!seen[kk]){ seen[kk]=1; st.push(kk); } } }
+  return cnt===free;
+}
+function mapCells(id,n,seed,land){
+  if(id==='plain') return [];
+  if(seed==null) seed=newMapSeed();
+  var o={}, ld=id==='island'?pickLand(seed,land):null, rnd;
+  if(ld&&ld!=='blob'){ o=mapRaw(id,n,null,ld); rnd=mkRng(seed); }
+  else for(var t=0;t<40;t++){ rnd=mkRng(seed+t*7919); o=mapRaw(id,n,rnd); if(mapOk(o,n,id)) break; }
+  var out=Object.keys(o).map(function(k){ k=+k; return [(k/n)|0,k%n,o[k]]; });
+  if(id==='volcano'){ var want=n<=11?3:n<=16?4:5, tries=0;   // crystals ◆ lying on free points
+    while(want>0&&tries++<400){ var r=1+Math.floor(rnd()*(n-2)), c=1+Math.floor(rnd()*(n-2)), k=r*n+c; if(!(k in o)){ o[k]='g'; out.push([r,c,'g']); want--; } } }
+  return out;
+}
+function applyMap(g,id,seed,land){
+  if(seed==null) seed=newMapSeed();
+  var cells=mapCells(id,g.n,seed,land); g.terrain={}; g.gems={}; g.mapId=id; g.mapSeed=seed; g.landId=id==='island'?pickLand(seed,land):null;
+  for(var i=0;i<cells.length;i++){ var k=cells[i][0]*g.n+cells[i][1]; if(cells[i][2]==='g'){ g.gems[k]=1; continue; } g.board[cells[i][0]][cells[i][1]]=BLK; g.terrain[k]=cells[i][2]; }
+  g._ver=(g._ver|0)+1;
+}
+// Liquids are drawn as one smooth body: the water mask is interpolated with a Catmull-Rom spline
+// between grid points (exact at every point), then shaded by depth — no "bubbles", soft coasts.
+function liquidCanvas(terr,n,kind,maxPx){
+  var M=1.5, span=n-1+2*M, ppc=Math.max(5,Math.min(30,Math.floor((maxPx||760)/span))), W=Math.ceil(span*ppc);
+  var F=new Float32Array(n*n), any=0, i;
+  for(var k in terr) if(terr[k]===kind){ F[+k]=1; any=1; }
+  if(!any) return null;
+  var D=new Float32Array(n*n), q=[];
+  for(i=0;i<n*n;i++){ if(F[i]) D[i]=99; else { D[i]=0; q.push(i); } }
+  // chamfer distance (round, not diamond-shaped) from every water point to the nearest shore
+  var SQ=1.414, r1, c1;
+  for(r1=0;r1<n;r1++) for(c1=0;c1<n;c1++){ var x=r1*n+c1; if(!F[x]) continue; var m1=D[x];
+    if(r1>0){ m1=Math.min(m1,D[x-n]+1); if(c1>0) m1=Math.min(m1,D[x-n-1]+SQ); if(c1<n-1) m1=Math.min(m1,D[x-n+1]+SQ); } if(c1>0) m1=Math.min(m1,D[x-1]+1); D[x]=m1; }
+  for(r1=n-1;r1>=0;r1--) for(c1=n-1;c1>=0;c1--){ var x=r1*n+c1; if(!F[x]) continue; var m1=D[x];
+    if(r1<n-1){ m1=Math.min(m1,D[x+n]+1); if(c1>0) m1=Math.min(m1,D[x+n-1]+SQ); if(c1<n-1) m1=Math.min(m1,D[x+n+1]+SQ); } if(c1<n-1) m1=Math.min(m1,D[x+1]+1); D[x]=m1; }
+  for(i=0;i<n*n;i++) if(D[i]>40) D[i]=6;
+  var cv=document.createElement('canvas'); cv.width=cv.height=W; var cx=cv.getContext('2d'); if(!cx) return null;
+  var im=null; try{ im=cx.createImageData(W,W); }catch(e){} if(!im||!im.data) return null;
+  var d=im.data, V=new Float32Array(n), DV=new Float32Array(n);
+  function cl(j){ return j<0?0:j>n-1?n-1:j; }
+  function cr(a0,b0,c0,e0,t){ return b0+0.5*t*(c0-a0+t*(2*a0-5*b0+4*c0-e0+t*(3*(b0-c0)+e0-a0))); }
+  function ss(e0,e1,x){ var t=(x-e0)/(e1-e0); t=t<0?0:t>1?1:t; return t*t*(3-2*t); }
+  var lava=kind==='l';
+  var C0=lava?[255,96,24]:[118,206,214], C1=lava?[255,214,92]:[34,104,146], RIM=lava?[66,40,30]:[226,200,144], FO=lava?[255,240,160]:[255,255,255];
+  for(var py=0;py<W;py++){
+    var v=py/ppc-M, r0=Math.floor(v), tv=v-r0;
+    for(var j=0;j<n;j++){ V[j]=cr(F[cl(r0-1)*n+j],F[cl(r0)*n+j],F[cl(r0+1)*n+j],F[cl(r0+2)*n+j],tv); var d0=D[cl(r0)*n+j], d1=D[cl(r0+1)*n+j]; DV[j]=d0+(d1-d0)*tv; }
+    for(var px=0;px<W;px++){
+      var u=px/ppc-M, c0=Math.floor(u), tu=u-c0;
+      var val=cr(V[cl(c0-1)],V[cl(c0)],V[cl(c0+1)],V[cl(c0+2)],tu);
+      if(val<0.27) continue;
+      var dep=DV[cl(c0)]+(DV[cl(c0+1)]-DV[cl(c0)])*tu, o=(py*W+px)*4;
+      var aw=ss(0.47,0.53,val), ar=ss(0.27,0.34,val)*(1-aw)*(lava?0.95:0.9);
+      var t=ss(0.3,2.4,dep), fo=(1-ss(0.5,0.6,val))*aw*(lava?0.7:0.5);
+      var wr=C0[0]+(C1[0]-C0[0])*t, wg=C0[1]+(C1[1]-C0[1])*t, wb=C0[2]+(C1[2]-C0[2])*t;
+      wr+=(FO[0]-wr)*fo; wg+=(FO[1]-wg)*fo; wb+=(FO[2]-wb)*fo;
+      var A=aw+ar; if(A<=0) continue;
+      d[o]=(wr*aw+RIM[0]*ar)/A; d[o+1]=(wg*aw+RIM[1]*ar)/A; d[o+2]=(wb*aw+RIM[2]*ar)/A; d[o+3]=Math.min(255,A*255*(lava?1:0.97));
+    }
+  }
+  cx.putImageData(im,0,0);
+  return {cv:cv,M:M};
+}
+function liqOf(g,kind){ g._liq=g._liq||{}; if(!(kind in g._liq)) g._liq[kind]=liquidCanvas(g.terrain,g.n,kind,760); return g._liq[kind]; }
+function drawRock(ctx,x,y,S){
+  ctx.fillStyle='rgba(40,26,10,0.3)'; ctx.beginPath(); ctx.ellipse(x+S*0.08,y+S*0.18,S*0.44,S*0.16,0,0,Math.PI*2); ctx.fill();
+  var gr=ctx.createLinearGradient(x-S*0.4,y-S*0.4,x+S*0.4,y+S*0.3); gr.addColorStop(0,'#a59c92'); gr.addColorStop(1,'#4c463f');
+  ctx.fillStyle=gr; ctx.beginPath(); ctx.moveTo(x-S*0.42,y+S*0.16); ctx.lineTo(x-S*0.3,y-S*0.18); ctx.lineTo(x-S*0.04,y-S*0.38); ctx.lineTo(x+S*0.3,y-S*0.22); ctx.lineTo(x+S*0.44,y+S*0.12); ctx.lineTo(x+S*0.1,y+S*0.24); ctx.closePath(); ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,0.22)'; ctx.beginPath(); ctx.moveTo(x-S*0.3,y-S*0.18); ctx.lineTo(x-S*0.04,y-S*0.38); ctx.lineTo(x+S*0.02,y-S*0.12); ctx.closePath(); ctx.fill();
+}
+function drawPine(ctx,x0,y0,H){
+  var x=x0, y=y0+H*0.36;
+  ctx.fillStyle='rgba(40,26,10,0.32)'; ctx.beginPath(); ctx.ellipse(x+H*0.12,y+H*0.02,H*0.34,H*0.12,0,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#6b4423'; ctx.fillRect(x-H*0.05,y-H*0.18,H*0.1,H*0.18);
+  [[0.18,0.36],[0.42,0.29],[0.64,0.21]].forEach(function(t,i){ var by=y-H*t[0], w=H*t[1], hh=H*0.36;
+    ctx.fillStyle=i===0?'#1d4d22':i===1?'#24602a':'#2e7533'; ctx.beginPath(); ctx.moveTo(x-w,by); ctx.lineTo(x+w,by); ctx.lineTo(x,by-hh); ctx.closePath(); ctx.fill();
+    ctx.fillStyle='rgba(190,230,140,0.25)'; ctx.beginPath(); ctx.moveTo(x,by-hh); ctx.lineTo(x-w*0.15,by-hh*0.4); ctx.lineTo(x-w*0.7,by); ctx.lineTo(x-w*0.35,by); ctx.closePath(); ctx.fill(); });
+}
+function drawGemAt(ctx,x,y,S){
+  ctx.save(); ctx.shadowColor='rgba(110,230,255,0.95)'; ctx.shadowBlur=S*0.9;
+  var gr=ctx.createLinearGradient(x,y-S*0.5,x,y+S*0.5); gr.addColorStop(0,'#e8fdff'); gr.addColorStop(0.45,'#5fd8f5'); gr.addColorStop(1,'#1f7fb8');
+  ctx.fillStyle=gr; ctx.beginPath(); ctx.moveTo(x,y-S*0.5); ctx.lineTo(x+S*0.38,y-S*0.1); ctx.lineTo(x,y+S*0.5); ctx.lineTo(x-S*0.38,y-S*0.1); ctx.closePath(); ctx.fill();
+  ctx.shadowBlur=0; ctx.fillStyle='rgba(255,255,255,0.7)'; ctx.beginPath(); ctx.moveTo(x,y-S*0.5); ctx.lineTo(x-S*0.38,y-S*0.1); ctx.lineTo(x-S*0.05,y-S*0.1); ctx.closePath(); ctx.fill();
+  ctx.restore();
+}
+// Fog of war: the board is split into 4×4 zones. Only the middle starts open; a zone opens when you
+// play within 2 points of it or capture inside it. Some enemy stones wait hidden in the fog.
+function scoutFog(g){
+  if(!g.fog) return; var cnt={};
+  for(var r=0;r<g.n;r++) for(var c=0;c<g.n;c++){ if(!fogHidden(g,r,c)) continue; var z=fogZone(g,r,c); cnt[z]=(cnt[z]|0)+(g.board[r][c]===P2?10:0)+1; }
+  Object.keys(cnt).sort(function(a,b){ return cnt[b]-cnt[a]; }).slice(0,2).forEach(function(z){ g.fog.open[z]=1; });
+  g.fog.v++;
+}
+function setupFog(g,k){
+  var n=g.n, zs=Math.ceil(n/4), zn=Math.ceil(n/zs), mid=(zn-1)/2;
+  g.fog={zs:zs,zn:zn,open:{},v:1,all:0};
+  for(var zr=0;zr<zn;zr++) for(var zc=0;zc<zn;zc++) if(Math.abs(zr-mid)<=0.5&&Math.abs(zc-mid)<=0.5) g.fog.open[zr*zn+zc]=1;
+  var placed=0, tries=0;
+  while(placed<k&&tries++<600){ var r=1+Math.floor(Math.random()*(n-2)), c=1+Math.floor(Math.random()*(n-2));
+    if(g.board[r][c]===EMPTY&&fogHidden(g,r,c)&&!(g.gems&&g.gems[r*n+c])){ g.board[r][c]=P2; placed++; } }
+  g._ver=(g._ver|0)+1;
+}
+function fogZone(g,r,c){ return ((r/g.fog.zs)|0)*g.fog.zn+((c/g.fog.zs)|0); }
+function fogHidden(g,r,c){ return !!(g&&g.fog)&&!g.fog.all&&!g.fog.open[fogZone(g,r,c)]; }
+function fogOpen(g,r,c,rad){
+  if(!g||!g.fog) return false; var ch=false;
+  for(var dr=-rad;dr<=rad;dr++) for(var dc=-rad;dc<=rad;dc++){ var rr=r+dr, cc=c+dc; if(rr<0||cc<0||rr>=g.n||cc>=g.n) continue; var z=fogZone(g,rr,cc); if(!g.fog.open[z]){ g.fog.open[z]=1; ch=true; } }
+  if(ch) g.fog.v++; return ch;
+}
+function fogAfterMove(g,r,c,mover){
+  if(!g.fog||mover!==1) return;
+  fogOpen(g,r,c,2);
+  var lc=g._lastCap; if(lc&&lc.player===1) (lc.dots||[]).concat(lc.empty||[]).forEach(function(q){ fogOpen(g,q[0],q[1],0); });
+}
+function fogCanvas(g){
+  var f=g.fog; if(f.cv&&f.cvV===f.v) return f.cvO;
+  var n=g.n, M=1.5, span=n-1+2*M, ppc=Math.max(5,Math.min(22,Math.floor(560/span))), W=Math.ceil(span*ppc);
+  var F=new Float32Array(n*n); for(var r=0;r<n;r++) for(var c=0;c<n;c++) F[r*n+c]=fogHidden(g,r,c)?1:0;
+  var cv=f.cv||document.createElement('canvas'); cv.width=cv.height=W; var cx=cv.getContext('2d'); if(!cx) return null;
+  var im=null; try{ im=cx.createImageData(W,W); }catch(e){} if(!im||!im.data) return null;
+  var d=im.data, V=new Float32Array(n);
+  if(!f.noise){ f.noise=[]; for(var i=0;i<12*12;i++) f.noise.push(Math.random()); }
+  function nz(x,y){ var X=x*11, Y=y*11, i0=Math.floor(X), j0=Math.floor(Y), tx=X-i0, ty=Y-j0; function v(i,j){ return f.noise[(Math.min(11,j))*12+Math.min(11,i)]; }
+    var a=v(i0,j0)+(v(i0+1,j0)-v(i0,j0))*tx, b=v(i0,j0+1)+(v(i0+1,j0+1)-v(i0,j0+1))*tx; return a+(b-a)*ty; }
+  function cl(j){ return j<0?0:j>n-1?n-1:j; }
+  function cr(a0,b0,c0,e0,t){ return b0+0.5*t*(c0-a0+t*(2*a0-5*b0+4*c0-e0+t*(3*(b0-c0)+e0-a0))); }
+  for(var py=0;py<W;py++){ var v=py/ppc-M, r0=Math.floor(v), tv=v-r0;
+    for(var j=0;j<n;j++) V[j]=cr(F[cl(r0-1)*n+j],F[cl(r0)*n+j],F[cl(r0+1)*n+j],F[cl(r0+2)*n+j],tv);
+    for(var px=0;px<W;px++){ var u=px/ppc-M, c0=Math.floor(u), tu=u-c0, val=cr(V[cl(c0-1)],V[cl(c0)],V[cl(c0+1)],V[cl(c0+2)],tu);
+      if(val<0.25) continue; var t=(val-0.25)/0.3; t=t<0?0:t>1?1:t; t=t*t*(3-2*t);
+      var o=(py*W+px)*4, k=nz(px/W,py/W), sh=0.74+0.34*k;
+      d[o]=Math.min(255,190*sh); d[o+1]=Math.min(255,200*sh); d[o+2]=Math.min(255,220*sh); d[o+3]=255*t*(0.9+0.09*k); } }
+  cx.putImageData(im,0,0);
+  f.cv=cv; f.cvV=f.v; f.cvO={cv:cv,M:M}; return f.cvO;
+}
+function drawFog(ctx,g){
+  if(!g.fog||g.fog.all) return; var fc=fogCanvas(g); if(!fc) return;
+  var o=n2x(0,0), sz=(g.n-1+2*fc.M)*CS;
+  ctx.save(); ctx.beginPath(); ctx.rect(0,0,BW,BH); ctx.clip(); ctx.drawImage(fc.cv,o[0]-fc.M*CS,o[1]-fc.M*CS,sz,sz); ctx.restore();
+}
+function checkGems(g){
+  if(!g||!g.gems) return;
+  for(var k in g.gems){ var r=(k/g.n)|0, c=k%g.n, v=g.board[r][c]; if(v===EMPTY) continue;
+    delete g.gems[k];
+    if((v===P1||v===T1)&&gameMode==='pve'){ addCrystals(3,true); g._gems=(g._gems|0)+3; activeAnims.push({type:'text',at:[r,c],txt:'+3 ◆',color:'#8ff0ff',start:performance.now(),dur:1200}); try{ kickAnims(); }catch(e){} } }
+}
+function drawGems(ctx,g){ if(!g.gems) return; for(var k in g.gems){ var r=(k/g.n)|0, c=k%g.n; if(g.board[r][c]!==EMPTY) continue; var xy=n2x(r,c); drawGemAt(ctx,xy[0],xy[1],Math.max(9,CS*0.8)); } }
+function drawTerrain(ctx,g){
+  if(!g.terrain) return;
+  var n=g.n, keys=Object.keys(g.terrain), o=n2x(0,0);
+  ctx.save(); ctx.beginPath(); ctx.rect(0,0,BW,BH); ctx.clip();
+  ['w','l'].forEach(function(kind){ var lc=liqOf(g,kind); if(!lc) return; var sz=(n-1+2*lc.M)*CS; ctx.drawImage(lc.cv,o[0]-lc.M*CS,o[1]-lc.M*CS,sz,sz); });
+  // gentle ripples on the water, glowing cracks on lava
+  ctx.lineCap='round';
+  keys.forEach(function(k){ var t=g.terrain[k]; if(t!=='w'&&t!=='l') return; var r=(k/n)|0,c=k%n; if((r*7+c*3)%5) return; var xy=n2x(r,c);
+    if(t==='w'){ ctx.strokeStyle='rgba(235,252,255,0.36)'; ctx.lineWidth=Math.max(0.8,CS*0.045);
+      ctx.beginPath(); ctx.moveTo(xy[0]-CS*0.28,xy[1]); ctx.quadraticCurveTo(xy[0]-CS*0.14,xy[1]-CS*0.12,xy[0],xy[1]); ctx.quadraticCurveTo(xy[0]+CS*0.14,xy[1]+CS*0.12,xy[0]+CS*0.28,xy[1]); ctx.stroke(); }
+    else { ctx.fillStyle='rgba(255,246,190,0.75)'; ctx.beginPath(); ctx.arc(xy[0]+CS*0.12,xy[1]-CS*0.08,Math.max(1,CS*0.07),0,Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.arc(xy[0]-CS*0.16,xy[1]+CS*0.1,Math.max(0.8,CS*0.045),0,Math.PI*2); ctx.fill(); } });
+  ctx.restore();
+  keys.forEach(function(k){ var t=g.terrain[k], r=(k/n)|0, c=k%n, xy=n2x(r,c); ctx.save();
+    if(t==='t') drawPine(ctx,xy[0],xy[1],CS*0.9); else if(t==='r') drawRock(ctx,xy[0],xy[1],CS*1.05);
+    ctx.restore(); });
+}
+function drawMapPreview(cv,id,n,seed,land){
+  var S=cv.width, c=cv.getContext('2d'); if(!c) return;
+  var st=boardStoneImg(); c.fillStyle='#d8c39a'; c.fillRect(0,0,S,S);
+  if(st){ try{ c.fillStyle=c.createPattern(st,'repeat'); c.fillRect(0,0,S,S); }catch(e){} }
+  c.fillStyle='rgba(255,246,222,0.3)'; c.fillRect(0,0,S,S);
+  var step=S/(n+1);
+  c.strokeStyle='rgba(140,96,30,0.35)'; c.lineWidth=1;
+  for(var i=0;i<n;i++){ var p=step*(i+1); c.beginPath(); c.moveTo(step,p); c.lineTo(S-step,p); c.stroke(); c.beginPath(); c.moveTo(p,step); c.lineTo(p,S-step); c.stroke(); }
+  var cells=mapCells(id,n,seed,land), terr={};
+  cells.forEach(function(q){ terr[q[0]*n+q[1]]=q[2]; });
+  ['w','l'].forEach(function(kind){ var lc=liquidCanvas(terr,n,kind,S*1.6); if(!lc) return; var sz=(n-1+2*lc.M)*step; c.drawImage(lc.cv,step-lc.M*step,step-lc.M*step,sz,sz); });
+  cells.forEach(function(q){ var x=step*(q[1]+1), y=step*(q[0]+1);
+    if(q[2]==='t'){ c.fillStyle='#1f5a26'; c.beginPath(); c.moveTo(x-step*0.42,y+step*0.36); c.lineTo(x+step*0.42,y+step*0.36); c.lineTo(x,y-step*0.5); c.closePath(); c.fill(); }
+    else if(q[2]==='r'){ c.fillStyle='#5d564e'; c.beginPath(); c.arc(x,y,step*0.42,0,Math.PI*2); c.fill(); }
+    else if(q[2]==='g') drawGemAt(c,x,y,step*1.1); });
+}
+// ── expedition screen ──
+var EXP={map:'island',lv:2,n:16,land:'rand',fog:0}, curMap=null, curFog=0, curMapSeed=null, EXPW={}, EXPSEED={};
+(function(){ try{ var v=JSON.parse(localStorage.getItem('dwExp')||'{}'); for(var k in v) if(k in EXP) EXP[k]=v[k]; EXPW=JSON.parse(localStorage.getItem('dwExpW')||'{}')||{}; }catch(e){} })();
+function saveExp(){ try{localStorage.setItem('dwExp',JSON.stringify(EXP)); localStorage.setItem('dwExpW',JSON.stringify(EXPW));}catch(e){} }
+function expWinReward(lv,map,n,fog){ return ([0,5,10,15][lv]|0)+(map!=='plain'?5:0)+(n>=21?5:0)+(fog?5:0); }
+function openExpedition(){ renderExp(); SS('screen-exp'); }
+function renderExp(){
+  document.getElementById('expTitle').textContent=T('expTitle'); document.getElementById('expSub').textContent=T('expSub');
+  document.getElementById('expOppL').textContent=T('expOpp'); document.getElementById('expSizeL').textContent=T('expSize');
+  document.getElementById('expGo').textContent=T('expGo'); document.getElementById('expBack').textContent=T('expBack');
+  var g=document.getElementById('expGrid'); g.innerHTML='';
+  MAPS.forEach(function(id){
+    var b=document.createElement('button'); b.className='exp-card'+(EXP.map===id?' sel':'');
+    var cv=document.createElement('canvas'); cv.width=160; cv.height=160; b.appendChild(cv);
+    if(!EXPSEED[id]) EXPSEED[id]=newMapSeed();
+    var nm=id==='island'?(function(){ var l=pickLand(EXPSEED[id],EXP.land); return l==='blob'?T('mp_island'):landName(l); })():T('mp_'+id);
+    var t=document.createElement('div'); t.innerHTML='<div class="en">'+MAP_ICO[id]+' '+nm+'</div><div class="ed">'+T('mpd_'+id)+'</div>'+(EXPW[id]?'<div class="ew">'+tpl(T('expWins'),{w:EXPW[id]})+'</div>':'');
+    b.appendChild(t);
+    if(!EXPSEED[id]) EXPSEED[id]=newMapSeed();
+    if(EXP.map===id&&id!=='plain'){ var dice=document.createElement('span'); dice.className='exp-dice'; dice.textContent='🎲'; b.appendChild(dice); }
+    b.onclick=function(){ if(EXP.map===id) EXPSEED[id]=newMapSeed(); EXP.map=id; saveExp(); renderExp(); };
+    g.appendChild(b); try{ drawMapPreview(cv,id,EXP.n,EXPSEED[id],EXP.land); }catch(e){}
+  });
+  var LE=document.getElementById('expLands');
+  EXP.land='rand';   // the land is random every time; its name is shown on the card (tap it again for another)
+  if(LE){ LE.style.display='none'; LE.innerHTML=''; }
+  if(false){
+    LE.innerHTML=['rand','blob'].concat(LAND_IDS).map(function(l){ var lab=l==='rand'?'🎲 '+T('ldRand'):l==='blob'?'🏝 '+T('mp_island'):LANDS[l].ico+' '+landName(l);
+      return '<button class="'+(EXP.land===l?'on':'')+'" onclick="EXP.land=\''+l+'\';EXPSEED.island=newMapSeed();saveExp();renderExp()">'+lab+'</button>'; }).join(''); }
+  document.getElementById('expFogL').textContent=T('expFog');
+  document.getElementById('segExpFog').innerHTML=[0,1].map(function(v){ return '<button class="'+((EXP.fog|0)===v?'on':'')+'" onclick="EXP.fog='+v+';saveExp();renderExp()">'+(v?'🌫 '+T('stOn'):T('stOff'))+'</button>'; }).join('');
+  var lvs=[{v:1,l:T('lv1n')},{v:2,l:T('lv2n')},{v:3,l:T('lv3n')}];
+  document.getElementById('segExpLv').innerHTML=lvs.map(function(o){ return '<button class="'+(EXP.lv===o.v?'on':'')+'" onclick="EXP.lv='+o.v+';saveExp();renderExp()">'+o.l+'</button>'; }).join('');
+  document.getElementById('segExpN').innerHTML=[11,16,21].map(function(v){ return '<button class="'+(EXP.n===v?'on':'')+'" onclick="EXP.n='+v+';saveExp();renderExp()">'+v+'×'+v+'</button>'; }).join('');
+  document.getElementById('expReward').innerHTML=tpl(T('expReward'),{n:expWinReward(EXP.lv,EXP.map,EXP.n,EXP.fog)})+' · '+chestText();
+}
+function startExpedition(){ gameMode='pve'; curStage=-1; selLv=EXP.lv; curMap=EXP.map; curFog=EXP.fog|0; curMapSeed=EXPSEED[EXP.map]||null; EXPSEED={}; startGame(); }
+
+var SET={sound:true,music:true,vibe:true,pveTimer:15,theme:'world',assist:true};
 (function(){ try{ var v=JSON.parse(localStorage.getItem('dwSet')||'{}'); for(var k in v) if(k in SET) SET[k]=v[k]; if(!localStorage.getItem('dwTheme24')){ SET.theme='world'; localStorage.setItem('dwTheme24','1'); } SET.theme='world'; }catch(e){} })();
 function saveSet(){ try{localStorage.setItem('dwSet',JSON.stringify(SET));}catch(e){} }
 var STATS={g:0,w:0,s:0,b:0};
@@ -2007,6 +2642,7 @@ function refreshProfileChip(){
   if(chip) chip.classList.toggle('in',!!signed);
   var pn=document.getElementById('mProfName');
   if(pn){ pn.textContent=signed?(name||authUser.email||T('accSigned')):T('signIn'); }
+  refreshCry();
   var rn=document.getElementById('mRateNum'), sn=document.getElementById('mStarsNum');
   if(rn){ rn.textContent=String(Math.round((typeof RATING!=='undefined'&&RATING.r)||1000)).replace(/\B(?=(\d{3})+(?!\d))/g,'\u2009'); document.getElementById('mRateChip').title=lang==='ru'?'Рейтинг · Топ-20':'Rating · Top 20';
     var st=0; try{ for(var i=0;i<STARS.length;i++) st+=STARS[i]|0; }catch(e){} sn.textContent=st; sn.title=lang==='ru'?'Звёзды кампании':'Campaign stars'; }
@@ -2018,6 +2654,7 @@ function segHtml(id,opts,cur,key){
 function renderSettings(){
   var onoff=[{v:true,l:T('stOn')},{v:false,l:T('stOff')}];
   document.getElementById('segSound').innerHTML=segHtml('segSound',onoff,SET.sound,'sound');
+  document.getElementById('segMusic').innerHTML=segHtml('segMusic',onoff,SET.music,'music');
   document.getElementById('segLang').innerHTML='<button class="'+(lang==='ru'?'on':'')+'" onclick="setLang(\'ru\');renderSettings()">Русский</button><button class="'+(lang==='en'?'on':'')+'" onclick="setLang(\'en\');renderSettings()">English</button>';
   document.getElementById('segVibe').innerHTML=segHtml('segVibe',onoff,SET.vibe,'vibe');
   document.getElementById('segTimer').innerHTML=segHtml('segTimer',[{v:15,l:'15'},{v:30,l:'30'},{v:60,l:'60'},{v:0,l:T('stOff')}],SET.pveTimer,'pveTimer');
@@ -2025,7 +2662,7 @@ function renderSettings(){
   document.getElementById('segAssist').innerHTML=segHtml('segAssist',onoff,SET.assist,'assist');
   document.getElementById('stVer').textContent='DOTS WAR v'+APP_VERSION;
 }
-function setOpt(k,v){ SET[k]=v; saveSet(); renderSettings(); if(k==='pveTimer'&&G&&gameMode==='pve') refreshTurnTimer(); if(k==='theme') applyTheme(v); if(k==='assist'){ computeAssist(); if(G) draw(G); } }
+function setOpt(k,v){ SET[k]=v; saveSet(); renderSettings(); if(k==='pveTimer'&&G&&gameMode==='pve') refreshTurnTimer(); if(k==='theme') applyTheme(v); if(k==='music') musicSync(); if(k==='assist'){ computeAssist(); if(G) draw(G); } }
 function vibrate(pattern){ if(SET.vibe&&navigator.vibrate) try{navigator.vibrate(pattern);}catch(e){} }
 
 // PvE campaign progress: 1=Rookie(small board), 2=Warrior(medium), 3=Legend(large)
@@ -2046,7 +2683,7 @@ function refreshLevelCards(){
 }
 function pickLevel(l){
   if(l>pveMax){ showToast(T('lvLocked')); return; }
-  curStage=-1; pveLevel=l; selLv=l; savePveProgress(); startGame();
+  curStage=-1; curMap=null; curFog=0; pveLevel=l; selLv=l; savePveProgress(); startGame();
 }
 loadPveProgress();
 
@@ -2137,7 +2774,7 @@ function cloneG(g){
 function reachBound(g,p){
   var o=3-p,n=g.n,b=g.board;
   var oLive=o===1?P1:P2, oT=o===1?T1:T2, oCap=o===1?C1:C2;
-  function inS(v){ return v===oLive||v===oT||v===C1||v===C2; }
+  function inS(v){ return v===oLive||v===oT||v===C1||v===C2||v===5; }
   var R=Array.from({length:n},function(){return new Uint8Array(n);}), q=[];
   function seed(r,c){ if(!R[r][c]&&inS(b[r][c])){R[r][c]=1;q.push(r*n+c);} }
   for(var i=0;i<n;i++){seed(0,i);seed(n-1,i);seed(i,0);seed(i,n-1);}
@@ -2189,7 +2826,7 @@ function rookieMove(g){
   var near=moves.filter(function(m){
     return [-1,0,1].some(function(dr){return [-1,0,1].some(function(dc){
       var nr=m[0]+dr,nc=m[1]+dc;
-      return nr>=0&&nr<g.n&&nc>=0&&nc<g.n&&g.board[nr][nc]!==EMPTY;
+      return nr>=0&&nr<g.n&&nc>=0&&nc<g.n&&g.board[nr][nc]!==EMPTY&&g.board[nr][nc]!==BLK;
     });});
   });
   var pool=near.length>0?near:moves;
@@ -2281,7 +2918,7 @@ function DotsAI(){
   function clone(st){ return {b:new Int8Array(st.b),cur:st.cur,sc:[st.sc[0],st.sc[1]]}; }
   function hash(st){
     var b=st.b,h1=0,h2=0;
-    for(var i=0;i<NN;i++){ var v=b[i]; if(v!==0){ var k=i*8+(v+3); h1^=Z1[k]; h2^=Z2[k]; } }
+    for(var i=0;i<NN;i++){ var v=b[i]; if(v!==0&&v!==5){ var k=i*8+(v+3); h1^=Z1[k]; h2^=Z2[k]; } }
     if(st.cur===2){ h1^=0x5bd1e995; h2^=0x1b873593; }
     return [h1,h2];
   }
@@ -2327,6 +2964,8 @@ function DotsAI(){
       // (almost) empty board: play around the centre
       var m=(n/2)|0;
       for(var dr=-1;dr<=1;dr++) for(var dc=-1;dc<=1;dc++){ var j=(m+dr)*n+m+dc; if(b[j]===EMPTY&&out.indexOf(j)<0) out.push(j); }
+      // centre under water (lake map): take the nearest free ring around it
+      for(var rd=2;rd<n&&out.length<4;rd++) for(var dr2=-rd;dr2<=rd;dr2++) for(var dc2=-rd;dc2<=rd;dc2++){ if(Math.max(Math.abs(dr2),Math.abs(dc2))!==rd) continue; var r3=m+dr2,c3=m+dc2; if(r3<0||c3<0||r3>=n||c3>=n) continue; var j2=r3*n+c3; if(b[j2]===EMPTY&&out.indexOf(j2)<0) out.push(j2); }
     }
     return out;
   }
@@ -2445,7 +3084,7 @@ function DotsAI(){
     var oLive=o, oT=o===1?T1:T2, oCap=o===1?C1:C2;
     if(!Rbuf||Rbuf.length!==NN) Rbuf=new Uint8Array(NN);
     var R=Rbuf; R.fill(0); var q=[];
-    function inS(v){ return v===oLive||v===oT||v===C1||v===C2; }
+    function inS(v){ return v===oLive||v===oT||v===C1||v===C2||v===5; }
     function seed(i){ if(!R[i]&&inS(b[i])){R[i]=1;q.push(i);} }
     for(var i=0;i<n;i++){seed(i);seed(NN-n+i);seed(i*n);seed(i*n+n-1);}
     while(q.length){ var x=q.pop(),r=(x/n)|0,c=x-r*n;
@@ -2599,6 +3238,83 @@ function getAC(){
 }
 // Mobile browsers only allow sound after a user gesture: warm the context up on the first touch/click
 (function(){ var done=false; function unlock(){ if(done) return; done=true; getAC(); } ['touchstart','mousedown','keydown'].forEach(function(ev){ document.addEventListener(ev,unlock,{once:true,passive:true}); }); })();
+
+// ═══════════════════════
+//  MUSIC — quiet generative background (no audio files, plays forever without repeating)
+// ═══════════════════════
+var MUS={master:null,bus:null,timer:null,next:0,bar:0,beat:60/112,phrase:null,paused:false,key:0,noise:null};
+// 8-bar loop in C major: C G Am F | C F G C  (each chord: root + triad, midi numbers)
+var MUS_CH=[[48,60,64,67],[43,59,62,67],[45,60,64,69],[41,60,65,69],[48,60,64,67],[41,60,65,69],[43,59,62,67],[48,60,64,67]];
+var MUS_PENT=[0,2,4,7,9];   // major pentatonic: always sounds happy, never clashes
+var MUS_RHY=[[1,0,1,0,1,1,1,0],[1,1,0,1,1,0,1,0],[1,0,0,1,1,0,1,1],[1,1,1,0,1,0,0,0],[0,1,1,0,1,1,1,0]];
+function midiF(m){ return 440*Math.pow(2,(m-69)/12); }
+function musicVol(){ var gs=document.getElementById('screen-game'); return (gs&&gs.classList.contains('active'))?0.055:0.08; }
+function musicBuild(ac){
+  var master=ac.createGain(); master.gain.value=0.0001; master.connect(ac.destination);
+  var bus=ac.createGain(); bus.gain.value=1; bus.connect(master);
+  var dl=ac.createDelay(1.0), fb=ac.createGain(), lp=ac.createBiquadFilter(), wet=ac.createGain();
+  dl.delayTime.value=MUS.beat*0.75; fb.gain.value=0.22; lp.type='lowpass'; lp.frequency.value=2600; wet.gain.value=0.25;
+  bus.connect(dl); dl.connect(lp); lp.connect(fb); fb.connect(dl); lp.connect(wet); wet.connect(master);
+  var nb=ac.createBuffer(1,Math.floor(ac.sampleRate*0.2),ac.sampleRate), nd=nb.getChannelData(0); for(var i=0;i<nd.length;i++) nd[i]=Math.random()*2-1;
+  MUS.master=master; MUS.bus=bus; MUS.noise=nb;
+}
+function mNote(ac,t,m,dur,vol,type,partial,pv){   // mallet: fast attack, ringing decay
+  var o=ac.createOscillator(), g=ac.createGain(); o.type=type||'sine'; o.frequency.value=midiF(m);
+  g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(vol,t+0.006); g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+  o.connect(g); g.connect(MUS.bus); o.start(t); o.stop(t+dur+0.05);
+  if(partial){ var o2=ac.createOscillator(), g2=ac.createGain(); o2.type='sine'; o2.frequency.value=midiF(m)*partial;
+    g2.gain.setValueAtTime(0.0001,t); g2.gain.exponentialRampToValueAtTime(vol*(pv||0.25),t+0.004); g2.gain.exponentialRampToValueAtTime(0.0001,t+dur*0.35);
+    o2.connect(g2); g2.connect(MUS.bus); o2.start(t); o2.stop(t+dur); }
+}
+function mKick(ac,t){ var o=ac.createOscillator(), g=ac.createGain(); o.frequency.setValueAtTime(130,t); o.frequency.exponentialRampToValueAtTime(48,t+0.12);
+  g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.22,t+0.005); g.gain.exponentialRampToValueAtTime(0.0001,t+0.18); o.connect(g); g.connect(MUS.bus); o.start(t); o.stop(t+0.2); }
+function mShake(ac,t,v){ if(!MUS.noise) return; var s=ac.createBufferSource(), f=ac.createBiquadFilter(), g=ac.createGain(); s.buffer=MUS.noise; f.type='highpass'; f.frequency.value=6500;
+  g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(v,t+0.004); g.gain.exponentialRampToValueAtTime(0.0001,t+0.06); s.connect(f); f.connect(g); g.connect(MUS.bus); s.start(t); s.stop(t+0.08); }
+function musMotif(){ // a 2-bar tune: rhythm + melody steps on the pentatonic scale
+  var rh=MUS_RHY[Math.floor(Math.random()*MUS_RHY.length)], idx=5+Math.floor(Math.random()*3), notes=[];
+  for(var i=0;i<16;i++){ var on=rh[i%8]&&!(i===15); if(on){ idx=Math.max(3,Math.min(11,idx+[-2,-1,1,1,2,-1,1][Math.floor(Math.random()*7)])); notes.push(idx); } else notes.push(-1); }
+  return notes;
+}
+function pentToMidi(i,key){ return 60+key+Math.floor(i/5)*12+MUS_PENT[((i%5)+5)%5]-12; }
+function musicTick(){
+  var ac=_ac; if(!ac||!MUS.master) return;
+  while(MUS.next<ac.currentTime+1.0){
+    var t=Math.max(MUS.next,ac.currentTime+0.05), bar=MUS.bar, B=MUS.beat, k=MUS.key, ch=MUS_CH[bar%8];
+    if(bar%16===0&&bar>0) MUS.key=[0,5,7,0][(bar/16)%4|0];   // gentle key change every 16 bars
+    if(bar%4===0||!MUS.phrase) MUS.phrase={a:musMotif(),b:musMotif()};
+    var sec=(bar%8)<4?'a':'b', half=bar%2, mot=MUS.phrase[sec];
+    // bouncy "oom-pah" bass
+    mNote(ac,t,ch[0]+k-12,0.32,0.20,'triangle');
+    mNote(ac,t+B,ch[0]+k-5,0.22,0.12,'triangle');
+    mNote(ac,t+B*2,ch[0]+k-12,0.32,0.18,'triangle');
+    mNote(ac,t+B*3,ch[0]+k-5,0.22,0.12,'triangle');
+    // marimba chord stabs on the off-beats
+    [0.5,1.5,2.5,3.5].forEach(function(b0,i){ if(i===3&&bar%2) return; ch.slice(1).forEach(function(m){ mNote(ac,t+B*b0,m+k,0.35,0.035,'sine',4,0.3); }); });
+    // glockenspiel melody (rests on the last bar of every 8)
+    if(bar%8!==7) for(var s8=0;s8<8;s8++){ var n=mot[half*8+s8]; if(n<0) continue; mNote(ac,t+s8*B*0.5,pentToMidi(n,k)+12,0.6,0.06,'sine',2.76,0.18); }
+    else mNote(ac,t,pentToMidi(7,k)+12,1.6,0.06,'sine',2.76,0.18);
+    // light percussion
+    mKick(ac,t); mKick(ac,t+B*2);
+    for(var h=0;h<8;h++) mShake(ac,t+h*B*0.5,h%2?0.035:0.02);
+    MUS.bar++; MUS.next=t+B*4;
+  }
+}
+function musicOn(){ return SET.music&&!MUS.paused&&!document.hidden; }
+function musicSync(){
+  var ac=_ac;
+  if(!musicOn()){ if(MUS.master&&ac){ var g=MUS.master.gain; g.cancelScheduledValues(ac.currentTime); g.setValueAtTime(g.value,ac.currentTime); g.linearRampToValueAtTime(0.0001,ac.currentTime+0.6); }
+    if(MUS.timer){ clearInterval(MUS.timer); MUS.timer=null; } return; }
+  ac=getAC(); if(!ac) return;
+  if(!MUS.master) musicBuild(ac);
+  if(!MUS.timer){ MUS.next=ac.currentTime+0.1; MUS.timer=setInterval(musicTick,300); musicTick(); }
+  var g=MUS.master.gain; g.cancelScheduledValues(ac.currentTime); g.setValueAtTime(Math.max(0.0001,g.value),ac.currentTime); g.linearRampToValueAtTime(musicVol(),ac.currentTime+2.5);
+}
+function appPause(){ MUS.paused=true; musicSync(); }
+function appResume(){ MUS.paused=false; musicSync(); }
+document.addEventListener('visibilitychange',function(){ musicSync(); if(document.hidden&&_ac&&_ac.state==='running'&&!SET.sound) try{_ac.suspend();}catch(e){} });
+// music may only start after the first tap (browser rule)
+(function(){ function go(){ document.removeEventListener('pointerdown',go,true); document.removeEventListener('keydown',go,true); setTimeout(musicSync,50); }
+  document.addEventListener('pointerdown',go,true); document.addEventListener('keydown',go,true); })();
 
 // Play a pleasant capture chime — ascending arpeggio
 function _tone(ac,type,f0,f1,t0,dur,vol){
@@ -2790,7 +3506,7 @@ var layerCv=null,layerCtx=null,layerKey='';
 var spriteCache={};
 function getSprite(kind,R){
   var dpr=Math.min(window.devicePixelRatio||1,2.5);
-  var key=kind+'|'+Math.round(R*4)+'|'+dpr+'|'+(CC.name||'');
+  var key=kind+'|'+Math.round(R*4)+'|'+dpr+'|'+(CC.name||'')+'|'+((WALLET.eq&&WALLET.eq.st)||'')+'|'+((WALLET.eq&&WALLET.eq.bd)||'');
   var sp=spriteCache[key]; if(sp) return sp;
   var p=kind.slice(-1)==='1'?1:2;
   var half=kind.indexOf('glow')===0?R*2.8:R*2.0;
@@ -2811,14 +3527,14 @@ function getSprite(kind,R){
     var d=R*0.38; c.beginPath(); c.moveTo(cx-d,cy-d); c.lineTo(cx+d,cy+d); c.moveTo(cx+d,cy-d); c.lineTo(cx-d,cy+d); c.stroke();
   } else if(CC.tok&&imgEl(p===1?'tokR':'tokG')){
     // polished stone token from the art set, with a soft contact shadow
-    var tim=imgEl(p===1?'tokR':'tokG');
+    var tim=(p===1?skinTokImg():oppTokImg())||imgEl(p===1?'tokR':'tokG');
     c.save(); c.shadowColor='rgba(30,15,5,0.5)'; c.shadowBlur=R*0.9; c.shadowOffsetY=R*0.42;
     c.fillStyle='#000'; c.beginPath(); c.arc(cx,cy,R*0.92,0,Math.PI*2); c.fill(); c.restore();
     // pale halo separates the stone from the sockets and grid
     c.fillStyle='rgba(255,250,235,0.85)'; c.beginPath(); c.arc(cx,cy,R*1.16,0,Math.PI*2); c.fill();
     c.drawImage(tim,cx-R*1.06,cy-R*1.06,R*2.12,R*2.12);
     // colour boost + top-left gloss so red/green stay vivid at small sizes
-    var sp3=p===1?CC.s1:CC.s2; c.save(); c.globalCompositeOperation='overlay'; c.fillStyle=sp3.mid; c.globalAlpha=0.35; c.beginPath(); c.arc(cx,cy,R*1.04,0,Math.PI*2); c.fill(); c.restore();
+    var sp3=p===1?CC.s1:CC.s2; c.save(); c.globalCompositeOperation='overlay'; c.fillStyle=(p===1&&curStSkin().acc)||sp3.mid; c.globalAlpha=0.35; c.beginPath(); c.arc(cx,cy,R*1.04,0,Math.PI*2); c.fill(); c.restore();
     c.fillStyle='rgba(255,255,255,0.5)'; c.beginPath(); c.ellipse(cx-R*0.34,cy-R*0.42,R*0.3,R*0.17,-0.6,0,Math.PI*2); c.fill();
   } else {
     // 3D sphere: drop shadow, rim glow, radial body, specular highlight
@@ -2841,9 +3557,9 @@ function drawStaticNeon(ctx,g){
   var bg=ctx.createRadialGradient(W/2,H*0.4,Math.min(W,H)*0.1,W/2,H/2,Math.max(W,H)*0.8);
   bg.addColorStop(0,CC.bg[0]); bg.addColorStop(0.6,CC.bg[1]); bg.addColorStop(1,CC.bg[2]);
   ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
-  if(CC.stone){ var stIm=imgEl('stone'); if(stIm){ var pat=ctx.createPattern(stIm,'repeat'); ctx.fillStyle=pat; ctx.fillRect(0,0,W,H); }
+  if(CC.stone){ var stIm=boardStoneImg(); if(stIm){ var pat=ctx.createPattern(stIm,'repeat'); ctx.fillStyle=pat; ctx.fillRect(0,0,W,H); }
     // warm light from the top-left, like the sun over the garden table
-    ctx.fillStyle='rgba(255,246,222,0.30)'; ctx.fillRect(0,0,W,H);   // lift the stone: brighter, less muddy
+    ctx.fillStyle=curBdSkin().lift; ctx.fillRect(0,0,W,H);   // lift the stone: brighter, less muddy
     var lt=ctx.createRadialGradient(W*0.2,H*0.1,0,W*0.5,H*0.5,Math.max(W,H)*0.9);
     lt.addColorStop(0,'rgba(255,245,215,0.30)'); lt.addColorStop(0.55,'rgba(255,235,190,0.06)'); lt.addColorStop(1,'rgba(70,45,20,0.12)');
     ctx.fillStyle=lt; ctx.fillRect(0,0,W,H); }
@@ -2859,7 +3575,7 @@ function drawStaticNeon(ctx,g){
   if(CC.stone&&CS>=11){ // bronze sockets at every crossing
     // shallow bronze sockets: light centre, thin ring — the stones must read clearly on top of them
     var sr=Math.max(2,CS*0.17), sw=Math.max(0.8,CS*0.06);
-    for(var r=0;r<n;r++) for(var c=0;c<n;c++){ var xy=n2x(r,c);
+    for(var r=0;r<n;r++) for(var c=0;c<n;c++){ if(board[r][c]===BLK) continue; var xy=n2x(r,c);
       ctx.beginPath(); ctx.arc(xy[0],xy[1],sr,0,Math.PI*2); ctx.fillStyle='rgba(120,88,40,0.28)'; ctx.fill();
       ctx.lineWidth=sw; ctx.strokeStyle='rgba(176,124,44,0.9)'; ctx.stroke();
       ctx.beginPath(); ctx.arc(xy[0],xy[1],sr*0.42,0,Math.PI*2); ctx.fillStyle='rgba(90,62,26,0.55)'; ctx.fill(); }
@@ -2867,15 +3583,18 @@ function drawStaticNeon(ctx,g){
     for(var r=0;r<n;r++) for(var c=0;c<n;c++){ var xy=n2x(r,c); ctx.fillRect(xy[0]-ds/2,xy[1]-ds/2,ds,ds); } }
   var b0=n2x(0,0),b1=n2x(n-1,n-1);
   ctx.strokeStyle=CC.gridBorder;ctx.lineWidth=1.6;ctx.strokeRect(b0[0],b0[1],b1[0]-b0[0],b1[1]-b0[1]);
+  drawTerrain(ctx,g); drawGems(ctx,g);
+  var bo=blkOwner(g);
   // territory glow
   var R=Math.max(3.5,CS*0.3), glow1=getSprite('glow1',CS*0.55), glow2=getSprite('glow2',CS*0.55);
   for(var r=0;r<n;r++) for(var c=0;c<n;c++){
     var v=board[r][c];
     if(v===T1||v===C1){ var xy=n2x(r,c); blit(ctx,glow1,xy[0],xy[1]); }
     else if(v===T2||v===C2){ var xy2=n2x(r,c); blit(ctx,glow2,xy2[0],xy2[1]); }
+    else if(v===BLK&&bo&&bo[r*n+c]){ var xy3=n2x(r,c); blit(ctx,bo[r*n+c]===1?glow1:glow2,xy3[0],xy3[1]); blit(ctx,bo[r*n+c]===1?glow1:glow2,xy3[0],xy3[1]); }
   }
   // walls (neon): collect fence segments per player
-  function capBy(r,c,p){ if(r<0||r>=n||c<0||c>=n) return false; var v=board[r][c]; return p===1?(v===T1||v===C1):(v===T2||v===C2); }
+  function capBy(r,c,p){ if(r<0||r>=n||c<0||c>=n) return false; var v=board[r][c]; if(v===BLK) return !!bo&&bo[r*n+c]===p; return p===1?(v===T1||v===C1):(v===T2||v===C2); }
   function isDot(r,c,p){ if(r<0||r>=n||c<0||c>=n) return false; return board[r][c]===(p===1?P1:P2); }
   var segs={1:[],2:[]};
   for(var r=0;r<n;r++) for(var c=0;c<n;c++){
@@ -3039,6 +3758,7 @@ function draw(g){
   ctx.save();
   ctx.translate(-panX,-panY);
 
+  drawHint(ctx);
   // ── Animations overlay ──
   if(activeAnims.length){
     var _now=performance.now();
@@ -3110,14 +3830,15 @@ function draw(g){
     }
     ctx.restore(); ctx.globalAlpha=1;
   }
+  drawFog(ctx,g);
   // Last move: pencil ring
-  if(last){
+  if(last&&!fogHidden(g,last[0],last[1])){
     var lxy=n2x(last[0],last[1]);
     ctx.beginPath();ctx.arc(lxy[0],lxy[1],dr+2.5,0,Math.PI*2);
     ctx.strokeStyle=CC.dark?'rgba(255,213,74,0.85)':'rgba(100,80,20,0.5)';ctx.lineWidth=CC.dark?2:1.5;
     ctx.setLineDash([3,3]);ctx.stroke();ctx.setLineDash([]);
   }
-  if(hR>=0&&hC>=0&&canPl(g,hR,hC)&&!g.over){
+  if(hR>=0&&hC>=0&&(canPl(g,hR,hC)||fogHidden(g,hR,hC))&&!g.over){
     var xy=n2x(hR,hC),col=g.cur===1?CC.p1:CC.p2;
     // Ghost dot preview — lighter, like a pencil sketch
     ctx.beginPath();ctx.arc(xy[0],xy[1],dr,0,Math.PI*2);
@@ -3172,6 +3893,7 @@ function drawLoupe(g){
 //  UI / SCREENS
 // ═══════════════════════
 function SS(id,fromPop){
+  setTimeout(function(){ if(MUS.master&&musicOn()) musicSync(); },30);
   document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
   document.getElementById(id).classList.add('active');
   var prev=curScreen; curScreen=id;
@@ -3187,7 +3909,7 @@ function SS(id,fromPop){
     }catch(e){}
   }
 }
-function goMenu(fromPop){leaveRoom();SS('screen-menu',fromPop);}
+function goMenu(fromPop){leaveRoom();SS('screen-menu',fromPop);setTimeout(checkDailyLogin,600);}
 function closeAllModals(){
   document.querySelectorAll('.overlay.open').forEach(function(o){o.classList.remove('open');});
   _cfCb=null;
@@ -3263,14 +3985,19 @@ function startGame(){
   layerKey=''; hideBanner();
   try{ V3.on=localStorage.getItem('dw3d')==='1'; }catch(e){} if(V3.on){ V3.ax=38; V3.az=-14; } v3apply();
   var n, st=gameMode==='pve'?stageOf():null;
+  setWorldLook(st?st.w:1);
   if(gameMode==='pve'){
-    n=st?st.n:(selLv===1?11:selLv===2?16:21);
-    playerNames[0]=lang==='ru'?'Красные':'Red Dots';
+    n=st?st.n:(curMap?EXP.n:(selLv===1?11:selLv===2?16:21));
+    playerNames[0]=lang==='ru'?'Красные':'Red';
     playerNames[1]=p2Name();
+    if(st&&st.boss) playerNames[1]=T('boss'+st.w);
   } else {
     n=FIELD_SIZES[olFSz];
   }
   G=mkGame(n,gameMode,selLv);
+  HINT=null;
+  if(gameMode==='pve'&&!st&&curMap&&curMap!=='plain'){ applyMap(G,curMap,curMapSeed,EXP.land); curMapSeed=null; }
+  if(st&&st.map) applyMap(G,st.map,null,'rand');
   G.stats={start:Date.now(),maxCap:0};
   if(st&&st.cond==='handicap'){
     // the AI gets k free dots around the centre before the battle starts
@@ -3279,10 +4006,15 @@ function startGame(){
       if(G.board[rr][cc]===EMPTY){ G.board[rr][cc]=P2; placed++; } }
     G._ver=(G._ver|0)+1;
   }
+  var fogK=st?(st.fog|0):(gameMode==='pve'&&curMap&&curFog?(n<=11?2:n<=16?3:4):0);
+  if(fogK) setupFog(G,fogK);
   var tag=document.getElementById('stageTag');
-  if(tag) tag.textContent = st ? tpl(T('stgName'),{n:curStage+1})+(st.cond?' · '+stageCondText(st):'') : '';
+  if(tag) tag.textContent = st ? WORLD_ICO[st.w]+' '+(st.boss?'👑 '+T('boss'+st.w):tpl(T('stgName'),{n:curStage%12+1}))+(st.map?' · '+mapTitle(G):'')+(st.fog?' · 🌫':'')+(st.cond&&!st.boss?' · '+stageCondText(st):'') : (gameMode==='pve'&&curMap ? mapTitle(G) : '');
+  var bb=document.getElementById('btnBoost'); if(bb) bb.style.display=gameMode==='pve'?'':'none';
   undoStack=[]; undoLeft=undoLimit();
   SS('screen-game');
+  if(st&&st.boss) setTimeout(function(){ showBanner(tpl(T('bossIntro'),{b:T('boss'+st.w)}),4000); },700);
+  else if(G.fog) setTimeout(function(){ showBanner(T('fogIntro'),3500); },700);
   refreshUndoBtn();
   document.getElementById('btnRst').style.display=gameMode==='online'?'none':'';
   // Delay to allow DOM to paint and measure correctly
@@ -3348,12 +4080,31 @@ var STAGES=[
   {lv:1,n:9},            {lv:1,n:11},            {lv:1,n:11,cond:'first',k:3},
   {lv:2,n:13},           {lv:2,n:13,cond:'handicap',k:2}, {lv:2,n:16},
   {lv:2,n:16,cond:'first',k:5}, {lv:2,n:16,cond:'blitz',k:8}, {lv:3,n:16},
-  {lv:3,n:21,cond:'handicap',k:3}, {lv:3,n:21}, {lv:3,n:21,cond:'blitz',k:8}
+  {lv:3,n:21,cond:'handicap',k:3}, {lv:3,n:21}, {lv:3,n:21,cond:'handicap',k:3,boss:1,map:'forest'},
+  // II. Blue world — water, islands, continents
+  {lv:2,n:13,map:'lake'}, {lv:2,n:13,map:'river'}, {lv:2,n:16,map:'island'},
+  {lv:2,n:16,map:'lake',cond:'first',k:5}, {lv:2,n:16,map:'river',cond:'handicap',k:2}, {lv:3,n:16,map:'island'},
+  {lv:2,n:16,map:'island',cond:'blitz',k:10}, {lv:3,n:16,map:'river'}, {lv:3,n:21,map:'lake',cond:'first',k:7},
+  {lv:3,n:21,map:'island',cond:'handicap',k:3}, {lv:3,n:21,map:'river',cond:'blitz',k:10}, {lv:3,n:21,map:'island',cond:'handicap',k:4,boss:1},
+  // III. Gold world — fog of war, volcanoes
+  {lv:2,n:13,fog:2}, {lv:3,n:13,map:'volcano'}, {lv:3,n:16,fog:3},
+  {lv:3,n:16,map:'volcano',cond:'first',k:5}, {lv:3,n:16,fog:3,map:'forest'}, {lv:3,n:16,map:'volcano',cond:'handicap',k:2},
+  {lv:3,n:16,fog:4,cond:'blitz',k:10}, {lv:3,n:21,map:'volcano'}, {lv:3,n:21,fog:4,map:'lake'},
+  {lv:3,n:21,fog:4,cond:'first',k:8}, {lv:3,n:21,map:'volcano',fog:3,cond:'handicap',k:2}, {lv:3,n:21,fog:5,map:'volcano',cond:'handicap',k:3,boss:1}
 ];
+STAGES.forEach(function(st,i){ st.w=Math.floor(i/12)+1; });
+var WORLD_ICO={1:'🌿',2:'🌊',3:'☀️'}, stgWorld=0;
 var curStage=-1, STARS=[];
 (function(){ try{ var v=JSON.parse(localStorage.getItem('dwStars')||'[]'); if(Array.isArray(v)) STARS=v.map(function(x){return x|0;}); }catch(e){} while(STARS.length<STAGES.length) STARS.push(0); })();
 function saveStars(){ try{localStorage.setItem('dwStars',JSON.stringify(STARS));}catch(e){} pushProgress(); }
+var BOSS_SKIN={1:'sunstone',2:'rose',3:'obsidian'};
+function bossReward(w){
+  WALLET.bossW=WALLET.bossW||{}; if(WALLET.bossW[w]) return; WALLET.bossW[w]=1;
+  var sk=BOSS_SKIN[w], extra=WALLET.owned['st_'+sk]?150:0; WALLET.owned['st_'+sk]=1; saveWallet(); addCrystals(100+extra,true);
+  setTimeout(function(){ showToast(tpl(T('bossReward'),{s:T('sk_'+sk),n:100+extra}),5000); },900);
+}
 function stageUnlocked(i){ return i===0 || STARS[i-1]>0; }
+function worldUnlocked(w){ return w===1 || STARS[(w-1)*12-1]>0; }
 function stageCondText(st){
   if(!st||!st.cond) return '';
   return tpl(T(st.cond==='first'?'condFirst':st.cond==='handicap'?'condHandicap':'condBlitz'),{k:st.k});
@@ -3361,18 +4112,30 @@ function stageCondText(st){
 function refreshStageMap(){
   var g=document.getElementById('stgGrid'); if(!g) return; g.innerHTML='';
   var nextIdx=-1; for(var i=0;i<STAGES.length;i++){ if(stageUnlocked(i)&&STARS[i]===0){nextIdx=i;break;} }
+  if(!stgWorld) stgWorld=nextIdx>=0?STAGES[nextIdx].w:1;
+  var wt=document.getElementById('wTabs');
+  if(wt){ wt.innerHTML=''; [1,2,3].forEach(function(w){ var un=worldUnlocked(w), sum=0; for(var j=(w-1)*12;j<w*12;j++) sum+=STARS[j]|0;
+    var b=document.createElement('button'); b.className='wtab'+(w===stgWorld?' on':'')+(un?'':' locked'); b.setAttribute('data-w',w);
+    b.innerHTML='<span class="wi">'+(un?WORLD_ICO[w]:'🔒')+'</span><span class="wn">'+T('world'+w)+'</span><span class="ws">★ '+sum+'/36</span>';
+    b.onclick=function(){ if(!un){ showToast(tpl(T('worldLocked'),{w:T('world'+(w-1))})); return; } stgWorld=w; refreshStageMap(); };
+    wt.appendChild(b); }); }
+  document.getElementById('stgSub').textContent=T('wsub'+stgWorld);
+  setWorldLook(stgWorld);
   STAGES.forEach(function(st,i){
+    if(st.w!==stgWorld) return;
     var el=document.createElement('div'); var un=stageUnlocked(i);
     el.className='stg'+(un?'':' locked')+(STARS[i]>0?' done':'')+(i===nextIdx?' next':'');
     var stars=''; for(var k=1;k<=3;k++) stars+='<span class="'+(STARS[i]>=k?'':'off')+'">★</span>';
-    el.innerHTML='<div class="stg-n">'+(i+1)+'</div><div class="stg-lv">'+T('lv'+st.lv+'n')+' · '+(st.n-1)+'×'+(st.n-1)+'</div><div class="stg-cond">'+stageCondText(st)+'</div><div class="stg-stars">'+stars+'</div>'+(un?'':'<span class="lock">🔒</span>');
+    if(st.boss) el.className+=' boss';
+    var ex=(st.map?MAP_ICO[st.map]+' ':'')+(st.fog?'🌫 ':'');
+    el.innerHTML='<div class="stg-n">'+(st.boss?'👑':(i%12+1))+'</div><div class="stg-lv">'+(st.boss?T('boss'+st.w):T('lv'+st.lv+'n')+' · '+(st.n-1)+'×'+(st.n-1))+'</div><div class="stg-cond">'+ex+(st.boss?'':stageCondText(st))+'</div><div class="stg-stars">'+stars+'</div>'+(un?'':'<span class="lock">🔒</span>');
     el.onclick=function(){ pickStage(i); };
     g.appendChild(el);
   });
 }
 function pickStage(i){
   if(!stageUnlocked(i)){ showToast(T('stgLocked')); return; }
-  curStage=i; var st=STAGES[i]; pveLevel=st.lv; selLv=st.lv; gameMode='pve'; startGame();
+  curStage=i; curMap=null; curFog=0; var st=STAGES[i]; pveLevel=st.lv; selLv=st.lv; gameMode='pve'; startGame();
 }
 function stageOf(){ return curStage>=0?STAGES[curStage]:null; }
 function stageStars(w,s1,s2){
@@ -3390,20 +4153,20 @@ function checkStageEnd(g){
 //  ACHIEVEMENTS
 // ═══════════════════════
 var ACH=[{id:'cap1',ico:'🎯'},{id:'cap3',ico:'💥'},{id:'cap5',ico:'🌋'},{id:'flawless',ico:'🛡'},{id:'streak3',ico:'🔥'},{id:'streak10',ico:'🐉'},
-  {id:'legend',ico:'👑'},{id:'campaign',ico:'🏆'},{id:'online1',ico:'🌐'},{id:'games50',ico:'💎'},{id:'stars36',ico:'⭐'},{id:'blitz',ico:'⚡'},{id:'daily3',ico:'👑'},{id:'daily7',ico:'📅'},{id:'daily30',ico:'🗓'}];
+  {id:'legend',ico:'👑'},{id:'campaign',ico:'🏆'},{id:'online1',ico:'🌐'},{id:'games50',ico:'💎'},{id:'stars36',ico:'⭐'},{id:'blitz',ico:'⚡'},{id:'daily3',ico:'👑'},{id:'daily7',ico:'📅'},{id:'daily30',ico:'🗓'},{id:'world2',ico:'🌊'},{id:'world3',ico:'☀️'},{id:'fogwin',ico:'🌫'}];
 var ACHV={};
 (function(){ try{ ACHV=JSON.parse(localStorage.getItem('dwAch')||'{}')||{}; }catch(e){ACHV={};} })();
 function achText(id){ var t=T('ach_'+id).split('|'); return {n:t[0],d:t[1]||''}; }
 var achQueue=[], achShowing=false;
 function unlockAch(id){
-  if(ACHV[id]) return; ACHV[id]=Date.now(); try{localStorage.setItem('dwAch',JSON.stringify(ACHV));}catch(e){} pushProgress();
+  if(ACHV[id]) return; ACHV[id]=Date.now(); try{localStorage.setItem('dwAch',JSON.stringify(ACHV));}catch(e){} addCrystals(25,true); pushProgress();
   achQueue.push(id); if(!achShowing) showNextAch();
 }
 function showNextAch(){
   var id=achQueue.shift(); if(!id){achShowing=false;return;} achShowing=true;
   var el=document.getElementById('achToast'); if(!el){ el=document.createElement('div'); el.id='achToast'; el.className='ach-toast'; document.body.appendChild(el); }
   var a=ACH.filter(function(x){return x.id===id;})[0]||{ico:'🏆'}, tx=achText(id);
-  el.innerHTML='<span class="ai">'+a.ico+'</span><div><div class="at">'+T('achUnlocked')+'</div><div class="an">'+tx.n+'</div></div>';
+  el.innerHTML='<span class="ai">'+a.ico+'</span><div><div class="at">'+T('achUnlocked')+'</div><div class="an">'+tx.n+' · <span style="color:#c9f3ff">+25 ◆</span></div></div>';
   el.classList.add('show'); vibrate([20,30,20]);
   setTimeout(function(){ el.classList.remove('show'); setTimeout(showNextAch,500); },3200);
 }
@@ -3416,7 +4179,7 @@ function achOnCapture(gained){ if(gained>=1) unlockAch('cap1'); if(gained>=3) un
 //  ASSIST — "capture here" / "in danger" markers (Rookie & Warrior only)
 // ═══════════════════════
 var assist=null, assistTimer=null;
-function assistActive(){ return SET.assist && gameMode==='pve' && !!G && !G.over && G.level<=2 && G.cur===1 && !aiLock; }
+function assistActive(){ var st=stageOf(); return SET.assist && gameMode==='pve' && !!G && !G.over && G.level<=2 && G.cur===1 && !aiLock && !G.fog && !(st&&st.boss); }
 function computeAssist(){
   assist=null;
   if(assistTimer){clearInterval(assistTimer);assistTimer=null;}
@@ -3503,7 +4266,7 @@ function startPuzzle(level){
   G=mkGame(9,'puzzle',3); G.board=pz.board.map(function(r){return r.slice();}); G._ver=1;
   G.puzzle={level:level,moves:pz.moves,target:pz.target,used:0};
   G.stats={start:Date.now(),maxCap:0}; undoStack=[]; undoLeft=0;
-  playerNames[0]=lang==='ru'?'Красные':'Red Dots'; playerNames[1]=p2Name();
+  playerNames[0]=lang==='ru'?'Красные':'Red'; playerNames[1]=p2Name();
   var title=T(level==='h'?'pzTitleH':pz.moves===1?'pzTitle1':pz.moves===2?'pzTitle2':'pzTitle3');
   var tag=document.getElementById('stageTag'); if(tag) tag.textContent=T(level==='e'?'dlyE':level==='m'?'dlyM':'dlyH')+' · '+title;
   SS('screen-game'); refreshUndoBtn();
@@ -3528,6 +4291,8 @@ function showPuzzleResult(){
   var lv=pz.level||'e';
   if(solved){
     var day=dayKey();
+    var firstToday=!(DAILY.day===day&&DAILY[lv]);
+    if(firstToday){ var pg={e:10,m:20,h:40}[lv]||10; addCrystals(pg,true); setTimeout(function(){ showToast(tpl(T('cryGot'),{n:pg}),2500); },900); }
     if(DAILY.day!==day){ var st=dailyStreakNow(); DAILY.streak=st+1; DAILY.day=day; DAILY.e=0; DAILY.m=0; DAILY.h=0; if(DAILY.streak>DAILY.best) DAILY.best=DAILY.streak; }
     DAILY[lv]=1; DAILY.done=(DAILY.e&&DAILY.m&&DAILY.h)?1:0; saveDaily();
     line=tpl(T('pzStreakUp'),{s:DAILY.streak})+' · '+tpl(T('dlyProg'),{d:dailyCount()});
@@ -3601,6 +4366,8 @@ function commitMove(r,c){
   if(gameMode==='pve'&&G.cur===1){ undoStack.push(snapshotG()); if(undoStack.length>40) undoStack.shift(); }
   var mover=G.cur;
   doMove(G,r,c);
+  checkGems(G); fogAfterMove(G,r,c,mover);
+  if(G.dblArmed&&mover===1&&gameMode==='pve'&&!G.over){ G.cur=1; G.dblArmed=false; G.dblUsed=true; hideBanner(); }
   if(gameMode==='online') pushMove(r,c);
   if(gameMode==='puzzle'&&mover===1&&G.puzzle) G.puzzle.used++;
   spawnPlaceAnim(r,c,mover); playPlaceSound();
@@ -3773,6 +4540,9 @@ function pressEnd(cancel){
   if(!pressActive) return;
   pressActive=false; loupeShow=false;
   if(pressTimer){clearTimeout(pressTimer);pressTimer=null;}
+  if(!cancel&&canLocalMove()&&hR>=0&&hC>=0&&G.fog&&fogHidden(G,hR,hC)&&!canPl(G,hR,hC)){
+    // something hides in the fog here: reveal it, the turn is not lost
+    var isT=G.board[hR][hC]===BLK; fogOpen(G,hR,hC,1); showToast(T(isT?'fogTerrain':'fogEnemy'),2200); vibrate(30); draw(G); return; }
   if(!cancel&&canLocalMove()&&hR>=0&&hC>=0&&canPl(G,hR,hC)) commitMove(hR,hC);
   else if(G) draw(G);
 }
@@ -3799,12 +4569,12 @@ function confirmResign(){
   setTimeout(showResult,200);
 }
 function showResult(){
-  hideBanner();
+  hideBanner(); if(G&&G.fog&&!G.fog.all){ G.fog.all=1; G.fog.v++; }
   if(gameMode==='puzzle'){ showPuzzleResult(); return; }
   document.getElementById('rPlayAgain').style.display='';
   var s1=G.sc[0],s2=G.sc[1],w=G.earlyW||(s1>s2?1:s2>s1?2:0);
   var n1=playerNames[0],n2=playerNames[1];
-  (function(){ var e=document.getElementById('resE'); if(w===0) e.textContent='🤝'; else if(CC.tok) e.innerHTML='<img class="res-tok" alt="" src="data:image/webp;base64,'+IMG[w===1?'tokR':'tokG']+'">'; else e.textContent=w===1?'🔴':'🟢'; })();
+  (function(){ var e=document.getElementById('resE'); if(w===0) e.textContent='🤝'; else if(CC.tok){ var su=w===1&&curStSkin().id!=='base'?canvasURL(skinTokImg()):(w===2&&curWorld>1?canvasURL(oppTokImg()):''); e.innerHTML='<img class="res-tok" alt="" src="'+(su||'data:image/webp;base64,'+IMG[w===1?'tokR':'tokG'])+'">'; } else e.textContent=w===1?'🔴':'🟢'; })();
   var ew=G.resigned?' ('+T('resignedTag')+')':G.timeout?' ('+T('timeoutTag')+')':(G.earlyW?' ('+T('earlyWin')+')':'');
   document.getElementById('resT').textContent=(w===0?T('draw'):(w===1?n1:n2)+T('wins'))+ew;
   document.getElementById('rs1').textContent=s1;document.getElementById('rs2').textContent=s2;
@@ -3821,24 +4591,28 @@ function showResult(){
   else{var wn=w===1?n1:n2,ln=w===1?n2:n1,ws=w===1?s1:s2,ls=w===1?s2:s1;document.getElementById('resD').textContent=wn+T('winD')+ws+T('pts')+ln+T('winD')+ls+'.';}
   var btnNext=document.getElementById('btnNext');
   if(gameMode==='pve'){ if(w===1) pveLossStreak=0; else if(w===2) pveLossStreak++; savePveProgress(); }
-  var rsEl=document.getElementById('resStars'); rsEl.innerHTML='';
+  var rsEl=document.getElementById('resStars'); rsEl.innerHTML=''; var newStarsC=0;
   var me2=gameMode==='online'?myPNum:1, iWon2=w===me2;
   if(G.goal){ document.getElementById('resT').textContent=(w===1?n1:n2)+T('wins')+' ('+T('goalReached')+')'; }
   if(!G._ach){ G._ach=true;
     if(iWon2){ if(G.sc[2-me2]===0) unlockAch('flawless'); if(STATS.s>=3) unlockAch('streak3'); if(STATS.s>=10) unlockAch('streak10');
-      if(gameMode==='pve'&&G.level===3) unlockAch('legend'); if(gameMode==='online') unlockAch('online1');
+      if(gameMode==='pve'&&G.level===3) unlockAch('legend'); if(gameMode==='online') unlockAch('online1'); if(gameMode==='pve'&&G.fog) unlockAch('fogwin');
       var stg=stageOf(); if(stg&&stg.cond==='blitz') unlockAch('blitz'); }
     if(STATS.g>=50) unlockAch('games50');
   }
   if(gameMode==='pve'&&curStage>=0){
     var stars=stageStars(w,s1,s2);
+    newStarsC=Math.max(0,stars-(STARS[curStage]|0));
     if(stars>STARS[curStage]){ STARS[curStage]=stars; saveStars(); }
     var sh=''; for(var k=1;k<=3;k++) sh+='<span class="'+(stars>=k?'':'off')+'">★</span>'; rsEl.innerHTML=sh;
-    if(STARS.every(function(x){return x>0;})) unlockAch('campaign');
-    if(STARS.every(function(x){return x>=3;})) unlockAch('stars36');
+    if(STARS.slice(0,12).every(function(x){return x>0;})) unlockAch('campaign');
+    if(STARS.slice(0,12).every(function(x){return x>=3;})) unlockAch('stars36');
+    var cst=STAGES[curStage];
+    if(w===1&&cst.boss){ if(cst.w>1) unlockAch('world'+cst.w); bossReward(cst.w); }
     if(w===1&&curStage<STAGES.length-1){
-      btnNext.style.display='block'; btnNext.textContent=T('btnNextStage');
-      var ni=curStage+1; btnNext.onclick=function(){pickStage(ni);};
+      var ni=curStage+1, nw=STAGES[curStage].boss;
+      btnNext.style.display='block'; btnNext.textContent=T(nw?'btnNextWorld':'btnNextStage');
+      btnNext.onclick=nw?function(){ stgWorld=STAGES[ni].w; initMode('pve'); }:function(){pickStage(ni);};
     } else if(w===1){
       document.getElementById('resE').textContent='🏆'; document.getElementById('resT').textContent=T('campaignDone');
       btnNext.style.display='block'; btnNext.textContent=T('btnStages'); btnNext.onclick=function(){initMode('pve');};
@@ -3846,6 +4620,9 @@ function showResult(){
       btnNext.style.display='block'; btnNext.textContent=T('btnStages'); btnNext.onclick=function(){initMode('pve');};
     }
     if(pveMax<pveLevel){ pveMax=pveLevel; savePveProgress(); }
+  } else if(gameMode==='pve'&&curMap){
+    if(w===1){ EXPW[curMap]=(EXPW[curMap]|0)+1; saveExp(); }
+    btnNext.style.display='block'; btnNext.textContent=T('expAnother'); btnNext.onclick=function(){openExpedition();};
   } else if(gameMode==='pve'&&w===1&&pveLevel<3){
     // Won this stage of the campaign -> unlock & offer the next AI level
     if(pveMax<pveLevel+1) pveMax=pveLevel+1;
@@ -3865,6 +4642,14 @@ function showResult(){
     btnNext.style.display='none';
     btnNext.onclick=null;
   }
+  var cEl=document.getElementById('resC');
+  if(!G._cry){ G._cry=true; var gain=0, chest=0;
+    if(gameMode==='online') gain=iWon2?20:(w===0?3:0);
+    else if(gameMode==='pve') gain=(iWon2?(curMap?expWinReward(G.level,curMap,G.n,!!G.fog):([0,5,10,15][G.level]|0)):(w===0?2:0))+newStarsC*10+(iWon2&&curStage>=0?(STAGES[curStage].w-1)*5:0);
+    if(iWon2&&(gameMode==='pve'||gameMode==='online')) chest=chestStep();
+    addCrystals(gain+chest,true); G._gain=gain; G._chest=chest;
+  }
+  if(cEl){ cEl.textContent=(G._gain?tpl(T('resCry'),{n:G._gain})+' · ':'')+(G._chest?tpl(T('chestOpen'),{n:G._chest}):chestText()); if(!G._gain&&!G._chest&&gameMode!=='pve'&&gameMode!=='online') cEl.textContent=''; }
   // Victory animation — confetti in the winner's colors, only for an
   // actual win by the local player (not for a loss, not for a draw)
   var iWon = w!==0 && (gameMode==='online' ? w===myPNum : w===1);
@@ -4493,6 +5278,7 @@ refreshDailyCard();
 try{ var _rm=(location.search||'').match(/[?&]room=(\d{4,6})/); if(_rm){ pendingRoom=_rm[1]; initMode('online'); } }catch(e){}
 // Cloud save: sign in anonymously in the background when online (never blocks the game)
 setTimeout(function(){ if(navigator.onLine!==false) ensureAuth(); },4000);
+setTimeout(function(){ refreshCry(); applySkinImgs(); checkDailyLogin(); },1500);
 // Very first visit: show "How to play" right away
 (function(){ var seen=false; try{seen=!!localStorage.getItem('dwSeen');}catch(e){} if(!seen) setTimeout(openRules,350); })();
 // PWA: offline cache + "Add to Home Screen" (needs sw.js/manifest.json next to this file; silently skipped otherwise)

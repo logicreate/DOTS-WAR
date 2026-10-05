@@ -217,13 +217,13 @@ public class MainActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (webView != null) webView.onPause();
+        if (webView != null) { webView.evaluateJavascript("window.appPause&&appPause()", null); webView.onPause(); }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (webView != null) webView.onResume();
+        if (webView != null) { webView.onResume(); webView.evaluateJavascript("window.appResume&&appResume()", null); }
     }
 
     @Override
