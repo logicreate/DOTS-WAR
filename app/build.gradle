@@ -23,7 +23,7 @@ android {
         // GitHub Actions (100 + run number, always increasing), so you never
         // have to bump it by hand. Local builds fall back to the number below.
         versionCode = dotsVersionCode()
-        versionName "3.0.0"
+        versionName "3.1.0"
     }
 
     // Release signing config is populated from environment variables so the
@@ -87,4 +87,6 @@ dependencies {
     implementation 'androidx.credentials:credentials:1.3.0'
     implementation 'androidx.credentials:credentials-play-services-auth:1.3.0'
     implementation 'com.google.android.libraries.identity.googleid:googleid:1.1.1'
+    // Push notifications for friend invites (initialised in code, no google-services plugin needed)
+    implementation 'com.google.firebase:firebase-messaging:24.1.0'
 }

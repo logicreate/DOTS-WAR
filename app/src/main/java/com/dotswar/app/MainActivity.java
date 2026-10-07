@@ -34,6 +34,14 @@ import android.os.CancellationSignal;
 import java.util.concurrent.Executors;
 
 import java.util.Locale;
+import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class MainActivity extends Activity {
     private WebView webView;
@@ -43,6 +51,14 @@ public class MainActivity extends Activity {
     private static final String START_URL = "https://appassets.androidplatform.net/assets/index.html";
     // Firebase Console -> Authentication -> Sign-in method -> Google -> "Web client ID" (ends with .apps.googleusercontent.com)
     private static final String WEB_CLIENT_ID = "911143426593-ecmf3a8g72fnm42m93tfc93fkv99gu5p.apps.googleusercontent.com";
+    // ── Push notifications (Firebase Cloud Messaging) ──
+    // Firebase Console -> Project settings -> Your apps -> Android app "com.dotswar.app" -> App ID
+    // (looks like 1:911143426593:android:0123456789abcdef). Until it is pasted, push is simply off.
+    private static final String FCM_APP_ID = "1:911143426593:android:040dd5935b2d88f48f6160";
+    private static final String FCM_API_KEY = "AIzaSyCxGB68ogFcdRk5Aeav_6rZmCNmIHY8_K0";
+    private static final int REQ_NOTIF = 77;
+    private boolean pageReady = false;
+    private String pendingPushJs = null;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -105,6 +121,8 @@ public class MainActivity extends Activity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 pushInsets(); // the page is ready: hand it the current safe-area insets
+                pageReady = true;
+                if (pendingPushJs != null) { final String pj = pendingPushJs; pendingPushJs = null; view.postDelayed(() -> js(pj), 2500); }
             }
         });
         webView.setWebChromeClient(new WebChromeClient());
@@ -123,7 +141,68 @@ public class MainActivity extends Activity {
             return WindowInsetsCompat.CONSUMED;
         });
 
+        createNotificationChannel();
+        handlePushIntent(getIntent());
         webView.loadUrl(START_URL);
+    }
+
+    // A tapped notification opens the app with the payload as extras: {type:"invite", room:"1234"} or {type:"friend"}
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handlePushIntent(intent);
+    }
+    private void handlePushIntent(Intent intent) {
+        if (intent == null || intent.getExtras() == null) return;
+        String room = intent.getExtras().getString("room");
+        String type = intent.getExtras().getString("type");
+        if (room == null && type == null) return;
+        String code = "openPushTarget({type:" + jsStr(type == null ? "" : type) + ",room:" + jsStr(room == null ? "" : room) + "})";
+        if (pageReady) js(code); else pendingPushJs = code;
+    }
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT < 26) return;
+        NotificationChannel ch = new NotificationChannel("invites", "Приглашения и друзья", NotificationManager.IMPORTANCE_HIGH);
+        ch.setDescription("Приглашения в бой и заявки в друзья");
+        NotificationManager nm = getSystemService(NotificationManager.class);
+        if (nm != null) nm.createNotificationChannel(ch);
+    }
+    private void startPush() {
+        if (FCM_APP_ID.startsWith("PASTE_")) { js("onPushError('Android App ID')"); return; }
+        if (Build.VERSION.SDK_INT >= 33 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, REQ_NOTIF);
+            return;
+        }
+        fetchPushToken();
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode != REQ_NOTIF) return;
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) fetchPushToken();
+        else js("showToast(T('pushDenied'),3500)");
+    }
+    private void fetchPushToken() {
+        try {
+            if (FirebaseApp.getApps(this).isEmpty()) {
+                FirebaseOptions o = new FirebaseOptions.Builder()
+                        .setApplicationId(FCM_APP_ID).setApiKey(FCM_API_KEY)
+                        .setProjectId("dots-2d4e4").setGcmSenderId("911143426593").build();
+                FirebaseApp.initializeApp(this, o);
+            }
+            FirebaseMessaging.getInstance().getToken().addOnCompleteListener(t -> {
+                if (t.isSuccessful() && t.getResult() != null) {
+                    final String tok = t.getResult();
+                    runOnUiThread(() -> js("onPushToken('android'," + jsStr(tok) + ")"));
+                } else {
+                    final String m = t.getException() == null ? "token" : t.getException().getClass().getSimpleName();
+                    runOnUiThread(() -> js("onPushError(" + jsStr(m) + ")"));
+                }
+            });
+        } catch (Exception e) {
+            js("onPushError(" + jsStr(e.getClass().getSimpleName()) + ")");
+        }
     }
 
     /** Called from the page: window.AndroidBridge.googleSignIn() -> native Google sign-in -> onGoogleIdToken(token) in JS */
@@ -131,6 +210,10 @@ public class MainActivity extends Activity {
         @JavascriptInterface
         public void googleSignIn() {
             runOnUiThread(MainActivity.this::startGoogleSignIn);
+        }
+        @JavascriptInterface
+        public void enablePush() {
+            runOnUiThread(MainActivity.this::startPush);
         }
     }
 

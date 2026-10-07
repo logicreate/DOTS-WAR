@@ -44,6 +44,10 @@ body{background:#1d1a12;color:#fff;min-height:100dvh}
 .screen{display:none;flex-direction:column;align-items:center;justify-content:center;
   width:100vw;height:100dvh;position:fixed;inset:0;z-index:1;padding:0;overflow:hidden}
 .screen.active{display:flex}
+/* tall screens start at the top and scroll; short ones stay centred */
+.iscr.active{justify-content:flex-start}
+.iscr.active>:first-child{margin-top:auto}
+.iscr.active>:last-child{margin-bottom:auto}
 .iscr{overflow-y:auto;padding:calc(14px + max(env(safe-area-inset-top,0px),var(--sat,0px))) calc(12px + max(env(safe-area-inset-right,0px),var(--sar,0px))) calc(56px + max(env(safe-area-inset-bottom,0px),var(--sab,0px))) calc(12px + max(env(safe-area-inset-left,0px),var(--sal,0px)))}
 
 /* ══════════════════════════════════
@@ -1076,14 +1080,72 @@ body[data-world="2"] #screen-game,body[data-world="2"] #screen-stages,body[data-
 body[data-world="3"] #screen-game,body[data-world="3"] #screen-stages,body[data-world="3"] #screen-result{background:linear-gradient(180deg,rgba(92,58,6,.66),rgba(50,30,2,.88)),var(--garden) center/cover no-repeat #2a1a05}
 body[data-world="2"] .stg{background:linear-gradient(160deg,rgba(20,50,96,.8),rgba(8,22,50,.85))}
 body[data-world="3"] .stg{background:linear-gradient(160deg,rgba(96,66,14,.8),rgba(52,32,4,.85))}
+
+.snd-fab{position:fixed;z-index:950;right:calc(10px + max(env(safe-area-inset-right,0px),var(--sar,0px)));top:calc(10px + max(env(safe-area-inset-top,0px),var(--sat,0px)));width:38px;height:38px;border-radius:50%;
+  border:1.5px solid #f4ce7a;background:linear-gradient(180deg,rgba(90,56,30,.92),rgba(44,26,14,.92));color:#fff;font-size:17px;line-height:1;display:grid;place-items:center;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.4);padding:0}
+.snd-fab:active{transform:scale(.92)}
+body.on-menu .snd-fab{display:none}
+body.in-game .snd-fab{width:32px;height:32px;font-size:14px;opacity:.85}
+body[data-theme=world] #mSndBtn{left:12px;top:calc(112px + max(env(safe-area-inset-top,0px),var(--sat,0px)))}
+body[data-theme=world] #mFrBtn{right:12px;top:calc(112px + max(env(safe-area-inset-top,0px),var(--sat,0px)))}
+.msnd{font-size:19px;line-height:1}
+.mbadge{position:absolute;top:-5px;right:-5px;min-width:19px;height:19px;border-radius:10px;background:#e8402a;color:#fff;font:800 11px/19px sans-serif;padding:0 5px;display:none;box-shadow:0 0 0 2px #fff4d6}
+.mbadge.on{display:block;animation:bdgPulse 1.6s infinite}
+@keyframes bdgPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
+@media(orientation:landscape) and (max-height:520px){ body[data-theme=world] #mSndBtn,body[data-theme=world] #mFrBtn{top:88px} }
+/* tutorial coach marks */
+.coach{position:fixed;inset:0;z-index:1200;display:none;--cx:50%;--cy:50%;--cr:40px;
+  background:radial-gradient(circle at var(--cx) var(--cy),rgba(0,0,0,0) calc(var(--cr) - 2px),rgba(12,7,2,.66) calc(var(--cr) + 6px))}
+.coach.open{display:block;animation:coIn .35s ease}
+@keyframes coIn{from{opacity:0}to{opacity:1}}
+.coach-ring{position:absolute;left:calc(var(--cx) - var(--cr));top:calc(var(--cy) - var(--cr));width:calc(var(--cr) * 2);height:calc(var(--cr) * 2);border-radius:50%;border:3px solid #ffd76a;box-shadow:0 0 22px rgba(255,214,106,.8);animation:coRing 1.3s ease-out infinite;pointer-events:none}
+@keyframes coRing{0%{transform:scale(.9);opacity:1}70%{transform:scale(1.18);opacity:.35}100%{transform:scale(1.25);opacity:0}}
+.coach-hand{position:absolute;font-size:38px;left:calc(var(--cx) - 19px);filter:drop-shadow(0 4px 6px rgba(0,0,0,.6));pointer-events:none;animation:coHand 1s ease-in-out infinite}
+.coach.below .coach-hand{top:calc(var(--cy) + var(--cr) - 4px)}
+.coach.above .coach-hand{top:calc(var(--cy) - var(--cr) - 44px);transform:rotate(180deg);animation-name:coHand2}
+@keyframes coHand{0%,100%{translate:0 0}50%{translate:0 10px}}
+@keyframes coHand2{0%,100%{translate:0 0}50%{translate:0 -10px}}
+.coach-tip{position:absolute;left:50%;translate:-50% 0;width:min(320px,86vw);background:linear-gradient(180deg,#fff4d6,#f2d79c);color:#3a220c;border:2px solid #c98a35;border-radius:16px;padding:12px 14px 10px;box-shadow:0 10px 30px rgba(0,0,0,.5);font-weight:700;font-size:.95rem;line-height:1.3;text-align:center}
+.coach.below .coach-tip{top:calc(var(--cy) + var(--cr) + 46px)}
+.coach.above .coach-tip{bottom:calc(100% - var(--cy) + var(--cr) + 46px)}
+.coach-btns{display:flex;justify-content:space-between;align-items:center;margin-top:9px;gap:8px}
+.coach-skip{background:none;border:none;color:#8a5a26;font:inherit;font-size:.8rem;text-decoration:underline;cursor:pointer}
+.coach-ok{background:linear-gradient(180deg,#f6d58a,#c9953f);border:1.5px solid #8a5a26;border-radius:999px;color:#2a1a08;font:inherit;font-weight:800;padding:6px 16px;cursor:pointer}
+.tier-ic{margin-right:3px}
+
+.fr-add{display:flex;gap:6px;margin:4px 0 8px}.fr-in{flex:1;min-width:0;margin:0!important}.fr-addb{min-width:52px;padding:0 14px!important;font-size:1.3rem!important}
+.fr-row2{display:flex;gap:6px;margin-bottom:8px}.fr-row2 .btn{flex:1;padding:8px!important;font-size:.8rem!important}#frPushBtn{flex:0 0 52px}
+.fr-list{display:flex;flex-direction:column;gap:5px;max-height:42vh;overflow-y:auto;margin:4px 0}
+.fr-sec{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--sub);margin:8px 2px 4px;text-align:left}
+.fr-it{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:12px;background:rgba(255,255,255,.07);border:1px solid rgba(255,225,159,.18);color:var(--text);font-size:.85rem;text-align:left}
+.fr-it.req{border-color:rgba(255,200,90,.6);background:rgba(255,200,90,.12)}
+.fr-dot{width:10px;height:10px;border-radius:50%;background:#7b6d5c;flex:none}.fr-dot.on{background:#4ade80;box-shadow:0 0 8px #4ade80}
+.fr-n{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700}.fr-r{font-size:.75rem;color:var(--sub);white-space:nowrap}
+.fr-b{border:none;border-radius:9px;padding:6px 9px;font:inherit;font-size:.78rem;font-weight:800;cursor:pointer;background:linear-gradient(180deg,#f6d58a,#c9953f);color:#2a1a08}
+.fr-b.x{background:rgba(255,255,255,.12);color:#fff}
+.fr-note{font-size:.8rem;color:var(--sub);margin:4px 0;line-height:1.35}
+.fr-it input{width:20px;height:20px;accent-color:#d9a03f;flex:none}
+.inv-cost{font-weight:800;color:#8ff0ff;margin-top:6px;font-size:.9rem}
+.soc-pop{text-align:center}.soc-ico{font-size:2.6rem;line-height:1;margin-bottom:4px;animation:bdgPulse 1.4s infinite}
+.top-tabs{margin:0 auto 8px;max-width:260px;justify-content:center}.top-tabs button{flex:1}
+.chat-pop{position:fixed;z-index:960;display:none;grid-template-columns:repeat(5,1fr);gap:5px;padding:8px;border-radius:14px;background:rgba(36,22,12,.96);border:1.5px solid #f4ce7a;box-shadow:0 8px 24px rgba(0,0,0,.5);max-width:300px}
+.chat-pop.open{display:grid}
+.chat-pop button{border:1px solid rgba(255,225,159,.3);background:rgba(255,255,255,.07);border-radius:10px;color:#fff;font:inherit;font-size:1.25rem;padding:6px 2px;cursor:pointer}
+.chat-pop button.ph{grid-column:span 5;font-size:.82rem;font-weight:700;padding:7px}
+.chat-bub{position:fixed;z-index:940;padding:7px 12px;border-radius:14px;background:#fff4d6;color:#2a1a08;font-weight:800;font-size:1rem;box-shadow:0 6px 16px rgba(0,0,0,.4);pointer-events:none;animation:bubIn .25s ease;max-width:60vw;white-space:nowrap}
+.chat-bub.emo{font-size:1.9rem;padding:2px 8px;background:rgba(255,244,214,.92)}
+@keyframes bubIn{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
 </style>
 </head>
 <body>
+<button id="sndFab" class="snd-fab" onclick="toggleMute()" aria-label="Sound">🔊</button>
+<div id="coach" class="coach" onclick="coachNext()"><div class="coach-ring"></div><div class="coach-hand">👆</div>
+  <div class="coach-tip"><div class="coach-txt" id="coachTxt"></div><div class="coach-btns"><button class="coach-skip" id="coachSkip" onclick="event.stopPropagation();coachEnd()">Skip</button><button class="coach-ok" id="coachOk">Next ›</button></div></div></div>
 <div id="screen-menu" class="screen active">
   <div class="menu-inner">
     <div class="mtop">
       <button class="mchip mchip-prof" onclick="openAccount()"><span class="mav" id="mStarsNum">0</span><b id="mProfName">—</b></button>
-      <div class="mchip mchip-rate" id="mRateChip"><button class="mseg mseg-cry" onclick="openShop()"><i class="mcry">◆</i><b id="mCryNum">0</b></button><span class="msep"></span><button class="mseg" onclick="openLeaderboard()"><span class="msun">☀</span><b id="mRateNum">1000</b></button></div>
+      <div class="mchip mchip-rate" id="mRateChip"><button class="mseg mseg-cry" onclick="openShop()"><i class="mcry">◆</i><b id="mCryNum">0</b></button><span class="msep"></span><button class="mseg" onclick="openLeaderboard()"><span class="msun" id="mTierIc">🥈</span><b id="mRateNum">1000</b></button></div>
     </div>
     <div class="logo-section">
       <img class="trademark-img" data-img="logo" alt="DOTS WAR">
@@ -1119,6 +1181,8 @@ body[data-world="3"] .stg{background:linear-gradient(160deg,rgba(96,66,14,.8),rg
         <button class="mtool" onclick="openSettings()" id="mGearBtn"><span class="msvg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.6v-.2h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z"/></svg></span><span class="mtool-ico">⚙️</span><span class="mtool-lbl" id="mSetLbl">Settings</span></button>
         <button class="mtool" onclick="openAccount()" id="mAccBtn"><span class="msvg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4.8 20c.8-4 3.2-6 7.2-6s6.4 2 7.2 6"/></svg></span><span class="mtool-ico">👤</span><span class="mtool-lbl" id="profileTxt">Sign in</span></button>
         <button class="mtool" onclick="openLeaderboard()" id="mTopBtn" title="Top 20"><span class="msvg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5L3 8Z"/><path d="M5 19h14"/></svg></span><span class="mtool-ico">👑</span></button>
+        <button class="mtool" onclick="toggleMute()" id="mSndBtn" aria-label="Sound"><span class="msnd" id="mSndIco">🔊</span></button>
+        <button class="mtool" onclick="openFriends()" id="mFrBtn" aria-label="Friends"><span class="msnd">👥</span><span class="mbadge" id="frBadge"></span></button>
         <button class="mtool" onclick="openAch()" id="mAchBtn"><span class="msvg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 4h8v5a4 4 0 0 1-8 0V4Z"/><path d="M8 6H4c0 4 1.5 6 5 6M16 6h4c0 4-1.5 6-5 6M12 13v4M8 20h8"/></svg></span><span class="mtool-ico">🏆</span><span class="mtool-lbl" id="mAchLbl">Achievements</span></button>
       </div>
     </div>
@@ -1177,6 +1241,7 @@ body[data-world="3"] .stg{background:linear-gradient(160deg,rgba(96,66,14,.8),rg
     </div>
     <div class="ol-me" id="olMe"></div>
     <button class="btn btn-gold" id="btnQuick" onclick="quickMatch()" style="width:100%;margin-bottom:8px">⚡ Quick match</button>
+    <button class="btn btn-blue" id="btnInvite" onclick="openInvite()" style="width:100%;margin-bottom:8px">👥 Invite friends</button>
     <div id="panelC">
       <div style="font-size:.73rem;color:rgba(255,210,140,.36);margin-bottom:6px;font-weight:400" id="fldSizeLbl">Field size:</div>
       <div style="display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-bottom:9px" id="olLvs"></div>
@@ -1206,6 +1271,38 @@ body[data-world="3"] .stg{background:linear-gradient(160deg,rgba(96,66,14,.8),rg
   </div>
 </div>
 
+<!-- FRIENDS -->
+<div class="overlay" id="friendsModal" onclick="if(event.target===this)closeAllModals()">
+  <div class="modal fr-modal" style="max-width:440px">
+    <h2 id="frH">👥 Friends</h2>
+    <div class="fr-add"><input class="inp fr-in" id="frIn" maxlength="18" placeholder="Player name" onkeydown="if(event.key==='Enter')frAdd()"><button class="btn btn-gold fr-addb" onclick="frAdd()" id="frAddBtn">+</button></div>
+    <div class="fr-row2"><button class="btn btn-ghost" onclick="frShare()" id="frShareBtn">🔗 Link</button><button class="btn btn-ghost" onclick="enablePush(true)" id="frPushBtn">🔔</button></div>
+    <div id="frInv"></div>
+    <div id="frReqs"></div>
+    <div class="fr-list" id="frList"></div>
+    <div class="fr-note" id="frNote"></div>
+    <button class="btn btn-gold" onclick="closeAllModals()" style="width:100%;margin-top:8px" id="frClose">OK</button>
+  </div>
+</div>
+<!-- INVITE FRIENDS TO A BATTLE -->
+<div class="overlay" id="invModal" onclick="if(event.target===this)closeAllModals()">
+  <div class="modal" style="max-width:420px">
+    <h2 id="invH">⚔ Invite</h2>
+    <div class="fr-note" id="invSub"></div>
+    <div class="fr-list" id="invList"></div>
+    <div class="inv-cost" id="invCost"></div>
+    <div class="row" style="margin-top:8px"><button class="btn btn-gold" onclick="invSend()" id="invGo">Send</button><button class="btn btn-ghost" onclick="closeAllModals()" id="invClose">Cancel</button></div>
+  </div>
+</div>
+<!-- GENERIC SOCIAL POPUP (incoming invite, friend link, push permission) -->
+<div class="overlay" id="socPop">
+  <div class="modal soc-pop" style="max-width:380px">
+    <div class="soc-ico" id="spIco">⚔</div>
+    <h2 id="spTitle"></h2>
+    <div class="fr-note" id="spText"></div>
+    <div class="row" style="margin-top:10px"><button class="btn btn-gold" id="spYes">OK</button><button class="btn btn-ghost" id="spNo">Later</button></div>
+  </div>
+</div>
 <!-- DAILY PUZZLES -->
 <div class="overlay" id="dailyModal" onclick="if(event.target===this)closeAllModals()">
   <div class="modal" style="max-width:420px">
@@ -1251,6 +1348,7 @@ body[data-world="3"] .stg{background:linear-gradient(160deg,rgba(96,66,14,.8),rg
 <div class="overlay" id="topModal" onclick="if(event.target===this)closeAllModals()">
   <div class="modal" style="max-width:420px">
     <h2 id="topTitle">🏆 Top 20</h2>
+    <div class="seg top-tabs" id="topTabs"></div>
     <div class="top-list" id="topList"></div>
     <button class="btn btn-gold" onclick="closeAllModals()" style="width:100%;margin-top:10px" id="topOk">OK</button>
   </div>
@@ -1290,6 +1388,7 @@ body[data-world="3"] .stg{background:linear-gradient(160deg,rgba(96,66,14,.8),rg
     <button class="btn btn-sm" onclick="openRules()" title="Rules">📜 <span class="btxt" id="gRules">Rules</span></button>
     <button class="btn btn-sm" id="btn3d" onclick="toggle3D()" title="3D">⬢ <span class="btxt">3D</span></button>
     <button class="btn btn-sm btn-boost" id="btnBoost" onclick="openBoost()" title="Boosters">◆</button>
+    <button class="btn btn-sm" id="btnChat" onclick="openChat(event)" style="display:none" title="Chat">💬</button>
     <div class="zoom-row">
       <button class="btn btn-sm zoom-btn" onclick="zoomBy(1/1.3)" id="zoomOut" title="Zoom out">−</button>
       <button class="btn btn-sm zoom-btn" onclick="zoomBy(1.3)" id="zoomIn" title="Zoom in">+</button>
@@ -1375,6 +1474,7 @@ body[data-world="3"] .stg{background:linear-gradient(160deg,rgba(96,66,14,.8),rg
     <div class="st-row"><span id="stTimer">Move timer vs AI</span><div class="seg" id="segTimer"></div></div>
     <div class="st-row" style="display:none"><span id="stTheme">Board style</span><div class="seg" id="segTheme"></div></div>
     <div class="st-row"><span id="stLang">Language</span><div class="seg" id="segLang"></div></div>
+    <div class="st-row"><span id="stCoach">Tutorial</span><div class="seg" id="segCoach"></div></div>
     <div class="st-row"><span id="stAssist">Hints (Rookie / Warrior)</span><div class="seg" id="segAssist"></div></div>
     <p class="st-ver" id="stVer"></p>
     <button class="btn btn-gold" onclick="closeSettings()" style="width:100%;margin-top:8px" id="stOk">OK</button>
@@ -1494,7 +1594,7 @@ var lang = (function(){ try{ return localStorage.getItem('dwl')||detectLang(); }
 var TR = {
   en:{
    
-    stMusic:'Music', world1:'Green World', world2:'Blue World', world3:'Gold World', wsub1:'A garden by the sea. 12 battles and a boss.', wsub2:'Islands, rivers, continents. Blue is stronger.', wsub3:'Fog, volcanoes and gold. Legends only.', worldLocked:'First beat the boss of the {w}', btnNextWorld:'New world →', boss1:'Forest Warden', boss2:'Captain Storm', boss3:'Golden Pharaoh', bossIntro:'👑 Boss: {b}. No hints!', bossReward:'👑 Boss defeated! +{n} ◆ and the «{s}» skin', fogIntro:'🌫 Fog! Rival stones hide in it. Play near the fog to clear it.', fogEnemy:'🌫 A rival stone was hiding here!', fogTerrain:'🌫 No way through here', expFog:'Fog', bScout:'Scout', bScoutD:'Clears the fog where the rival hides', bScoutOn:'🔭 Fog cleared', ldRand:'Any', ld_africa:'Africa', ld_europe:'Europe', ld_asia:'Asia', ld_namerica:'North America', ld_samerica:'South America', ld_australia:'Australia', ld_antarctica:'Antarctica', ld_greenland:'Greenland', ld_madagascar:'Madagascar', ld_britain:'Great Britain', ld_iceland:'Iceland', ld_borneo:'Borneo', ld_srilanka:'Sri Lanka', ld_newzealand:'New Zealand', mp_volcano:'Volcano', mpd_volcano:'Lava and ◆ crystals', sk_sunstone:'Sunstone', sk_rose:'Rose quartz', shopBossTip:'Reward for the boss of the {w}', ach_world2:'Wave master|Finish the Blue World', ach_world3:'Golden emperor|Finish the Gold World', ach_fogwin:'Through the fog|Win in the fog', mTag:'The art of surrounding',
+    stMusic:'Music', world1:'Green World', world2:'Blue World', world3:'Gold World', wsub1:'A garden by the sea. 12 battles and a boss.', wsub2:'Islands, rivers, continents. Blue is stronger.', wsub3:'Fog, volcanoes and gold. Legends only.', worldLocked:'First beat the boss of the {w}', btnNextWorld:'New world →', boss1:'Forest Warden', boss2:'Captain Storm', boss3:'Golden Pharaoh', bossIntro:'👑 Boss: {b}. No hints!', bossReward:'👑 Boss defeated! +{n} ◆ and the «{s}» skin', fogIntro:'🌫 Fog! Rival stones hide in it. Play near the fog to clear it.', fogEnemy:'🌫 A rival stone was hiding here!', fogTerrain:'🌫 No way through here', expFog:'Fog', bScout:'Scout', bScoutD:'Clears the fog where the rival hides', bScoutOn:'🔭 Fog cleared', ldRand:'Any', ld_africa:'Africa', ld_europe:'Europe', ld_asia:'Asia', ld_namerica:'North America', ld_samerica:'South America', ld_australia:'Australia', ld_antarctica:'Antarctica', ld_greenland:'Greenland', ld_madagascar:'Madagascar', ld_britain:'Great Britain', ld_iceland:'Iceland', ld_borneo:'Borneo', ld_srilanka:'Sri Lanka', ld_newzealand:'New Zealand', mp_volcano:'Volcano', mpd_volcano:'Lava and ◆ crystals', sk_sunstone:'Sunstone', sk_rose:'Rose quartz', shopBossTip:'Reward for the boss of the {w}', ach_world2:'Wave master|Finish the Blue World', ach_world3:'Golden emperor|Finish the Gold World', ach_fogwin:'Through the fog|Win in the fog', sndOn:'🔊 Sound on', sndOff:'🔇 Sound off', stCoach:'Tutorial', coSkip:'Skip', coNext:'Next ›', coDone:'Got it!', coM1:'Start here: the campaign vs AI — three worlds and bosses.', coM2:'Online: battle friends and climb the rating.', coM3:'Friends: add friends and call them to battle.', coM4:'Daily puzzles: three puzzles and ◆ crystals.', coM5:'Crystals ◆ — for skins, boosters and friend invites.', coM6:'Sound and music on/off. The button is on every screen.', coO1:'Invite friends: the first to accept plays you.', coO2:'Quick match: we find a rival for you.', coO3:'Got a code from a friend? Enter it here.', coS1:'Three worlds: beat the boss to open the next one.', coS2:'Your next battle — tap to start.', coS3:'Expedition: any map, continents and fog.', coBoard:'👆 Tap the glowing point to make your first move!', tBronze:'Bronze', tSilver:'Silver', tGold:'Gold', tPlat:'Platinum', tDiamond:'Diamond', tLegend:'Legend', tierUp:'New league: {t}!', roomFull:'The battle already started — someone was faster.', frH:'👥 Friends', frPh:'Player name', frShareBtn:'🔗 Invite by link', frClose:'Done', frInvites:'Battle invites', frReqs:'Friend requests', frCount:'Friends · {n}', frEmpty:'No friends yet. Type a player name or send your link.', frHint:'⚔ — invite to battle, ✕ — remove. Green dot — online now.', frNeedName:'Set your name in the account first', frNotFound:'No player with that name', frSelf:'That is you :)', frAlready:'Already friends', frSent:'Request sent: {n}', frAdded:'You and {n} are friends now!', frReqNew:'👋 {n} wants to be friends — open Friends', frRemoveT:'Remove friend?', frRemoveTx:'You will disappear from each other\'s lists.', frRemoveYes:'Remove', frShareTxt:'{n} invites you to be friends in DOTS WAR!', frLinkT:'{n} wants to be friends', frLinkTx:'Send a friend request? The player will confirm it.', frLinkYes:'Send', frNoFriends:'Add some friends first', btnInvite:'👥 Invite friends', invH:'⚔ Call to battle', invSub:'Pick friends. The first to accept plays you. {c} ◆ per friend.', invCost:'Friends: {k} · Cost: {c} ◆ (you have {b} ◆)', invMax:'Up to {k} friends at once', invPick:'Pick at least one friend', invNoCry:'You need {c} ◆ — top up in the shop', invRefund:'Could not create the room — crystals refunded', invSentSt:'Invites sent: {k}. Waiting for the first one!', invToastGame:'⚔ {n} calls you to battle — open it after this game', invTitle:'{n} calls you to battle!', invText:'Board {s} · {t}', invGo2:'⚔ Fight!', invGoS:'Fight', invLater:'Later', invGo:'Invite', invClose:'Cancel', topAll:'Top 20', topFr:'Friends', chGood:'Nice move!', chLuck:'Good luck!', chWow:'Wow!', chGG:'Good game!', chWait:'Not so fast :)', pushFail:'Notifications unavailable', pushAskT:'Turn on notifications?', pushAskTx:'We will tell you when a friend calls you to battle or adds you.', pushYes:'Turn on', pushNA:'Notifications are not supported on this device yet', pushDenied:'Notifications are blocked in settings', pushOn:'🔔 Notifications on', pushAsk:'Notifications', mTag:'The art of surrounding',
     mPveT:'PLAY', mPveS:'Campaign vs AI',
     mPvpT:'DUEL', mPvpS:'Two players, one screen',
     mOnT:'ONLINE', mOnS:'Friends & rating',
@@ -1503,7 +1603,7 @@ var TR = {
     stTitle:'⚙ Settings', stSound:'Sound', stVibe:'Vibration', stTimer:'Move timer',
     stOn:'On', stOff:'Off', stStatsH:'📊 Statistics', stOk:'OK',
     signIn:'Sign in', accSigned:'Signed in', accNameLbl:'Name', accWhy:'Sign in to keep progress on every device.',
-    cryGot:'+{n} ◆', cryNotEnough:'Not enough ◆', shopTitle:'◆ Shop', shopStones:'Stones', shopBoards:'Boards', shopEquip:'Use', shopEquipped:'In use', shopSoon:'Crystal packs come in 3.0. Earn ◆ for wins, stars, puzzles, the daily chest, logins and achievements.', sk_base:'Classic', sk_ruby:'Ruby', sk_amethyst:'Amethyst', sk_gold:'Gold', sk_obsidian:'Obsidian', bd_base:'Sandstone', bd_marble:'Marble', bd_sand:'Gold sand', bd_terra:'Terracotta', bd_slate:'Slate', boostTitle:'◆ Boosters', bHint:'Hint', bHintD:'Shows a strong move', bDouble:'Double move', bDoubleD:'Two dots in a row, once a battle', bUndo:'Undo move', bUndoD:'Take back your move', bUsed:'Already used', bNoUndo:'Nothing to undo', bNotNow:'Wait for your turn', bHintOn:'💡 Gold ring = strong move', bDoubleOn:'⚡ One more dot!', loginTitle:'🎁 Daily reward', loginDay:'Day {d}', loginGot:'+{n} ◆ — more tomorrow!', loginOk:'Claim', chestOpen:'🎁 Chest: +{n} ◆', chestProg:'🎁 Chest {w}/3', resCry:'+{n} ◆', expTitle:'🧭 Expedition', expSub:'Pick a land and a rival. Maps are new every time. Take ◆ on the volcano!', expOpp:'Rival', expSize:'Board', expGo:'⚔ Fight', expBack:'← Back', expWins:'Wins: {w}', expReward:'Victory: +{n} ◆', expAnother:'🧭 New map', mp_plain:'Plains', mp_island:'Island', mp_river:'River', mp_lake:'Lake', mp_forest:'Forest', mpd_plain:'Open field', mpd_island:'Continents & islands', mpd_river:'Two banks, few fords', mpd_lake:'Fight around the water', mpd_forest:'Trees break lines', gLbl:'Sign in with Google', aLbl:'Sign in with Apple', aFail:'Apple sign-in failed', tcWhy:'No Google? Take a transfer code and enter it on another device.',
+    cryGot:'+{n} ◆', cryNotEnough:'Not enough ◆', shopTitle:'◆ Shop', shopStones:'Stones', shopBoards:'Boards', shopEquip:'Use', shopEquipped:'In use', shopSoon:'Crystal packs are coming soon. Earn ◆ for wins, stars, puzzles, the chest, logins and achievements.', sk_base:'Classic', sk_ruby:'Ruby', sk_amethyst:'Amethyst', sk_gold:'Gold', sk_obsidian:'Obsidian', bd_base:'Sandstone', bd_marble:'Marble', bd_sand:'Gold sand', bd_terra:'Terracotta', bd_slate:'Slate', boostTitle:'◆ Boosters', bHint:'Hint', bHintD:'Shows a strong move', bDouble:'Double move', bDoubleD:'Two dots in a row, once a battle', bUndo:'Undo move', bUndoD:'Take back your move', bUsed:'Already used', bNoUndo:'Nothing to undo', bNotNow:'Wait for your turn', bHintOn:'💡 Gold ring = strong move', bDoubleOn:'⚡ One more dot!', loginTitle:'🎁 Daily reward', loginDay:'Day {d}', loginGot:'+{n} ◆ — more tomorrow!', loginOk:'Claim', chestOpen:'🎁 Chest: +{n} ◆', chestProg:'🎁 Chest {w}/3', resCry:'+{n} ◆', expTitle:'🧭 Expedition', expSub:'Pick a land and a rival. Maps are new every time. Take ◆ on the volcano!', expOpp:'Rival', expSize:'Board', expGo:'⚔ Fight', expBack:'← Back', expWins:'Wins: {w}', expReward:'Victory: +{n} ◆', expAnother:'🧭 New map', mp_plain:'Plains', mp_island:'Island', mp_river:'River', mp_lake:'Lake', mp_forest:'Forest', mpd_plain:'Open field', mpd_island:'Continents & islands', mpd_river:'Two banks, few fords', mpd_lake:'Fight around the water', mpd_forest:'Trees break lines', gLbl:'Sign in with Google', aLbl:'Sign in with Apple', aFail:'Apple sign-in failed', tcWhy:'No Google? Take a transfer code and enter it on another device.',
     nameSaved:'Saved', nameEmpty:'Enter a name', nameTaken:'Name taken — try another', nameInvalid:'2–18 letters, digits, space, - or _', nameOffline:'Offline — can\'t check the name', nameChecking:'Checking…',
     stGames:'Battles', stWins:'Wins', stPct:'Win %', stStreak:'Streak', stBest:'Best streak', stRating:'Rating', stOnline:'Rated', stStars:'Stars', stAch:'Achievements', stDaily:'Puzzle streak', mSetLbl:'Settings', mAchLbl:'Achievements', achTitle:'🏆 Achievements', achOk:'OK', accOk:'OK',
     achCount:'Unlocked: {u} of {t}',
@@ -1602,7 +1702,7 @@ var TR = {
   },
   ru:{
    
-    stMusic:'Музыка', world1:'Зелёный мир', world2:'Синий мир', world3:'Золотой мир', wsub1:'Сад над морем. 12 битв и босс.', wsub2:'Острова, реки и материки. Синие сильнее.', wsub3:'Туман, вулканы и золото. Только для легенд.', worldLocked:'Сначала победите босса: {w}', btnNextWorld:'Новый мир →', boss1:'Лесной Страж', boss2:'Капитан Шторм', boss3:'Золотой Фараон', bossIntro:'👑 Босс: {b}. Без подсказок!', bossReward:'👑 Босс повержен! +{n} ◆ и скин «{s}»', fogIntro:'🌫 Туман! В нём прячутся камни соперника. Ходите рядом — туман рассеется.', fogEnemy:'🌫 Здесь прятался соперник!', fogTerrain:'🌫 Здесь не пройти', expFog:'Туман', bScout:'Разведка', bScoutD:'Рассеет туман там, где прячется соперник', bScoutOn:'🔭 Туман рассеян', ldRand:'Любой', ld_africa:'Африка', ld_europe:'Европа', ld_asia:'Азия', ld_namerica:'Северная Америка', ld_samerica:'Южная Америка', ld_australia:'Австралия', ld_antarctica:'Антарктида', ld_greenland:'Гренландия', ld_madagascar:'Мадагаскар', ld_britain:'Великобритания', ld_iceland:'Исландия', ld_borneo:'Калимантан', ld_srilanka:'Шри-Ланка', ld_newzealand:'Новая Зеландия', mp_volcano:'Вулкан', mpd_volcano:'Лава и кристаллы ◆', sk_sunstone:'Солнечный камень', sk_rose:'Розовый кварц', shopBossTip:'Награда за босса: {w}', ach_world2:'Повелитель волн|Пройдите Синий мир', ach_world3:'Золотой император|Пройдите Золотой мир', ach_fogwin:'Сквозь туман|Победа в тумане', mTag:'Искусство окружать',
+    stMusic:'Музыка', world1:'Зелёный мир', world2:'Синий мир', world3:'Золотой мир', wsub1:'Сад над морем. 12 битв и босс.', wsub2:'Острова, реки и материки. Синие сильнее.', wsub3:'Туман, вулканы и золото. Только для легенд.', worldLocked:'Сначала победите босса: {w}', btnNextWorld:'Новый мир →', boss1:'Лесной Страж', boss2:'Капитан Шторм', boss3:'Золотой Фараон', bossIntro:'👑 Босс: {b}. Без подсказок!', bossReward:'👑 Босс повержен! +{n} ◆ и скин «{s}»', fogIntro:'🌫 Туман! В нём прячутся камни соперника. Ходите рядом — туман рассеется.', fogEnemy:'🌫 Здесь прятался соперник!', fogTerrain:'🌫 Здесь не пройти', expFog:'Туман', bScout:'Разведка', bScoutD:'Рассеет туман там, где прячется соперник', bScoutOn:'🔭 Туман рассеян', ldRand:'Любой', ld_africa:'Африка', ld_europe:'Европа', ld_asia:'Азия', ld_namerica:'Северная Америка', ld_samerica:'Южная Америка', ld_australia:'Австралия', ld_antarctica:'Антарктида', ld_greenland:'Гренландия', ld_madagascar:'Мадагаскар', ld_britain:'Великобритания', ld_iceland:'Исландия', ld_borneo:'Калимантан', ld_srilanka:'Шри-Ланка', ld_newzealand:'Новая Зеландия', mp_volcano:'Вулкан', mpd_volcano:'Лава и кристаллы ◆', sk_sunstone:'Солнечный камень', sk_rose:'Розовый кварц', shopBossTip:'Награда за босса: {w}', ach_world2:'Повелитель волн|Пройдите Синий мир', ach_world3:'Золотой император|Пройдите Золотой мир', ach_fogwin:'Сквозь туман|Победа в тумане', sndOn:'🔊 Звук включён', sndOff:'🔇 Звук выключен', stCoach:'Обучение', coSkip:'Пропустить', coNext:'Дальше ›', coDone:'Понятно!', coM1:'Начните здесь: кампания против ИИ — три мира и боссы.', coM2:'Онлайн: бои с друзьями и по рейтингу.', coM3:'Друзья: добавляйте друзей и зовите их в бой.', coM4:'Задания дня: три головоломки и кристаллы ◆.', coM5:'Кристаллы ◆ — на скины, усилители и приглашения друзей.', coM6:'Звук и музыка: включить или выключить. Кнопка есть на каждом экране.', coO1:'Позовите друзей: кто первый примет — с тем и бой.', coO2:'Быстрая игра: найдём соперника сами.', coO3:'Есть код от друга? Введите его здесь.', coS1:'Три мира: пройдите босса, чтобы открыть следующий.', coS2:'Следующая битва — нажмите, чтобы начать.', coS3:'Экспедиция: любые карты, материки и туман.', coBoard:'👆 Коснитесь светящейся точки, чтобы сделать первый ход!', tBronze:'Бронза', tSilver:'Серебро', tGold:'Золото', tPlat:'Платина', tDiamond:'Алмаз', tLegend:'Легенда', tierUp:'Новая лига: {t}!', roomFull:'Игра уже началась — вас опередили.', frH:'👥 Друзья', frPh:'Имя игрока', frShareBtn:'🔗 Пригласить ссылкой', frClose:'Готово', frInvites:'Зовут в бой', frReqs:'Заявки в друзья', frCount:'Друзья · {n}', frEmpty:'Пока нет друзей. Введите имя игрока или отправьте ссылку.', frHint:'⚔ — позвать в бой, ✕ — удалить. Зелёная точка — сейчас в игре.', frNeedName:'Сначала задайте своё имя в аккаунте', frNotFound:'Игрок с таким именем не найден', frSelf:'Это вы :)', frAlready:'Уже в друзьях', frSent:'Заявка отправлена: {n}', frAdded:'Теперь вы друзья с {n}!', frReqNew:'👋 {n} хочет дружить — откройте «Друзья»', frRemoveT:'Удалить из друзей?', frRemoveTx:'Игрок исчезнет из вашего списка, вы — из его.', frRemoveYes:'Удалить', frShareTxt:'{n} зовёт тебя в друзья в DOTS WAR!', frLinkT:'{n} зовёт в друзья', frLinkTx:'Отправить заявку? Игрок увидит её и подтвердит.', frLinkYes:'Отправить', frNoFriends:'Сначала добавьте друзей', btnInvite:'👥 Позвать друзей', invH:'⚔ Позвать в бой', invSub:'Отметьте друзей. Кто первым примет — с тем и бой. {c} ◆ за каждого.', invCost:'Друзей: {k} · Стоимость: {c} ◆ (у вас {b} ◆)', invMax:'Не больше {k} друзей за раз', invPick:'Отметьте хотя бы одного друга', invNoCry:'Нужно {c} ◆ — пополните в магазине', invRefund:'Комнату создать не удалось — кристаллы возвращены', invSentSt:'Приглашения отправлены: {k}. Ждём, кто первый!', invToastGame:'⚔ {n} зовёт в бой — откройте после партии', invTitle:'{n} зовёт в бой!', invText:'Поле {s} · {t}', invGo2:'⚔ В бой!', invGoS:'В бой', invLater:'Позже', invGo:'Позвать', invClose:'Отмена', topAll:'Топ-20', topFr:'Друзья', chGood:'Хороший ход!', chLuck:'Удачи!', chWow:'Ого!', chGG:'Хорошая игра!', chWait:'Не так быстро :)', pushFail:'Уведомления недоступны', pushAskT:'Включить уведомления?', pushAskTx:'Сообщим, когда друг позовёт в бой или добавит в друзья.', pushYes:'Включить', pushNA:'Уведомления на этом устройстве пока не поддерживаются', pushDenied:'Уведомления запрещены в настройках', pushOn:'🔔 Уведомления включены', pushAsk:'Уведомления', mTag:'Искусство окружать',
     mPveT:'ИГРАТЬ', mPveS:'Кампания против ИИ',
     mPvpT:'ДУЭЛЬ', mPvpS:'Вдвоём на одном экране',
     mOnT:'ОНЛАЙН', mOnS:'Друзья и рейтинг',
@@ -1611,7 +1711,7 @@ var TR = {
     stTitle:'⚙ Настройки', stSound:'Звук', stVibe:'Вибрация', stTimer:'Таймер хода',
     stOn:'Вкл', stOff:'Выкл', stStatsH:'📊 Статистика', stOk:'ОК',
     signIn:'Войти', accSigned:'В аккаунте', accNameLbl:'Имя', accWhy:'Войдите — прогресс сохранится на всех устройствах.',
-    cryGot:'+{n} ◆', cryNotEnough:'Мало кристаллов', shopTitle:'◆ Магазин', shopStones:'Камни', shopBoards:'Доски', shopEquip:'Выбрать', shopEquipped:'Выбрано', shopSoon:'Наборы кристаллов — в версии 3.0. Пока ◆ дают победы, звёзды, задания, сундук, вход и достижения.', sk_base:'Классика', sk_ruby:'Рубин', sk_amethyst:'Аметист', sk_gold:'Золото', sk_obsidian:'Обсидиан', bd_base:'Песчаник', bd_marble:'Мрамор', bd_sand:'Золотой песок', bd_terra:'Терракота', bd_slate:'Сланец', boostTitle:'◆ Усилители', bHint:'Подсказка', bHintD:'Покажет сильный ход', bDouble:'Двойной ход', bDoubleD:'Две точки подряд, раз за бой', bUndo:'Отмена хода', bUndoD:'Вернуть свой ход', bUsed:'Уже использован', bNoUndo:'Нечего отменять', bNotNow:'Дождитесь хода', bHintOn:'💡 Золотое кольцо — сильный ход', bDoubleOn:'⚡ Ставьте ещё точку!', loginTitle:'🎁 Награда дня', loginDay:'День {d}', loginGot:'+{n} ◆ — завтра будет больше!', loginOk:'Забрать', chestOpen:'🎁 Сундук: +{n} ◆', chestProg:'🎁 Сундук {w}/3', resCry:'+{n} ◆', expTitle:'🧭 Экспедиция', expSub:'Выберите землю и соперника. Карта всегда новая. На вулкане — кристаллы ◆!', expOpp:'Соперник', expSize:'Поле', expGo:'⚔ В бой', expBack:'← Назад', expWins:'Побед: {w}', expReward:'Победа: +{n} ◆', expAnother:'🧭 Новая карта', mp_plain:'Равнина', mp_island:'Остров', mp_river:'Река', mp_lake:'Озеро', mp_forest:'Лес', mpd_plain:'Открытое поле', mpd_island:'Материки и острова', mpd_river:'Два берега и броды', mpd_lake:'Бой вокруг воды', mpd_forest:'Деревья рвут линии', gLbl:'Войти через Google', aLbl:'Войти через Apple', aFail:'Apple: вход не удался', tcWhy:'Нет Google? Возьмите код переноса и введите его на другом устройстве.',
+    cryGot:'+{n} ◆', cryNotEnough:'Мало кристаллов', shopTitle:'◆ Магазин', shopStones:'Камни', shopBoards:'Доски', shopEquip:'Выбрать', shopEquipped:'Выбрано', shopSoon:'Наборы кристаллов скоро появятся. Пока ◆ дают победы, звёзды, задания, сундук, вход и достижения.', sk_base:'Классика', sk_ruby:'Рубин', sk_amethyst:'Аметист', sk_gold:'Золото', sk_obsidian:'Обсидиан', bd_base:'Песчаник', bd_marble:'Мрамор', bd_sand:'Золотой песок', bd_terra:'Терракота', bd_slate:'Сланец', boostTitle:'◆ Усилители', bHint:'Подсказка', bHintD:'Покажет сильный ход', bDouble:'Двойной ход', bDoubleD:'Две точки подряд, раз за бой', bUndo:'Отмена хода', bUndoD:'Вернуть свой ход', bUsed:'Уже использован', bNoUndo:'Нечего отменять', bNotNow:'Дождитесь хода', bHintOn:'💡 Золотое кольцо — сильный ход', bDoubleOn:'⚡ Ставьте ещё точку!', loginTitle:'🎁 Награда дня', loginDay:'День {d}', loginGot:'+{n} ◆ — завтра будет больше!', loginOk:'Забрать', chestOpen:'🎁 Сундук: +{n} ◆', chestProg:'🎁 Сундук {w}/3', resCry:'+{n} ◆', expTitle:'🧭 Экспедиция', expSub:'Выберите землю и соперника. Карта всегда новая. На вулкане — кристаллы ◆!', expOpp:'Соперник', expSize:'Поле', expGo:'⚔ В бой', expBack:'← Назад', expWins:'Побед: {w}', expReward:'Победа: +{n} ◆', expAnother:'🧭 Новая карта', mp_plain:'Равнина', mp_island:'Остров', mp_river:'Река', mp_lake:'Озеро', mp_forest:'Лес', mpd_plain:'Открытое поле', mpd_island:'Материки и острова', mpd_river:'Два берега и броды', mpd_lake:'Бой вокруг воды', mpd_forest:'Деревья рвут линии', gLbl:'Войти через Google', aLbl:'Войти через Apple', aFail:'Apple: вход не удался', tcWhy:'Нет Google? Возьмите код переноса и введите его на другом устройстве.',
     nameSaved:'Сохранено', nameEmpty:'Введите имя', nameTaken:'Имя занято — выберите другое', nameInvalid:'2–18 знаков: буквы, цифры, пробел, - _', nameOffline:'Нет связи — имя не проверить', nameChecking:'Проверяю…',
     stGames:'Битвы', stWins:'Победы', stPct:'% побед', stStreak:'Серия', stBest:'Рекорд серии', stRating:'Рейтинг', stOnline:'Рейтинговые', stStars:'Звёзды', stAch:'Достижения', stDaily:'Серия заданий', mSetLbl:'Настройки', mAchLbl:'Достижения', achTitle:'🏆 Достижения', achOk:'ОК', accOk:'ОК',
     achCount:'Открыто: {u} из {t}',
@@ -1711,7 +1811,7 @@ var TR = {
 };
 function T(k){ return (TR[lang]&&TR[lang][k]) || TR.en[k] || k; }
 
-var TEXT_IDS = ['mTag','stLang','aLbl','accNameLbl','accWhy','gLbl','tcWhy','mSetLbl','mAchLbl','achTitle','achOk','accOk','stAccH','tcLbl','tcEnterLbl','soLbl','dlyTitle','dlyIntro','dlyClose','mDlyT','btnQuick','btnTop','topTitle','topOk','stgTitle','stgSub','btnFree','btnBackStg','stAssist','stAchH','stTheme','btnRematch','shareLbl','stTitle','stSound','stMusic','stVibe','stTimer','stStatsH','stOk','gUndo','btnBackLv','mPveT','mPveS','mPvpT','mPvpS','mOnT','mOnS',
+var TEXT_IDS = ['mTag','stLang','aLbl','accNameLbl','accWhy','gLbl','tcWhy','mSetLbl','mAchLbl','achTitle','achOk','accOk','stAccH','tcLbl','tcEnterLbl','soLbl','dlyTitle','dlyIntro','dlyClose','mDlyT','btnQuick','btnTop','btnInvite','frH','frShareBtn','frClose','invH','invGo','invClose','topTitle','topOk','stgTitle','stgSub','btnFree','btnBackStg','stAssist','stAchH','stTheme','btnRematch','shareLbl','stTitle','stSound','stMusic','stCoach','stVibe','stTimer','stStatsH','stOk','gUndo','btnBackLv','mPveT','mPveS','mPvpT','mPvpS','mOnT','mOnS',
   'mRulesBtn','lvTitle','lvSub','lv1n','lv2n','lv3n',
   'btnStart','nameTitle','nameSub','lbl1','lbl2','ne1','ne2','btnCont',
   'olTitle','olSub','tCreate','tJoin','fldSizeLbl','codeLbl','codeHint',
@@ -1875,7 +1975,7 @@ function mergeProgress(c){
   if(c.name&&!localStorage.getItem('dwName')) try{localStorage.setItem('dwName',c.name);}catch(e){}
 }
 function onSignedIn(u){
-  authUser=u; UID=u.uid; try{localStorage.setItem('dwUid',u.uid);}catch(e){}
+  authUser=u; UID=u.uid; setTimeout(socialStart,400); try{localStorage.setItem('dwUid',u.uid);}catch(e){}
   var dn=u.displayName||u._dwName||'';
   if(dn&&!localStorage.getItem('dwName')){
     var base=dn.replace(/[.#$\[\]\/]/g,'').trim().slice(0,15)||'Player', tries=0;
@@ -2024,9 +2124,10 @@ function ratingDelta(opp,score,weight){
 }
 function applyRating(won,draw,opp,weight){
   if(typeof opp!=='number') opp=oppRating;
-  var d=ratingDelta(opp,won?1:draw?0.5:0,weight);
+  var d=ratingDelta(opp,won?1:draw?0.5:0,weight), t0=tierOf(RATING.r);
   if(!won&&!draw&&d===0) d=-1; if(won&&d===0) d=1;       // a result always moves the needle
   RATING.r=Math.max(100,RATING.r+d); RATING.g++; if(won) RATING.w++; saveRating();
+  var t1=tierOf(RATING.r); if(t1[0]>t0[0]) setTimeout(function(){ showToast(tpl(T('tierUp'),{t:t1[1]+' '+T(t1[2])}),4500); try{ fireConfetti(['#ffd700','#ffee88','#ff8800']); }catch(e){} },1400);
   if(typeof pushMyPlayer==='function') pushMyPlayer(); if(typeof pushProgress==='function') pushProgress();
   if(typeof refreshProfileChip==='function') refreshProfileChip();
   return d;
@@ -2035,7 +2136,11 @@ function abandonPenalty(){
   if(gameMode!=='pve'||!G||G.over||G._counted||(G.moveCount|0)<8) return;
   G._counted=true; recordResult(false,false); applyRating(false,false,aiRating(),0.75);
 }
-function openLeaderboard(){
+var topTab='all';
+function openLeaderboard(tab){
+  if(tab) topTab=tab;
+  document.getElementById('topTabs').innerHTML=['all','fr'].map(function(t){ return '<button class="'+(topTab===t?'on':'')+'" onclick="openLeaderboard(\''+t+'\')">'+T(t==='all'?'topAll':'topFr')+'</button>'; }).join('');
+  if(topTab==='fr'){ openFriendTop(); return; }
   var list=document.getElementById('topList'); list.innerHTML='<div class="top-row">…</div>';
   document.getElementById('topModal').classList.add('open');
   loadFirebase().then(function(){
@@ -2045,7 +2150,16 @@ function openLeaderboard(){
     var arr=[]; var v=snap.val()||{}; Object.keys(v).forEach(function(k){ if(v[k]&&typeof v[k].r==='number') arr.push({uid:k,name:v[k].name||'?',r:v[k].r,g:v[k].g|0}); });
     arr.sort(function(a,b){return b.r-a.r;});
     if(!arr.length){ list.innerHTML='<div class="top-row">'+T('topEmpty')+'</div>'; return; }
-    list.innerHTML=arr.map(function(p,i){ return '<div class="top-row'+(p.uid===UID?' me':'')+'"><span class="tp">'+(i+1)+'</span><span class="tn">'+String(p.name).replace(/[<>&]/g,'')+'</span><span class="tg">'+p.g+'</span><span class="tr">'+p.r+'</span></div>'; }).join('');
+    list.innerHTML=arr.map(function(p,i){ return '<div class="top-row'+(p.uid===UID?' me':'')+'"><span class="tp">'+(i+1)+'</span><span class="tn">'+String(p.name).replace(/[<>&]/g,'')+'</span><span class="tg">'+p.g+'</span><span class="tr"><span class="tier-ic">'+tierOf(p.r)[1]+'</span>'+p.r+'</span></div>'; }).join('');
+  }).catch(function(){ list.innerHTML='<div class="top-row">'+T('netErr')+'</div>'; });
+}
+function openFriendTop(){
+  var list=document.getElementById('topList'); list.innerHTML='<div class="top-row">…</div>'; document.getElementById('topModal').classList.add('open');
+  socialReady().then(function(){
+    var ids=Object.keys(SOC.friends); return Promise.all(ids.map(function(f){ return db.ref('players/'+f).once('value').then(function(sn){ var v=sn.val()||{}; return {uid:f,name:v.name||frInfo(f).n,r:typeof v.r==='number'?v.r:1000,g:v.g|0}; }); }));
+  }).then(function(arr){
+    arr.push({uid:UID,name:myName()||playerNames[0]||'—',r:RATING.r,g:RATING.g}); arr.sort(function(a,b){ return b.r-a.r; });
+    list.innerHTML=(arr.length<2?'<div class="top-row">'+T('frEmpty')+'</div>':'')+arr.map(function(p,i){ return '<div class="top-row'+(p.uid===UID?' me':'')+'"><span class="tp">'+(i+1)+'</span><span class="tn">'+escH(p.name)+'</span><span class="tg">'+p.g+'</span><span class="tr"><span class="tier-ic">'+tierOf(p.r)[1]+'</span>'+p.r+'</span></div>'; }).join('');
   }).catch(function(){ list.innerHTML='<div class="top-row">'+T('netErr')+'</div>'; });
 }
 // ── quick match: take a waiting room from the queue, or host one and wait ──
@@ -2084,7 +2198,7 @@ var pressActive=false, pressTimer=null, pressX=0, pressY=0, loupeShow=false, lou
 var HOLD_MS=300, PRESS_SLOP=6;
 var curScreen='screen-menu', _cfCb=null;
 var turnTimerId=null, turnGraceId=null, TURN_SECS=15, TURN_GRACE=5, TURN_WARN=5;
-var APP_VERSION='3.0.0';
+var APP_VERSION='3.1.0';
 // ═══════════════════════
 //  CRYSTALS — soft currency. Earned by playing, spent on boosters (vs AI only) and skins.
 //  Stored locally and in the cloud (progress.wallet); the newest copy wins (t = last change).
@@ -2566,7 +2680,7 @@ function renderExp(){
 }
 function startExpedition(){ gameMode='pve'; curStage=-1; selLv=EXP.lv; curMap=EXP.map; curFog=EXP.fog|0; curMapSeed=EXPSEED[EXP.map]||null; EXPSEED={}; startGame(); }
 
-var SET={sound:true,music:true,vibe:true,pveTimer:15,theme:'world',assist:true};
+var SET={sound:true,music:true,vibe:true,pveTimer:15,theme:'world',assist:true,coach:true};
 (function(){ try{ var v=JSON.parse(localStorage.getItem('dwSet')||'{}'); for(var k in v) if(k in SET) SET[k]=v[k]; if(!localStorage.getItem('dwTheme24')){ SET.theme='world'; localStorage.setItem('dwTheme24','1'); } SET.theme='world'; }catch(e){} })();
 function saveSet(){ try{localStorage.setItem('dwSet',JSON.stringify(SET));}catch(e){} }
 var STATS={g:0,w:0,s:0,b:0};
@@ -2644,6 +2758,7 @@ function refreshProfileChip(){
   if(pn){ pn.textContent=signed?(name||authUser.email||T('accSigned')):T('signIn'); }
   refreshCry();
   var rn=document.getElementById('mRateNum'), sn=document.getElementById('mStarsNum');
+  var ti=document.getElementById('mTierIc'); if(ti) ti.textContent=tierOf((typeof RATING!=='undefined'&&RATING.r)||1000)[1];
   if(rn){ rn.textContent=String(Math.round((typeof RATING!=='undefined'&&RATING.r)||1000)).replace(/\B(?=(\d{3})+(?!\d))/g,'\u2009'); document.getElementById('mRateChip').title=lang==='ru'?'Рейтинг · Топ-20':'Rating · Top 20';
     var st=0; try{ for(var i=0;i<STARS.length;i++) st+=STARS[i]|0; }catch(e){} sn.textContent=st; sn.title=lang==='ru'?'Звёзды кампании':'Campaign stars'; }
 }
@@ -2660,9 +2775,10 @@ function renderSettings(){
   document.getElementById('segTimer').innerHTML=segHtml('segTimer',[{v:15,l:'15'},{v:30,l:'30'},{v:60,l:'60'},{v:0,l:T('stOff')}],SET.pveTimer,'pveTimer');
   document.getElementById('segTheme').innerHTML=segHtml('segTheme',[{v:'world',l:T('thWorld')}],SET.theme,'theme');
   document.getElementById('segAssist').innerHTML=segHtml('segAssist',onoff,SET.assist,'assist');
+  document.getElementById('segCoach').innerHTML=segHtml('segCoach',onoff,SET.coach,'coach');
   document.getElementById('stVer').textContent='DOTS WAR v'+APP_VERSION;
 }
-function setOpt(k,v){ SET[k]=v; saveSet(); renderSettings(); if(k==='pveTimer'&&G&&gameMode==='pve') refreshTurnTimer(); if(k==='theme') applyTheme(v); if(k==='music') musicSync(); if(k==='assist'){ computeAssist(); if(G) draw(G); } }
+function setOpt(k,v){ SET[k]=v; saveSet(); renderSettings(); if(k==='pveTimer'&&G&&gameMode==='pve') refreshTurnTimer(); if(k==='theme') applyTheme(v); if(k==='music') musicSync(); if(k==='sound'||k==='music') refreshMute(); if(k==='coach'&&v){ coachReset(); } if(k==='assist'){ computeAssist(); if(G) draw(G); } }
 function vibrate(pattern){ if(SET.vibe&&navigator.vibrate) try{navigator.vibrate(pattern);}catch(e){} }
 
 // PvE campaign progress: 1=Rookie(small board), 2=Warrior(medium), 3=Legend(large)
@@ -3226,6 +3342,86 @@ function requestAIMove(g,cb){
     w.postMessage({id:id,opts:o2});
   }catch(e){ delete aiPending[id]; if(!done){done=true;setTimeout(fallback,0);} }
 }
+
+// ═══════════════════════
+//  SOUND BUTTON (every screen) — one tap mutes / unmutes sound + music
+// ═══════════════════════
+function isMuted(){ return !SET.sound&&!SET.music; }
+function toggleMute(){
+  if(isMuted()){ SET.sound=true; SET.music=true; } else { SET.sound=false; SET.music=false; }
+  saveSet(); musicSync(); refreshMute(); try{ if(document.getElementById('settingsModal').classList.contains('open')) renderSettings(); }catch(e){}
+  showToast(isMuted()?T('sndOff'):T('sndOn'),1400);
+}
+function refreshMute(){ var ic=isMuted()?'🔇':'🔊'; var a=document.getElementById('sndFab'), b=document.getElementById('mSndIco'); if(a) a.textContent=ic; if(b) b.textContent=ic; }
+function placeFab(){
+  var f=document.getElementById('sndFab'); if(!f) return;
+  if(curScreen==='screen-game'){ var cw=document.querySelector('#screen-game .canvas-wrap'), ft=document.querySelector('#screen-game .gfoot');
+    if(cw&&ft){ var r=cw.getBoundingClientRect(), fr=ft.getBoundingClientRect(); f.style.top=Math.round(Math.min(r.bottom+6,fr.top-38))+'px'; return; } }
+  f.style.top='';
+}
+window.addEventListener('resize',function(){ setTimeout(placeFab,60); });
+
+// ═══════════════════════
+//  TUTORIAL — animated pointer + ring + tip; can be switched off in Settings
+// ═══════════════════════
+var COACH=null;
+var COACH_TOURS={
+  menu:[['.mcard.pve','coM1'],['.mcard.onl','coM2'],['#mFrBtn','coM3'],['.mcard.dly','coM4'],['#mRateChip .mseg-cry','coM5'],['#mSndBtn','coM6']],
+  online:[['#btnInvite','coO1'],['#btnQuick','coO2'],['#tabJ','coO3']],
+  stages:[['#wTabs','coS1'],['#stgGrid .stg.next','coS2'],['#btnFree','coS3']]
+};
+function coachReset(){ try{ ['menu','online','stages','board'].forEach(function(k){ localStorage.removeItem('dwCo_'+k); }); }catch(e){} }
+function coachSeen(n){ try{ return !!localStorage.getItem('dwCo_'+n); }catch(e){ return true; } }
+function coachTry(name,scr,tries){
+  if(!SET.coach||coachSeen(name)||COACH) return;
+  tries=tries|0; if(tries>12) return;
+  if(curScreen!==scr||document.querySelector('.overlay.open')){ setTimeout(function(){ coachTry(name,scr,tries+1); },900); return; }
+  var lay=!/jsdom/.test(navigator.userAgent), steps=COACH_TOURS[name].filter(function(st){ var el=document.querySelector(st[0]); return el&&(!lay||(el.offsetParent!==null&&el.getBoundingClientRect().width>0)); });
+  if(!steps.length) return;
+  COACH={name:name,steps:steps,i:0,scr:scr}; coachShow();
+}
+function coachShow(){
+  var co=document.getElementById('coach'), st=COACH.steps[COACH.i], el=document.querySelector(st[0]);
+  if(!el||curScreen!==COACH.scr){ coachEnd(); return; }
+  try{ el.scrollIntoView({block:'center',behavior:'instant'}); }catch(e){}
+  var r=el.getBoundingClientRect(), cx=r.left+r.width/2, cy=r.top+r.height/2, R=Math.min(Math.max(r.width,r.height)/2+10,innerWidth*0.48);
+  co.style.setProperty('--cx',Math.round(cx)+'px'); co.style.setProperty('--cy',Math.round(cy)+'px'); co.style.setProperty('--cr',Math.round(R)+'px');
+  var up=cy>innerHeight*0.55; co.classList.toggle('above',up); co.classList.toggle('below',!up);
+  document.getElementById('coachTxt').textContent=T(st[1]);
+  document.getElementById('coachSkip').textContent=T('coSkip');
+  document.getElementById('coachOk').textContent=COACH.i===COACH.steps.length-1?T('coDone'):T('coNext');
+  co.classList.remove('open'); void co.offsetWidth; co.classList.add('open');
+}
+function coachNext(){ if(!COACH) return; COACH.i++; if(COACH.i>=COACH.steps.length) coachEnd(); else coachShow(); }
+function coachEnd(){ if(COACH){ try{ localStorage.setItem('dwCo_'+COACH.name,'1'); }catch(e){} } COACH=null; document.getElementById('coach').classList.remove('open'); }
+// first battle: a pulsing marker on the board shows where to tap
+var coachDotTimer=null;
+function coachBoardStart(){
+  if(!SET.coach||coachSeen('board')||!G||gameMode!=='pve') return false;
+  var n=G.n, m=(n/2)|0, best=null;
+  for(var d=0;d<n&&!best;d++) for(var r=m-d;r<=m+d&&!best;r++) for(var c=m-d;c<=m+d;c++){ if(r>=0&&c>=0&&r<n&&c<n&&G.board[r][c]===EMPTY){ best=[r,c]; break; } }
+  if(!best) return false;
+  G.coachDot=best; if(coachDotTimer) clearInterval(coachDotTimer);
+  coachDotTimer=setInterval(function(){ if(!G||!G.coachDot||G.moveCount>0||curScreen!=='screen-game'){ clearInterval(coachDotTimer); coachDotTimer=null; if(G&&G.coachDot&&G.moveCount>0){ G.coachDot=null; try{localStorage.setItem('dwCo_board','1');}catch(e){} } if(G) draw(G); return; } draw(G); },60);
+  setTimeout(function(){ if(G&&G.coachDot&&!G.over) showBanner(T('coBoard'),6000); },500);
+  return true;
+}
+function drawCoachDot(ctx,g){
+  if(!g.coachDot||g.moveCount>0) return;
+  var xy=n2x(g.coachDot[0],g.coachDot[1]), t=performance.now()/1000, R=Math.max(10,CS*0.55);
+  ctx.save();
+  for(var k=0;k<2;k++){ var ph=((t*0.9+k*0.5)%1); ctx.globalAlpha=(1-ph)*0.9; ctx.strokeStyle='#ffd76a'; ctx.lineWidth=Math.max(2,CS*0.1); ctx.beginPath(); ctx.arc(xy[0],xy[1],R*(0.6+ph*1.4),0,Math.PI*2); ctx.stroke(); }
+  ctx.globalAlpha=1; ctx.fillStyle='rgba(255,215,106,0.9)'; ctx.beginPath(); ctx.arc(xy[0],xy[1],R*0.32,0,Math.PI*2); ctx.fill();
+  ctx.font=Math.round(R*1.5)+'px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='top'; ctx.fillText('👆',xy[0],xy[1]+R*0.35+Math.abs(Math.sin(t*3.2))*R*0.4);
+  ctx.restore();
+}
+
+// ═══════════════════════
+//  LEAGUES — rating tiers shown next to the rating everywhere
+// ═══════════════════════
+var TIERS=[[0,'🥉','tBronze'],[1050,'🥈','tSilver'],[1250,'🥇','tGold'],[1450,'💠','tPlat'],[1700,'💎','tDiamond'],[1950,'👑','tLegend']];
+function tierOf(r){ var t=TIERS[0]; for(var i=0;i<TIERS.length;i++) if((r|0)>=TIERS[i][0]) t=TIERS[i]; return t; }
+function tierLabel(r){ var t=tierOf(r); return t[1]+' '+T(t[2]); }
 
 // ═══════════════════════
 //  SOUND — Web Audio API
@@ -3830,7 +4026,7 @@ function draw(g){
     }
     ctx.restore(); ctx.globalAlpha=1;
   }
-  drawFog(ctx,g);
+  drawFog(ctx,g); drawCoachDot(ctx,g);
   // Last move: pencil ring
   if(last&&!fogHidden(g,last[0],last[1])){
     var lxy=n2x(last[0],last[1]);
@@ -3899,6 +4095,8 @@ function SS(id,fromPop){
   var prev=curScreen; curScreen=id;
   document.body.classList.toggle('in-game', id==='screen-game');
   document.body.classList.toggle('on-menu', id==='screen-menu');
+  if(COACH&&COACH.scr!==id) coachEnd();
+  setTimeout(placeFab,90);
   // Browser/phone Back button support: exactly one extra history entry
   // while away from the menu, so Back always returns to the main menu.
   if(!fromPop){
@@ -3909,7 +4107,7 @@ function SS(id,fromPop){
     }catch(e){}
   }
 }
-function goMenu(fromPop){leaveRoom();SS('screen-menu',fromPop);setTimeout(checkDailyLogin,600);}
+function goMenu(fromPop){leaveRoom();SS('screen-menu',fromPop);setTimeout(checkDailyLogin,600);setTimeout(function(){ coachTry('menu','screen-menu'); if(typeof showPendingInvite==='function') showPendingInvite(); },1500);}
 function closeAllModals(){
   document.querySelectorAll('.overlay.open').forEach(function(o){o.classList.remove('open');});
   _cfCb=null;
@@ -3946,7 +4144,7 @@ function initMode(mode){
   gameMode=mode;
   if(mode==='pve'){
     refreshLevelCards(); refreshStageMap();
-    SS('screen-stages');
+    SS('screen-stages'); setTimeout(function(){ coachTry('stages','screen-stages'); },700);
     return;
   }
   loadFirebase().catch(function(){});   // start fetching the SDK early; errors surface later in createRoom/joinRoom
@@ -3962,13 +4160,19 @@ function confirmNames(){
   document.getElementById('ni1').classList.remove('bad');document.getElementById('ne1').classList.remove('show');
   if(!n1){document.getElementById('ni1').classList.add('bad');document.getElementById('ne1').classList.add('show');document.getElementById('ni1').focus();return;}
   var same=false; try{ same=nameKey(localStorage.getItem('dwName')||'')===nameKey(n1); }catch(e){}
-  if(same){ playerNames[0]=n1; buildOlLvs();SS('screen-online');setOS('',''); return; }
+  if(same){ playerNames[0]=n1; buildOlLvs();SS('screen-online');setOS('','');
+    refreshOlMe(); ensureAuth(); document.getElementById('codeBox').style.display='none'; document.getElementById('btnCreate').style.display='block';
+    // invite link / accepted invite: join right away (this branch used to return before it, so links did nothing for players with a saved name)
+    if(pendingRoom){ var pc=pendingRoom; pendingRoom=null; switchTab('j'); document.getElementById('joinIn').value=pc; joinRoom(); }
+    else setTimeout(function(){ coachTry('online','screen-online'); },700);
+    return; }
   showToast(T('nameChecking'),2000);
   claimName(n1).then(function(r){
     if(!r.ok){ showToast(nameProblemText(r.reason),5000); document.getElementById('ni1').classList.add('bad'); return; }
     playerNames[0]=n1;
     try{localStorage.setItem('dwName',n1);}catch(e){}
     buildOlLvs();SS('screen-online');setOS('','');
+    setTimeout(function(){ coachTry('online','screen-online'); },700);
   });
   refreshOlMe(); ensureAuth(); loadFirebase().then(function(){ syncMyPlayer(); }).catch(function(){});
   document.getElementById('codeBox').style.display='none';
@@ -4011,6 +4215,7 @@ function startGame(){
   var tag=document.getElementById('stageTag');
   if(tag) tag.textContent = st ? WORLD_ICO[st.w]+' '+(st.boss?'👑 '+T('boss'+st.w):tpl(T('stgName'),{n:curStage%12+1}))+(st.map?' · '+mapTitle(G):'')+(st.fog?' · 🌫':'')+(st.cond&&!st.boss?' · '+stageCondText(st):'') : (gameMode==='pve'&&curMap ? mapTitle(G) : '');
   var bb=document.getElementById('btnBoost'); if(bb) bb.style.display=gameMode==='pve'?'':'none';
+  var bc=document.getElementById('btnChat'); if(bc) bc.style.display=gameMode==='online'?'':'none';
   undoStack=[]; undoLeft=undoLimit();
   SS('screen-game');
   if(st&&st.boss) setTimeout(function(){ showBanner(tpl(T('bossIntro'),{b:T('boss'+st.w)}),4000); },700);
@@ -4020,7 +4225,7 @@ function startGame(){
   // Delay to allow DOM to paint and measure correctly
   requestAnimationFrame(function(){
     requestAnimationFrame(function(){
-      initCanvas(G);draw(G);updateHUD();
+      initCanvas(G);draw(G);updateHUD();placeFab();
     });
   });
   if(gameMode==='pve') schedAI();
@@ -4028,7 +4233,7 @@ function startGame(){
   if(gameMode==='pve'&&G.level<=2&&SET.assist&&!localStorage.getItem('dwAssistHint')){ try{localStorage.setItem('dwAssistHint','1');}catch(e){} setTimeout(function(){showToast(T('lvHintRookie'),5000);},7500); }
   if(gameMode==='pve'){
     var hinted=false; try{hinted=!!localStorage.getItem('dwHint');}catch(e){}
-    if(!hinted){ try{localStorage.setItem('dwHint','1');}catch(e){} setTimeout(function(){ if(G&&!G.over) showToast(T('firstHint'),6500); },500); }
+    if(!coachBoardStart()&&!hinted){ try{localStorage.setItem('dwHint','1');}catch(e){} setTimeout(function(){ if(G&&!G.over) showToast(T('firstHint'),6500); },500); }
   }
 }
 function restartGame(){if(gameMode==='online')return; if(gameMode==='puzzle'){startPuzzle(G&&G.puzzle?G.puzzle.level:'e');return;} startGame();}
@@ -4263,6 +4468,7 @@ function startPuzzle(level){
   gameMode='puzzle'; curStage=-1; selLv=3;
   if(aiTimer){clearTimeout(aiTimer);aiTimer=null;} aiToken++; aiLock=false; hR=-1;hC=-1; activeAnims=[];
   clearTurnTimer(); pressActive=false; loupeShow=false; layerKey=''; hideBanner();
+  setWorldLook(1);
   G=mkGame(9,'puzzle',3); G.board=pz.board.map(function(r){return r.slice();}); G._ver=1;
   G.puzzle={level:level,moves:pz.moves,target:pz.target,used:0};
   G.stats={start:Date.now(),maxCap:0}; undoStack=[]; undoLeft=0;
@@ -4586,7 +4792,7 @@ function showResult(){
     if(gameMode==='online'){ G._rd=applyRating(w===me,w===0); }
     else if(gameMode==='pve'){ G._rd=applyRating(w===1,w===0,aiRating(),0.75); }
   }
-  if(typeof G._rd==='number'){ rEl.innerHTML=tpl(T('ratingLine'),{r:RATING.r,d:'<span class="'+(G._rd>=0?'up':'dn')+'">'+(G._rd>=0?'+':'')+G._rd+'</span>'}); }
+  if(typeof G._rd==='number'){ rEl.innerHTML=tpl(T('ratingLine'),{r:RATING.r,d:'<span class="'+(G._rd>=0?'up':'dn')+'">'+(G._rd>=0?'+':'')+G._rd+'</span>'})+' · '+tierLabel(RATING.r); }
   if(w===0) document.getElementById('resD').textContent=T('drawD')+s1+T('andPts');
   else{var wn=w===1?n1:n2,ln=w===1?n2:n1,ws=w===1?s1:s2,ls=w===1?s2:s1;document.getElementById('resD').textContent=wn+T('winD')+ws+T('pts')+ln+T('winD')+ls+'.';}
   var btnNext=document.getElementById('btnNext');
@@ -4842,6 +5048,7 @@ function detachGameListeners(){
   turnInfo=null; claimSent=false;
 }
 function leaveRoom(){
+  if(typeof cancelInvites==='function') cancelInvites();
   olReady=false; offline=false;
   if(queueRef){ try{queueRef.remove();queueRef.onDisconnect().cancel();}catch(e){} queueRef=null; }
   var qb=document.getElementById('btnQuick'); if(qb) qb.disabled=false;
@@ -4873,7 +5080,7 @@ function buildOlLvs(){
     g.appendChild(el);
   }
 }
-function cancelOnline(){leaveRoom();SS('screen-name');}
+function cancelOnline(){leaveRoom();goMenu();}
 // Apply one remote move if it is exactly the next move of the game. Returns true when applied.
 function applyRemoteMove(d){
   if(!d||!G||G.over) return false;
@@ -4938,6 +5145,7 @@ function startOnlineGame(){
   listenResult();
   listenTurn();
   listenRematch();
+  listenChat();
   hideRematchUI();
   startGame();
   if(isHost) setTurn(1);
@@ -5003,7 +5211,7 @@ function listenRematch(){
     if(d[opp]&&!d[me]&&G&&G.over){ showToast(T('rematchOffer')); }
     if(d.p1&&d.p2&&isHost){
       olGen++;
-      try{ roomRef.update({moves:null,resign:null,result:null,rematch:null,turn:null,gen:olGen}); }catch(e){}
+      try{ roomRef.update({moves:null,resign:null,result:null,rematch:null,turn:null,chat:null,gen:olGen}); }catch(e){}
       startOnlineGame();
     }
   },function(){});
@@ -5106,6 +5314,7 @@ function _dc(){
       return;
     }
     roomRef=ref;isHost=true;myPNum=1;roomCode=code;olGen=0;
+    if(SOC.invPending){ var _ids=SOC.invPending; SOC.invPending=null; sendInvites(_ids,code); }
     ref.onDisconnect().remove();          // auto-cleanup if host drops
     document.getElementById('codeVal').textContent=code;
     document.getElementById('codeBox').style.display='block';
@@ -5115,7 +5324,7 @@ function _dc(){
       if(gst&&gst.name&&!olReady){
         playerNames[1]=gst.name; oppRating=typeof gst.r==='number'?gst.r:1000;
         if(queueRef){ try{queueRef.remove();queueRef.onDisconnect().cancel();}catch(e){} queueRef=null; }
-        olReady=true;
+        olReady=true; cancelInvites();
         setOS(T('started'),'ok');
         startOnlineGame();
       } else if(!gst&&olReady&&G&&!G.over){
@@ -5160,7 +5369,7 @@ function _join(code){
     },function(err,committed){
       if(done)return;done=true;clearTimeout(ct);
       if(err){setOS(T('netErr'),'err');return;}
-      if(!committed){setOS(T('notFound'),'err');return;}
+      if(!committed){setOS(T('roomFull'),'err');return;}
       roomRef=ref;
       ref.child('guest').onDisconnect().remove();  // free the seat if guest drops
       olFSz=(typeof room.fsz==='number'&&room.fsz>=0&&room.fsz<FIELD_SIZES.length)?room.fsz:1;
@@ -5178,6 +5387,221 @@ function _join(code){
       });
     });
   }).catch(function(){if(!done){done=true;clearTimeout(ct);setOS(T('netErr'),'err');}});
+}
+
+// ═══════════════════════
+//  FRIENDS · INVITES · CHAT · PUSH
+//  friends/<me>/<uid>   friendReq/<to>/<from>   invites/<to>/<from>   presence/<uid>   pushTokens/<uid>/<kind>
+// ═══════════════════════
+var SOC={on:false,friends:{},reqs:{},invites:{},pres:{},info:{},invited:[],invPending:null,invPaid:0,shown:{},loadedReq:false,sel:{}};
+var INVITE_COST=5, INVITE_TTL=180000, INVITE_MAX=6;
+function escH(x){ return String(x==null?'':x).replace(/[<>&"']/g,''); }
+function TSV(){ return firebase.database.ServerValue.TIMESTAMP; }
+function socialStart(){
+  if(SOC.on||!getDB()||!(firebase.auth&&firebase.auth().currentUser)) return; SOC.on=true; UID=firebase.auth().currentUser.uid;
+  try{ var pr=db.ref('presence/'+UID); db.ref('.info/connected').on('value',function(sn){ if(sn.val()===true){ pr.onDisconnect().remove(); pr.set({on:1,t:TSV()}).catch(function(){}); } }); }catch(e){}
+  db.ref('friends/'+UID).on('value',function(sn){ SOC.friends=sn.val()||{}; Object.keys(SOC.friends).forEach(watchFriend); renderFriends(); },function(){});
+  db.ref('friendReq/'+UID).on('value',function(sn){ var v=sn.val()||{}, nw=Object.keys(v).filter(function(k){ return !SOC.reqs[k]; });
+    SOC.reqs=v; if(nw.length&&SOC.loadedReq){ showToast(tpl(T('frReqNew'),{n:escH(v[nw[0]].n)}),4500); playWinSound&&SET.sound&&vibrate(40); }
+    SOC.loadedReq=true; renderFriends(); refreshFrBadge(); },function(){});
+  db.ref('invites/'+UID).on('value',function(sn){ var v=sn.val()||{}, now=serverNow(); SOC.invites={};
+    Object.keys(v).forEach(function(k){ var x=v[k]; if(!x||!x.room||(typeof x.t==='number'&&now-x.t>INVITE_TTL)){ db.ref('invites/'+UID+'/'+k).remove().catch(function(){}); return; } SOC.invites[k]=x; });
+    refreshFrBadge(); renderFriends(); showPendingInvite(); },function(){});
+  flushPushToken(); handleFriendLink();
+  try{ if(localStorage.getItem('dwPush')==='1') setTimeout(function(){ enablePush(false); },3000); }catch(e){}
+}
+function watchFriend(fid){
+  if(SOC.pres[fid]!==undefined) return; SOC.pres[fid]=0;
+  db.ref('presence/'+fid).on('value',function(sn){ SOC.pres[fid]=sn.exists()?1:0; renderFriends(); },function(){});
+  db.ref('players/'+fid).once('value').then(function(sn){ var v=sn.val()||{}; SOC.info[fid]={n:v.name||(SOC.friends[fid]&&SOC.friends[fid].n)||'?',r:typeof v.r==='number'?v.r:1000}; renderFriends(); }).catch(function(){});
+}
+function frInfo(fid){ return SOC.info[fid]||{n:(SOC.friends[fid]&&SOC.friends[fid].n)||'?',r:1000}; }
+function refreshFrBadge(){ var n=Object.keys(SOC.reqs).length+Object.keys(SOC.invites).length, b=document.getElementById('frBadge'); if(b){ b.textContent=n; b.classList.toggle('on',n>0); } }
+function socialReady(){ return loadFirebase().then(function(){ if(!getDB()) throw 0; return waitAuth(); }).then(function(ok){ if(!ok) throw 0; socialStart(); return true; }); }
+function openFriends(){
+  renderFriends(); document.getElementById('friendsModal').classList.add('open');
+  document.getElementById('frNote').textContent=SOC.on?'':T('connecting');
+  socialReady().then(function(){ renderFriends(); }).catch(function(){ document.getElementById('frNote').textContent=T('netErr'); });
+}
+function friendIds(){ return Object.keys(SOC.friends).sort(function(a,b){ return (SOC.pres[b]|0)-(SOC.pres[a]|0)||frInfo(b).r-frInfo(a).r; }); }
+function renderFriends(){
+  var L=document.getElementById('frList'); if(!L) return;
+  document.getElementById('frIn').placeholder=T('frPh'); document.getElementById('frPushBtn').title=T('pushAsk');
+  var inv=Object.keys(SOC.invites), h='';
+  if(inv.length){ h+='<div class="fr-sec">'+T('frInvites')+'</div>'+inv.map(function(fid){ var x=SOC.invites[fid];
+      return '<div class="fr-it req"><span>⚔</span><span class="fr-n">'+escH(x.n)+'</span><button class="fr-b" onclick="acceptInvite(\''+fid+'\')">'+T('invGoS')+'</button><button class="fr-b x" onclick="declineInvite(\''+fid+'\')">✕</button></div>'; }).join(''); }
+  document.getElementById('frInv').innerHTML=h;
+  var rq=Object.keys(SOC.reqs); h='';
+  if(rq.length){ h+='<div class="fr-sec">'+T('frReqs')+'</div>'+rq.map(function(fid){ var x=SOC.reqs[fid]||{};
+      return '<div class="fr-it req"><span>👋</span><span class="fr-n">'+escH(x.n)+'</span><span class="fr-r">'+tierOf(x.r||1000)[1]+' '+(x.r||1000)+'</span><button class="fr-b" onclick="frAccept(\''+fid+'\')">✔</button><button class="fr-b x" onclick="frDecline(\''+fid+'\')">✕</button></div>'; }).join(''); }
+  document.getElementById('frReqs').innerHTML=h;
+  var ids=friendIds();
+  L.innerHTML=(ids.length?'<div class="fr-sec">'+tpl(T('frCount'),{n:ids.length})+'</div>':'')+ids.map(function(fid){ var i=frInfo(fid), on=SOC.pres[fid];
+    return '<div class="fr-it"><span class="fr-dot'+(on?' on':'')+'"></span><span class="fr-n">'+escH(i.n)+'</span><span class="fr-r">'+tierOf(i.r)[1]+' '+i.r+'</span><button class="fr-b" onclick="inviteOne(\''+fid+'\')" title="'+T('invGoS')+'">⚔</button><button class="fr-b x" onclick="frRemove(\''+fid+'\')">✕</button></div>'; }).join('');
+  if(!ids.length&&!rq.length&&SOC.on) document.getElementById('frNote').textContent=T('frEmpty'); else if(SOC.on) document.getElementById('frNote').textContent=T('frHint');
+}
+function frAdd(){
+  var inp=document.getElementById('frIn'), name=inp.value.trim();
+  if(!myName()){ showToast(T('frNeedName'),3000); closeAllModals(); openAccount(); return; }
+  if(!validName(name)){ showToast(T('nameInvalid')); return; }
+  socialReady().then(function(){ return db.ref('usernames/'+nameKey(name)).once('value'); }).then(function(sn){
+    var uid=sn.val();
+    if(!uid){ showToast(T('frNotFound'),3000); return; }
+    if(uid===UID){ showToast(T('frSelf')); return; }
+    if(SOC.friends[uid]){ showToast(T('frAlready')); return; }
+    if(SOC.reqs[uid]){ frAccept(uid); return; }
+    return db.ref('friendReq/'+uid+'/'+UID).set({n:myName(),r:RATING.r,t:TSV()}).then(function(){ inp.value=''; showToast(tpl(T('frSent'),{n:escH(name)}),3000); askPushOnce(); });
+  }).catch(function(e){ showToast(dbErrText(e)); });
+}
+function frAccept(fid){
+  var req=SOC.reqs[fid]||{}, u={};
+  u['friends/'+UID+'/'+fid]={n:req.n||'?',t:TSV()}; u['friends/'+fid+'/'+UID]={n:myName()||'?',t:TSV()}; u['friendReq/'+UID+'/'+fid]=null;
+  db.ref().update(u).then(function(){ showToast(tpl(T('frAdded'),{n:escH(req.n)}),3000); askPushOnce(); }).catch(function(e){ showToast(dbErrText(e)); });
+}
+function frDecline(fid){ db.ref('friendReq/'+UID+'/'+fid).remove().catch(function(){}); }
+function frRemove(fid){
+  askConfirm('frRemoveT','frRemoveTx','frRemoveYes',function(){ var u={}; u['friends/'+UID+'/'+fid]=null; u['friends/'+fid+'/'+UID]=null; db.ref().update(u).catch(function(e){ showToast(dbErrText(e)); }); });
+}
+function siteBase(){ return /^https:/.test(location.protocol)&&!/androidplatform/.test(location.host)?(location.origin+location.pathname):'https://logicreate.github.io/dots-game/'; }
+function frShare(){
+  if(!UID){ showToast(T('netErr')); return; }
+  var url=siteBase()+'?f='+encodeURIComponent(UID), txt=tpl(T('frShareTxt'),{n:myName()||'DOTS WAR'});
+  if(window.webkit&&webkit.messageHandlers&&webkit.messageHandlers.ios){ try{ webkit.messageHandlers.ios.postMessage({cmd:'share',text:txt+' '+url}); return; }catch(e){} }
+  if(navigator.share){ navigator.share({title:'DOTS WAR',text:txt,url:url}).catch(function(){}); return; }
+  if(navigator.clipboard) navigator.clipboard.writeText(txt+' '+url).then(function(){ showToast(T('linkCopied')); }).catch(function(){ showToast(url,6000); }); else showToast(url,6000);
+}
+var pendingFriend=null;
+try{ var _fm=(location.search||'').match(/[?&]f=([A-Za-z0-9_-]{6,40})/); if(_fm){ pendingFriend=_fm[1]; setTimeout(ensureAuth,500); } if(/[?&]fr=1/.test(location.search||'')) setTimeout(openFriends,1500); }catch(e){}
+function handleFriendLink(){
+  var f=pendingFriend; if(!f) return; pendingFriend=null;
+  if(f===UID||SOC.friends[f]) return;
+  db.ref('players/'+f).once('value').then(function(sn){ var v=sn.val()||{}, n=v.name||'?';
+    socPop('👋',tpl(T('frLinkT'),{n:escH(n)}),T('frLinkTx'),T('frLinkYes'),T('invLater'),function(){
+      if(!myName()){ showToast(T('frNeedName'),3000); openAccount(); return; }
+      db.ref('friendReq/'+f+'/'+UID).set({n:myName(),r:RATING.r,t:TSV()}).then(function(){ showToast(tpl(T('frSent'),{n:escH(n)}),3000); }).catch(function(e){ showToast(dbErrText(e)); });
+    });
+  }).catch(function(){});
+}
+// ── generic popup ──
+function socPop(ico,title,text,yes,no,onYes,onNo){
+  document.getElementById('spIco').textContent=ico; document.getElementById('spTitle').textContent=title; document.getElementById('spText').textContent=text;
+  var y=document.getElementById('spYes'), n=document.getElementById('spNo'), m=document.getElementById('socPop');
+  y.textContent=yes; n.textContent=no;
+  y.onclick=function(){ m.classList.remove('open'); if(onYes) onYes(); };
+  n.onclick=function(){ m.classList.remove('open'); if(onNo) onNo(); };
+  m.classList.add('open');
+}
+// ── invites: pay ◆ per friend, first one to join plays ──
+function openInvite(){
+  if(!myName()){ showToast(T('frNeedName'),3000); openAccount(); return; }
+  socialReady().then(function(){
+    var ids=friendIds();
+    if(!ids.length){ showToast(T('frNoFriends'),3500); openFriends(); return; }
+    SOC.sel={}; ids.filter(function(f){ return SOC.pres[f]; }).slice(0,INVITE_MAX).forEach(function(f){ SOC.sel[f]=1; });
+    if(!Object.keys(SOC.sel).length) SOC.sel[ids[0]]=1;
+    renderInvite(); document.getElementById('invModal').classList.add('open');
+  }).catch(function(){ showToast(T('netErr')); });
+}
+function renderInvite(){
+  var ids=friendIds();
+  document.getElementById('invSub').textContent=tpl(T('invSub'),{c:INVITE_COST});
+  document.getElementById('invList').innerHTML=ids.map(function(fid){ var i=frInfo(fid);
+    return '<label class="fr-it"><input type="checkbox" '+(SOC.sel[fid]?'checked':'')+' onchange="invToggle(\''+fid+'\',this.checked)"><span class="fr-dot'+(SOC.pres[fid]?' on':'')+'"></span><span class="fr-n">'+escH(i.n)+'</span><span class="fr-r">'+tierOf(i.r)[1]+' '+i.r+'</span></label>'; }).join('');
+  var k=Object.keys(SOC.sel).length; document.getElementById('invCost').textContent=tpl(T('invCost'),{k:k,c:k*INVITE_COST,b:WALLET.c});
+}
+function invToggle(fid,on){ if(on){ if(Object.keys(SOC.sel).length>=INVITE_MAX){ showToast(tpl(T('invMax'),{k:INVITE_MAX})); renderInvite(); return; } SOC.sel[fid]=1; } else delete SOC.sel[fid]; renderInvite(); }
+function inviteOne(fid){ closeAllModals(); SOC.sel={}; SOC.sel[fid]=1; if(curScreen!=='screen-online'){ initMode('online'); setTimeout(invSend,400); } else invSend(); }
+function invSend(){
+  var ids=Object.keys(SOC.sel); if(!ids.length){ showToast(T('invPick')); return; }
+  var cost=ids.length*INVITE_COST;
+  if(WALLET.c<cost){ showToast(tpl(T('invNoCry'),{c:cost}),3500); closeAllModals(); openShop(); return; }
+  if(curScreen!=='screen-online'){ initMode('online'); }
+  if(!spendCrystals(cost)) return;
+  closeAllModals(); SOC.invPending=ids; SOC.invPaid=cost; switchTab('c'); createRoom();
+  setTimeout(function(){ if(SOC.invPending){ SOC.invPending=null; addCrystals(SOC.invPaid,true); SOC.invPaid=0; showToast(T('invRefund'),3500); } },16000);
+}
+function sendInvites(ids,code){
+  var u={}; ids.forEach(function(f){ u['invites/'+f+'/'+UID]={n:myName()||playerNames[0],room:code,fsz:olFSz,r:RATING.r,t:TSV()}; });
+  db.ref().update(u).then(function(){ SOC.invited=ids.slice(); SOC.invPaid=0; setOS(tpl(T('invSentSt'),{k:ids.length}),'wdots'); })
+    .catch(function(e){ addCrystals(SOC.invPaid,true); SOC.invPaid=0; showToast(dbErrText(e),4000); });
+}
+function cancelInvites(){
+  if(!SOC.invited.length||!db||!UID) return; var u={};
+  SOC.invited.forEach(function(f){ u['invites/'+f+'/'+UID]=null; }); SOC.invited=[]; db.ref().update(u).catch(function(){});
+}
+function showPendingInvite(){
+  var ks=Object.keys(SOC.invites).filter(function(k){ return !SOC.shown[k+'|'+SOC.invites[k].t]; }); if(!ks.length) return;
+  var fid=ks[ks.length-1], x=SOC.invites[fid];
+  if(curScreen==='screen-game'&&G&&!G.over){ SOC.shown[fid+'|'+x.t]=1; showToast(tpl(T('invToastGame'),{n:escH(x.n)}),4500); return; }
+  if(olReady||document.querySelector('.overlay.open')||COACH){ setTimeout(showPendingInvite,2500); return; }
+  SOC.shown[fid+'|'+x.t]=1; vibrate([40,60,40]); try{ playPlaceSound(); }catch(e){}
+  var sz=T('fieldSizes')[x.fsz|0]||'';
+  socPop('⚔',tpl(T('invTitle'),{n:escH(x.n)}),tpl(T('invText'),{s:sz,t:tierLabel(x.r||1000)}),T('invGo2'),T('invLater'),function(){ acceptInvite(fid); });
+}
+function acceptInvite(fid){
+  var x=SOC.invites[fid]; if(!x) return; closeAllModals();
+  db.ref('invites/'+UID+'/'+fid).remove().catch(function(){});
+  pendingRoom=String(x.room); initMode('online');
+}
+function declineInvite(fid){ db.ref('invites/'+UID+'/'+fid).remove().catch(function(){}); }
+// called by native wrappers / ?room links when a push notification is opened
+function openPushTarget(d){ d=d||{}; if(d.room){ pendingRoom=String(d.room); initMode('online'); } else if(d.type==='friend') openFriends(); }
+
+// ── quick emoji chat in online battles (no free text: safe for kids) ──
+var CHAT=['👍','😮','😂','😎','🔥','🤝','😅','👏','🙏','💪','chGood','chLuck','chWow','chGG'], chatLast=0;
+function chatTxt(i){ var m=CHAT[i]; return m&&m.length>3?T(m):m; }
+function openChat(ev){
+  if(ev) ev.stopPropagation();
+  var p=document.getElementById('chatPop');
+  if(!p){ p=document.createElement('div'); p.id='chatPop'; p.className='chat-pop'; document.body.appendChild(p); document.addEventListener('click',function(e){ if(!p.contains(e.target)) p.classList.remove('open'); }); }
+  if(p.classList.contains('open')){ p.classList.remove('open'); return; }
+  p.innerHTML=CHAT.map(function(m,i){ return '<button class="'+(m.length>3?'ph':'')+'" onclick="sendChat('+i+')">'+chatTxt(i)+'</button>'; }).join('');
+  var b=document.getElementById('btnChat').getBoundingClientRect();
+  p.classList.add('open'); var w=p.offsetWidth, h=p.offsetHeight;
+  p.style.left=Math.max(6,Math.min(innerWidth-w-6,b.left+b.width/2-w/2))+'px'; p.style.top=Math.max(6,b.top-h-8)+'px';
+}
+function sendChat(i){
+  var p=document.getElementById('chatPop'); if(p) p.classList.remove('open');
+  if(Date.now()-chatLast<2500){ showToast(T('chWait'),1200); return; } chatLast=Date.now();
+  if(roomRef) try{ roomRef.child('chat').push({p:myPNum,m:i,t:TSV()}); }catch(e){}
+  showChatBubble(myPNum,i);
+}
+function listenChat(){
+  if(!roomRef) return; var c=roomRef.child('chat'); olRefs.push(c); var since=serverNow()-8000;
+  c.on('child_added',function(sn){ var d=sn.val(); if(!d||d.p===myPNum||typeof d.m!=='number'||!CHAT[d.m]) return; if(typeof d.t==='number'&&d.t<since) return; showChatBubble(d.p,d.m); vibrate(20); },function(){});
+}
+function showChatBubble(p,i){
+  var hud=document.getElementById(p===1?'phud1':'phud2'); if(!hud) return;
+  var r=hud.getBoundingClientRect(), b=document.createElement('div'), emo=CHAT[i].length<=3;
+  b.className='chat-bub'+(emo?' emo':''); b.textContent=chatTxt(i); document.body.appendChild(b);
+  var w=b.offsetWidth; b.style.top=Math.round(r.bottom+8)+'px'; b.style.left=Math.round(Math.max(6,Math.min(innerWidth-w-6,r.left+r.width/2-w/2)))+'px';
+  setTimeout(function(){ b.style.transition='opacity .4s'; b.style.opacity='0'; setTimeout(function(){ b.remove(); },450); },2800);
+}
+
+// ── push notifications (invites & friend requests). Tokens go to pushTokens/<uid>; a Cloud Function sends them ──
+var PUSH_VAPID='';   // Firebase console → Project settings → Cloud Messaging → Web Push certificates → "Key pair"
+var pushTok=null;
+function onPushToken(kind,tok){ if(!tok) return; pushTok=[kind,tok]; flushPushToken(); }
+function onPushError(msg){ showToast(T('pushFail')+(msg?' ('+msg+')':''),4000); }
+function flushPushToken(){ if(!pushTok||!db||!UID||!(firebase.auth&&firebase.auth().currentUser)) return; var k=pushTok;
+  db.ref('pushTokens/'+UID+'/'+k[0]).set({k:k[1],l:lang,t:TSV()}).then(function(){ try{localStorage.setItem('dwPush','1');}catch(e){} }).catch(function(){}); }
+function askPushOnce(){
+  try{ if(localStorage.getItem('dwPushAsk')) return; localStorage.setItem('dwPushAsk','1'); }catch(e){ return; }
+  setTimeout(function(){ socPop('🔔',T('pushAskT'),T('pushAskTx'),T('pushYes'),T('invLater'),function(){ enablePush(true); }); },1200);
+}
+function enablePush(explicit){
+  try{
+    if(window.AndroidBridge&&AndroidBridge.enablePush){ AndroidBridge.enablePush(); return; }
+    if(window.webkit&&webkit.messageHandlers&&webkit.messageHandlers.ios){ webkit.messageHandlers.ios.postMessage({cmd:'push'}); return; }
+  }catch(e){}
+  if(!PUSH_VAPID||!('serviceWorker' in navigator)||!window.Notification||!/^https:/.test(location.protocol)){ if(explicit) showToast(T('pushNA'),3500); return; }
+  Notification.requestPermission().then(function(p){
+    if(p!=='granted'){ if(explicit) showToast(T('pushDenied'),3500); return; }
+    return loadScript('https://www.gstatic.com/firebasejs/10.14.1/firebase-messaging-compat.js')
+      .then(function(){ return navigator.serviceWorker.ready; })
+      .then(function(reg){ return firebase.messaging().getToken({vapidKey:PUSH_VAPID,serviceWorkerRegistration:reg}); })
+      .then(function(tok){ onPushToken('web',tok); if(explicit) showToast(T('pushOn'),2500); });
+  }).catch(function(e){ console.warn('push',e); if(explicit) onPushError(''); });
 }
 
 // ═══════════════════════
@@ -5278,6 +5702,8 @@ refreshDailyCard();
 try{ var _rm=(location.search||'').match(/[?&]room=(\d{4,6})/); if(_rm){ pendingRoom=_rm[1]; initMode('online'); } }catch(e){}
 // Cloud save: sign in anonymously in the background when online (never blocks the game)
 setTimeout(function(){ if(navigator.onLine!==false) ensureAuth(); },4000);
+refreshMute();
+setTimeout(function(){ coachTry('menu','screen-menu'); },2600);
 setTimeout(function(){ refreshCry(); applySkinImgs(); checkDailyLogin(); },1500);
 // Very first visit: show "How to play" right away
 (function(){ var seen=false; try{seen=!!localStorage.getItem('dwSeen');}catch(e){} if(!seen) setTimeout(openRules,350); })();
