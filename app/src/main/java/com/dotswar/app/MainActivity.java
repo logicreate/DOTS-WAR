@@ -42,6 +42,13 @@ import android.content.pm.PackageManager;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.messaging.FirebaseMessaging;
+import android.net.Uri;
+import com.google.android.play.core.appupdate.AppUpdateInfo;
+import com.google.android.play.core.appupdate.AppUpdateManager;
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
+import com.google.android.play.core.appupdate.AppUpdateOptions;
+import com.google.android.play.core.install.model.AppUpdateType;
+import com.google.android.play.core.install.model.UpdateAvailability;
 
 public class MainActivity extends Activity {
     private WebView webView;
@@ -54,7 +61,7 @@ public class MainActivity extends Activity {
     // ── Push notifications (Firebase Cloud Messaging) ──
     // Firebase Console -> Project settings -> Your apps -> Android app "com.dotswar.app" -> App ID
     // (looks like 1:911143426593:android:0123456789abcdef). Until it is pasted, push is simply off.
-    private static final String FCM_APP_ID = "1:911143426593:android:040dd5935b2d88f48f6160";
+    private static final String FCM_APP_ID = "PASTE_ANDROID_APP_ID";
     private static final String FCM_API_KEY = "AIzaSyCxGB68ogFcdRk5Aeav_6rZmCNmIHY8_K0";
     private static final int REQ_NOTIF = 77;
     private boolean pageReady = false;
@@ -118,6 +125,14 @@ public class MainActivity extends Activity {
                 // Stay inside the app for our own origin; anything else (share links etc.) is ignored
                 return !"appassets.androidplatform.net".equals(request.getUrl().getHost());
             }
+            // The WebView engine can be killed by the system (low memory during a phone call).
+            // Instead of letting the app crash, rebuild the screen: the game offers to resume the autosaved battle.
+            @Override
+            public boolean onRenderProcessGone(WebView view, android.webkit.RenderProcessGoneDetail detail) {
+                webView = null;
+                recreate();
+                return true;
+            }
             @Override
             public void onPageFinished(WebView view, String url) {
                 pushInsets(); // the page is ready: hand it the current safe-area insets
@@ -143,6 +158,7 @@ public class MainActivity extends Activity {
 
         createNotificationChannel();
         handlePushIntent(getIntent());
+        checkPlayUpdate();
         webView.loadUrl(START_URL);
     }
 
@@ -160,6 +176,32 @@ public class MainActivity extends Activity {
         if (room == null && type == null) return;
         String code = "openPushTarget({type:" + jsStr(type == null ? "" : type) + ",room:" + jsStr(room == null ? "" : room) + "})";
         if (pageReady) js(code); else pendingPushJs = code;
+    }
+    // ── Google Play in-app update: if Play has a newer version, show Google's own update screen ──
+    private static final int REQ_UPDATE = 78;
+    private AppUpdateManager updateManager;
+    private void checkPlayUpdate() {
+        try {
+            updateManager = AppUpdateManagerFactory.create(this);
+            updateManager.getAppUpdateInfo().addOnSuccessListener(info -> {
+                if (info.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                        && info.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
+                    try { updateManager.startUpdateFlowForResult(info, this, AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE).build(), REQ_UPDATE); }
+                    catch (Exception ignored) {}
+                }
+            });
+        } catch (Exception ignored) {}   // not installed from Play (debug APK): nothing to do
+    }
+    private void resumePlayUpdate() {
+        if (updateManager == null) return;
+        try {
+            updateManager.getAppUpdateInfo().addOnSuccessListener(info -> {
+                if (info.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
+                    try { updateManager.startUpdateFlowForResult(info, this, AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE).build(), REQ_UPDATE); }
+                    catch (Exception ignored) {}
+                }
+            });
+        } catch (Exception ignored) {}
     }
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT < 26) return;
@@ -210,6 +252,15 @@ public class MainActivity extends Activity {
         @JavascriptInterface
         public void googleSignIn() {
             runOnUiThread(MainActivity.this::startGoogleSignIn);
+        }
+        @JavascriptInterface
+        public void openUrl(final String url) {
+            runOnUiThread(() -> {
+                try { startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url))); }
+                catch (Exception e) {
+                    try { startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.dotswar.app"))); } catch (Exception ignored) {}
+                }
+            });
         }
         @JavascriptInterface
         public void enablePush() {
@@ -307,6 +358,7 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         if (webView != null) { webView.onResume(); webView.evaluateJavascript("window.appResume&&appResume()", null); }
+        resumePlayUpdate();
     }
 
     @Override
