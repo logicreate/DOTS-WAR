@@ -341,6 +341,7 @@ public class MainActivity extends Activity {
                     }
                 })
                 .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
+                .enableAutoServiceReconnection()
                 .build();
     }
     private void connectBilling(final Runnable then) {
@@ -362,8 +363,9 @@ public class MainActivity extends Activity {
     private void queryProducts(final List<String> ids, final Runnable then) {
         List<QueryProductDetailsParams.Product> list = new ArrayList<>();
         for (String id : ids) list.add(QueryProductDetailsParams.Product.newBuilder().setProductId(id).setProductType(BillingClient.ProductType.INAPP).build());
-        billing.queryProductDetailsAsync(QueryProductDetailsParams.newBuilder().setProductList(list).build(), (r, details) -> {
+        billing.queryProductDetailsAsync(QueryProductDetailsParams.newBuilder().setProductList(list).build(), (r, result) -> {   // Billing 8: the answer is a QueryProductDetailsResult
             JSONArray arr = new JSONArray();
+            List<ProductDetails> details = result == null ? null : result.getProductDetailsList();
             if (details != null) for (ProductDetails d : details) {
                 products.put(d.getProductId(), d);
                 try { JSONObject o = new JSONObject(); o.put("id", d.getProductId()); ProductDetails.OneTimePurchaseOfferDetails off = d.getOneTimePurchaseOfferDetails(); o.put("price", off == null ? "" : off.getFormattedPrice()); arr.put(o); } catch (Exception ignored) {}

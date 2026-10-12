@@ -90,7 +90,7 @@ dependencies {
     // Push notifications for friend invites (initialised in code, no google-services plugin needed)
     implementation 'com.google.firebase:firebase-messaging:24.1.0'
     // In-app purchases of crystals
-    implementation 'com.android.billingclient:billing:7.1.1'
+    implementation 'com.android.billingclient:billing:8.3.0'
     // Rewarded video ads + consent form (GDPR)
     implementation 'com.google.android.gms:play-services-ads:23.6.0'
     implementation 'com.google.android.ump:user-messaging-platform:3.1.0'
