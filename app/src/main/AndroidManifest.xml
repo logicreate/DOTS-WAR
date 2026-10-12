@@ -3,6 +3,7 @@
 
     <!-- Needed for Online battle mode (Firebase Realtime Database) -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.android.vending.BILLING" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- Android 13+: asked only when the player turns notifications on -->
@@ -28,6 +29,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- AdMob → Apps → DOTS WAR (Android) → App settings → App ID "ca-app-pub-XXXX~YYYY". Below: Google's TEST app id -->
+        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-3940256099942544~3347511713" />
         <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id" android:value="invites" />
         <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@mipmap/ic_launcher" />
     </application>

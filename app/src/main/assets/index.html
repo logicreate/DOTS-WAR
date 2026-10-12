@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin><link rel="preconnect" href="https://dots-2d4e4-default-rtdb.firebaseio.com"><link rel="preconnect" href="https://identitytoolkit.googleapis.com">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#1b3027">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1199,7 +1200,10 @@ body[data-theme=world] .mav.has-av{padding:0;overflow:hidden;background:none;bor
 .btn-gold,.cta,.mcard.pve,.mcard.onl{position:relative;overflow:hidden}
 .btn-gold::after,.mcard.pve::after,.mcard.onl::after{content:'';position:absolute;top:-60%;left:-40%;width:35%;height:220%;background:linear-gradient(100deg,rgba(255,255,255,0) 0,rgba(255,255,255,.45) 50%,rgba(255,255,255,0) 100%);transform:rotate(12deg);animation:shine 4.5s ease-in-out infinite;pointer-events:none}
 @keyframes shine{0%,70%{left:-40%}100%{left:140%}}
-body[data-theme=world] .trademark-img{animation:logoFloat 5s ease-in-out infinite}
+body[data-theme=world] .trademark-img{animation:logoBreath 4.5s ease-in-out infinite;transform-origin:50% 60%}
+@keyframes logoBreath{0%,100%{transform:scale(1);filter:drop-shadow(0 8px 9px rgba(54,27,12,.48))}50%{transform:scale(1.045);filter:drop-shadow(0 10px 14px rgba(54,27,12,.5)) drop-shadow(0 0 16px rgba(255,214,120,.35))}}
+body[data-theme=world] .tagline{animation:tagBreath 4.5s ease-in-out infinite}
+@keyframes tagBreath{0%,100%{opacity:.85;letter-spacing:.3em}50%{opacity:1;letter-spacing:.34em}}
 @keyframes logoFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 .exp-card{transition:transform .2s,box-shadow .2s}.exp-card:hover{transform:translateY(-3px) scale(1.02)}
 .exp-card.sel{animation:selGlow 1.8s ease-in-out infinite}
@@ -1351,21 +1355,133 @@ body[data-theme=world] .inp{box-shadow:inset 0 3px 6px rgba(0,0,0,.45),inset 0 -
 
 .gfoot{max-width:100%;box-sizing:border-box}
 @media(max-width:380px){ .gfoot{gap:4px} .gfoot .btn-sm{padding:8px 7px;font-size:.82rem} .btn-resign{padding:8px 9px!important} }
+
+.mus-sec{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--sub);margin:8px 2px 2px;text-align:left}
+.mus-row{display:flex;gap:6px}.mus-row .mus-it{flex:1;min-width:0}.mus-n{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mus-del{flex:none;width:38px;border-radius:12px;border:1px solid rgba(255,225,159,.25);background:rgba(255,255,255,.06);color:#fff;cursor:pointer}
+.mus-add{border-style:dashed!important;justify-content:center}
+/* portrait only: on a phone turned sideways ask to turn it back */
+.rot-ov{display:none;position:fixed;inset:0;z-index:5000;background:#1b1209;color:#ffe6a8;align-items:center;justify-content:center;flex-direction:column;gap:14px;font:800 1.1rem 'Exo 2',sans-serif;text-align:center;padding:20px}
+.rot-ov .rot-ic{font-size:3.4rem;animation:rotHint 1.8s ease-in-out infinite}
+@keyframes rotHint{0%,30%{transform:rotate(90deg)}60%,100%{transform:rotate(0)}}
+@media (orientation:landscape) and (max-height:500px) and (hover:none) and (pointer:coarse){ .rot-ov{display:flex} }
+
+.exp-dice{display:none}.exp-card.sel:not([data-map="plain"]) .exp-dice{display:block}
+.exp-card.reroll canvas{animation:reroll .55s cubic-bezier(.2,1.3,.4,1)}
+@keyframes reroll{0%{transform:perspective(500px) rotateY(90deg) scale(.9);opacity:.3}100%{transform:perspective(500px) rotateX(5deg)}}
+
+/* ══ Ice world ══ */
+body[data-world="4"] #screen-game,body[data-world="4"] #screen-stages,body[data-world="4"] #screen-result{background:linear-gradient(180deg,rgba(150,200,240,.55),rgba(10,40,80,.88)),var(--garden) center/cover no-repeat #0e2238}
+body[data-world="4"] .stg{background:linear-gradient(160deg,rgba(70,120,170,.8),rgba(20,46,80,.88))}
+body[data-world="4"] .stg.done::before{filter:grayscale(.6) hue-rotate(170deg) saturate(.7) brightness(1.3)}
+#puzGrid[data-w="4"] .puz-p.on{filter:grayscale(.6) hue-rotate(170deg) saturate(.7) brightness(1.3)}
+.wtab[data-w="4"].on{border-color:#bfefff;box-shadow:0 0 18px rgba(180,235,255,.55)}
+.snowfall{position:fixed;inset:0;z-index:2;pointer-events:none;display:none;
+  background-image:radial-gradient(2px 2px at 10% 20%,#fff 50%,transparent 51%),radial-gradient(3px 3px at 30% 60%,#fff 50%,transparent 51%),radial-gradient(2px 2px at 55% 30%,#fff 50%,transparent 51%),radial-gradient(3px 3px at 75% 80%,#fff 50%,transparent 51%),radial-gradient(2px 2px at 90% 45%,#fff 50%,transparent 51%),radial-gradient(1.5px 1.5px at 45% 90%,#fff 50%,transparent 51%);
+  background-size:320px 320px;opacity:.75;animation:snow 14s linear infinite}
+.snowfall.b{background-size:220px 220px;opacity:.5;animation-duration:9s}
+@keyframes snow{from{background-position:0 0,0 0,0 0,0 0,0 0,0 0}to{background-position:40px 320px,-30px 320px,20px 320px,-40px 320px,30px 320px,-20px 320px}}
+body[data-world="4"]:not(.on-menu) .snowfall{display:block}
+.wtabs{gap:6px}.wtab .wn{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.top-tabs{max-width:none!important}.top-tabs button{padding:6px 4px;font-size:.74rem}
+.lg-head{text-align:center;padding:8px 6px 10px;margin-bottom:6px;border-radius:14px;background:linear-gradient(180deg,rgba(255,214,90,.16),rgba(255,214,90,.04));border:1px solid rgba(255,214,90,.4)}
+.lg-tier{font-size:1.25rem;font-weight:900;color:#ffe6a8}.lg-sub{font-size:.8rem;color:var(--sub);margin-top:2px}.lg-rew{font-size:.72rem;color:#8ff0ff;margin:6px 0 2px;line-height:1.3}
+.lg-club{font-size:.85em;opacity:.9}
+.cl-card{text-align:center;padding:10px;border-radius:14px;background:linear-gradient(180deg,rgba(255,226,154,.16),rgba(255,226,154,.04));border:1px solid rgba(255,226,154,.45);margin-bottom:6px}
+.cl-ico{font-size:2.4rem;line-height:1.1}.cl-n{font-size:1.15rem;font-weight:900;color:#ffe6a8}.cl-sub{font-size:.78rem;color:var(--sub)}
+.cl-intro{font-size:.84rem;color:var(--sub);text-align:center;line-height:1.35;padding:4px 6px}
+#topModal .top-list{max-height:min(56vh,480px)}
+
+.shop-grid.cry-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+.cry-pack{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 8px 10px;border-radius:16px;cursor:pointer;font:inherit;color:#fff3d6;
+  background:linear-gradient(180deg,rgba(120,220,255,.18),rgba(40,90,140,.25)),linear-gradient(160deg,#4a3020,#2a170a);border:1.5px solid rgba(143,240,255,.55);box-shadow:0 8px 16px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.3)}
+.cry-pack.t-best{border-color:#ffd76a;box-shadow:0 0 18px rgba(255,214,106,.5),0 8px 16px rgba(0,0,0,.4)}
+.cp-ico{font-size:1.9rem;line-height:1.1;filter:drop-shadow(0 3px 5px rgba(0,0,0,.5))}.cp-c{font-weight:900;font-size:1.15rem;color:#8ff0ff;text-shadow:0 0 10px rgba(143,240,255,.6)}
+.cp-p{margin-top:2px;padding:5px 12px;border-radius:999px;background:linear-gradient(180deg,#ffe8a8,#d9a24a);color:#2a1507;font-weight:900;font-size:.85rem;box-shadow:0 2px 0 #7a4612}
+.cp-tag{position:absolute;top:-8px;left:50%;transform:translateX(-50%);padding:2px 9px;border-radius:999px;background:#e8402a;color:#fff;font-size:.62rem;font-weight:900;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.4)}
+.t-best .cp-tag{background:linear-gradient(180deg,#ffd76a,#c98a35);color:#2a1507}
+.cry-starter{grid-column:span 2;position:relative;display:flex;align-items:center;gap:10px;padding:12px;border-radius:16px;cursor:pointer;font:inherit;color:#fff3d6;text-align:left;
+  background:linear-gradient(120deg,rgba(255,214,90,.28),rgba(232,64,42,.22)),linear-gradient(160deg,#5a3420,#2a170a);border:2px solid #ffd76a;animation:selGlow 2s ease-in-out infinite}
+.cs-badge{position:absolute;top:-9px;right:12px;background:#e8402a;color:#fff;border-radius:999px;padding:2px 9px;font-size:.62rem;font-weight:900}
+.cs-ico{font-size:2.3rem}.cs-t{flex:1;display:flex;flex-direction:column;gap:2px}.cs-t b{font-size:1rem;color:#ffe6a8}.cs-t small{font-size:.72rem;color:#f0dcb0}.cs-tm{color:#ffb38a!important}
+.cs-p{padding:7px 12px;border-radius:999px;background:linear-gradient(180deg,#ffe8a8,#d9a24a);color:#2a1507;font-weight:900;font-size:.85rem;white-space:nowrap}
+
+.ad-card{grid-column:span 2;display:flex;align-items:center;gap:12px;padding:14px;border-radius:16px;cursor:pointer;font:inherit;color:#fff3d6;text-align:left;
+  background:linear-gradient(120deg,rgba(90,190,255,.32),rgba(120,90,255,.22)),linear-gradient(160deg,#3a2a40,#1c1226);border:2px solid #8ff0ff;box-shadow:0 0 22px rgba(143,240,255,.45),0 8px 16px rgba(0,0,0,.4);animation:ctaPulse 1.8s ease-in-out infinite}
+.ad-card.off{opacity:.5;animation:none;box-shadow:none}
+.ad-ico{font-size:2.3rem}.ad-t{flex:1;display:flex;flex-direction:column;gap:2px}.ad-t b{font-size:1.02rem;color:#e8fbff}.ad-t small{font-size:.74rem;color:#bfe6f0}
+.ad-p{padding:7px 12px;border-radius:999px;background:linear-gradient(180deg,#c8f8ff,#5fd8f5);color:#08303c;font-weight:900;white-space:nowrap;box-shadow:0 2px 0 #1f7fb8}
+.cry-earn{grid-column:span 2;font-size:.82rem;color:var(--sub);text-align:center;padding:6px}
+.res-dbl{margin:6px auto 0!important;max-width:360px;width:100%}
+
+/* calm main screen: no shine, no nudging */
+#screen-menu .mcard::after,#screen-menu .btn-gold::after{display:none!important}
+#screen-menu .mchip-prof.nudge{animation:none}
+/* one height for every device (WebViews differ in dvh support) */
+#screen-menu .menu-inner{height:var(--app-h,100dvh)}
+.screen{height:var(--app-h,100dvh)}
+
+/* ══ accounts ══ */
+.auth-tabs{margin:2px auto 10px;max-width:280px;justify-content:center}.auth-tabs button{flex:1}
+.auth-in{width:100%;margin:0 0 8px!important;text-align:center}
+.auth-pw{position:relative}.auth-eye{position:absolute;right:8px;top:50%;transform:translateY(-62%);background:none;border:none;font-size:1.05rem;cursor:pointer;opacity:.7}
+.auth-err{color:#ff9a7a;min-height:1.1em;text-align:center}.auth-go{width:100%;margin-top:2px}.auth-hint{text-align:center;font-size:.74rem;margin-top:6px}
+.auth-skip{display:block;margin:8px auto 0;background:none;border:none;color:var(--sub);font:inherit;font-size:.8rem;text-decoration:underline;cursor:pointer}
+.acc-head{display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:8px}
+.acc-av{width:84px;height:84px;border-radius:50%;border:3px solid #ffd76a;background:#5a3a22;font-size:2.6rem;display:grid;place-items:center;overflow:hidden;cursor:pointer;padding:0;box-shadow:0 0 18px rgba(255,214,106,.4)}
+.acc-av img{width:100%;height:100%;object-fit:cover}.acc-avb{padding:6px 14px!important;font-size:.82rem!important}
+label.av-opt{cursor:pointer}
+/* ══ online screen ══ */
+.ol-sec{font-size:.74rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--sub);margin:12px 2px 6px;text-align:left;width:100%;border-top:1px solid rgba(255,226,154,.18);padding-top:10px}
+.ol-lbl{font-size:.78rem;color:var(--sub);margin-bottom:6px}
+#panelJ .join-row{display:flex;gap:8px}#panelJ .join-inp{flex:1;min-width:0}
+/* ══ praise pop-ups ══ */
+.praise{position:fixed;left:50%;top:38%;transform:translate(-50%,-50%) scale(.3);z-index:1300;pointer-events:none;text-align:center;opacity:0;animation:praiseIn .5s cubic-bezier(.2,1.6,.4,1) forwards}
+.praise b{display:block;font:900 clamp(2rem,10vw,3.2rem)/1 'Exo 2',sans-serif;color:#ffe6a8;letter-spacing:.02em;
+  text-shadow:0 2px 0 #b8731c,0 4px 0 #6a3a10,0 8px 18px rgba(0,0,0,.6),0 0 30px rgba(255,214,120,.6);-webkit-text-stroke:1px rgba(80,40,10,.35)}
+.praise small{display:inline-block;margin-top:8px;padding:4px 12px;border-radius:999px;background:rgba(20,10,4,.75);color:#8ff0ff;font:800 1rem 'Exo 2',sans-serif;border:1px solid rgba(143,240,255,.5)}
+.praise.p-cool b{color:#c8f8ff;text-shadow:0 2px 0 #2a8fb8,0 4px 0 #0f4a66,0 8px 18px rgba(0,0,0,.6),0 0 26px rgba(143,240,255,.6)}
+.praise.p-super b,.praise.p-mega b{font-size:clamp(2.4rem,12vw,3.8rem);color:#ffd76a}
+.praise.p-mega b{background:linear-gradient(90deg,#ffd76a,#ff8a3a,#ff4fa0,#8ff0ff,#ffd76a);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:megaShift 1s linear infinite}
+@keyframes megaShift{to{background-position:200% 0}}
+.praise.p-win{top:50%;padding:28px 34px;border-radius:28px;background:rgba(16,8,3,.9);border:2px solid rgba(255,215,106,.55);box-shadow:0 0 0 100vmax rgba(0,0,0,.35),0 0 40px rgba(255,200,80,.35)}
+.praise.out{animation:praiseOut .45s ease forwards}
+@keyframes praiseIn{0%{opacity:0;transform:translate(-50%,-50%) scale(.3) rotate(-8deg)}60%{opacity:1;transform:translate(-50%,-50%) scale(1.15) rotate(2deg)}100%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}}
+@keyframes praiseOut{to{opacity:0;transform:translate(-50%,-80%) scale(1.1)}}
+/* ══ adaptive sizes: buttons and text follow the screen width ══ */
+.btn{font-size:clamp(.86rem,3.6vw,1rem)}
+.modal h2{font-size:clamp(1.12rem,5vw,1.4rem)}
+.st-row{font-size:clamp(.84rem,3.7vw,.98rem)}
+.lg-d{font-size:clamp(.56rem,2.6vw,.7rem)!important}
+
+/* account window: compact, social sign-in side by side */
+#accountModal .acc-card{padding:10px 12px;margin-bottom:8px}
+#accountModal .acc-why{display:none}
+#accountModal .gbtn,#accountModal .abtn{font-size:.86rem;padding:9px 10px;margin-top:6px}
+body.ios #accountModal .acc-soc{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#accountModal .acc-head{margin-bottom:4px}#accountModal .acc-av{width:72px;height:72px;font-size:2.2rem}
+.acc-foot{gap:8px;margin-top:4px}.acc-foot .btn{flex:1}
+#accountModal .acc-row{margin-top:2px}
+.res-title{white-space:normal!important;overflow-wrap:anywhere;font-size:clamp(1.05rem,5.2vw,1.6rem)!important;line-height:1.15;padding:0 8px;max-width:100%}
+body[data-theme=world] .mini-lv.sel .mini-lv-n,body[data-theme=world] .mini-lv.sel .mini-lv-s{color:#2a1507!important;-webkit-text-fill-color:#2a1507;opacity:1}
+@media (max-height:700px){#accountModal .acc-head{flex-direction:row;justify-content:center;gap:12px}#accountModal .acc-av{width:56px;height:56px;font-size:1.8rem}
+ #accountModal .modal h2,#accountModal h2{margin-bottom:6px}#accountModal .acc-card{padding:8px 10px;margin-bottom:6px}#accountModal .auth-in{padding-top:7px;padding-bottom:7px}
+ #accountModal .auth-tabs{margin-bottom:6px}#accountModal .gbtn,#accountModal .abtn{padding:7px 10px;margin-top:4px}#accountModal .auth-hint{display:none}}
+#accountModal .acc-ic{display:none}
+.pw-msg{min-height:1.2em;color:var(--sub);line-height:1.4;margin-bottom:8px}.pw-msg.bad{color:#ff9a7a}
+.auth-forgot{margin-top:6px}
 </style>
 </head>
 <body>
+<div class="snowfall"></div><div class="snowfall b"></div>
+<div class="rot-ov" id="rotOv"><div class="rot-ic">📱</div><div id="rotTx">Поверните телефон вертикально</div></div>
 <button id="sndFab" class="snd-fab" onclick="toggleMute()" aria-label="Sound">🔊</button>
 <div id="coach" class="coach" onclick="coachNext()"><div class="coach-ring"></div><div class="coach-hand">👆</div>
   <div class="coach-tip"><div class="coach-txt" id="coachTxt"></div><div class="coach-btns"><button class="coach-skip" id="coachSkip" onclick="event.stopPropagation();coachEnd()">Skip</button><button class="coach-ok" id="coachOk">Next ›</button></div></div></div>
 <div class="amb" aria-hidden="true"><div class="lv lv-rays"></div><div class="lv lv-motes"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></div></div>
 <div id="pauseOv" class="pause-ov" onclick="gameResume()"><div class="pause-card"><div class="pause-ic">⏸</div><div class="pause-t" id="pauseT">Pause</div><button class="btn btn-gold cta" id="pauseB">▶ Continue</button></div></div>
 <div id="screen-menu" class="screen active">
-  <div class="live" aria-hidden="true">
-    <div class="lv lv-sway lv-l"></div><div class="lv lv-sway lv-r"></div><div class="lv lv-sway lv-top"></div><div class="lv lv-flag"></div>
-    <div class="lv lv-rays"></div><div class="lv lv-sun"></div><div class="lv lv-board"></div>
-    <div class="lv lv-leaves"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-    <div class="lv lv-motes"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></div>
-  </div>
   <div class="menu-inner">
     <div class="mtop">
       <button class="mchip mchip-prof" onclick="openAccount()"><span class="mav" id="mStarsNum">0</span><b id="mProfName">—</b></button>
@@ -1460,15 +1576,12 @@ body[data-theme=world] .inp{box-shadow:inset 0 3px 6px rgba(0,0,0,.45),inset 0 -
   <div class="stitle" id="olTitle">🌐 Online Battle</div>
   <div class="ssub" id="olSub">Play with a friend over the internet</div>
   <div class="ol-wrap">
-    <div class="tabs">
-      <button class="otab on" id="tabC" onclick="switchTab('c')"><span id="tCreate">🏠 Create Room</span></button>
-      <button class="otab" id="tabJ" onclick="switchTab('j')"><span id="tJoin">🔗 Join by Code</span></button>
-    </div>
     <div class="ol-me" id="olMe"></div>
     <button class="btn btn-gold" id="btnQuick" onclick="quickMatch()" style="width:100%;margin-bottom:8px">⚡ Quick match</button>
     <button class="btn btn-blue cta-blue" id="btnInvite" onclick="openInvite()" style="width:100%;margin-bottom:8px">👥 Invite friends</button>
+    <div class="ol-sec" id="olSecRoom"></div>
     <div id="panelC">
-      <div style="font-size:.73rem;color:rgba(255,210,140,.36);margin-bottom:6px;font-weight:400" id="fldSizeLbl">Field size:</div>
+      <div class="ol-lbl" id="fldSizeLbl">Field size:</div>
       <div style="display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-bottom:9px" id="olLvs"></div>
       <div class="code-box" id="codeBox" onclick="copyCode()" style="display:none">
         <div style="font-size:.65rem;color:rgba(255,210,140,.34);font-weight:400" id="codeLbl">ROOM CODE — tap to copy</div>
@@ -1478,8 +1591,9 @@ body[data-theme=world] .inp{box-shadow:inset 0 3px 6px rgba(0,0,0,.45),inset 0 -
       </div>
       <button class="btn btn-blue" id="btnCreate" onclick="createRoom()" style="width:100%;font-family:'Exo 2',sans-serif">🌐 Create Room</button>
     </div>
-    <div id="panelJ" style="display:none">
-      <div style="font-size:.73rem;color:rgba(255,210,140,.36);margin-bottom:6px;font-weight:400" id="enterCodeLbl">Enter 4-digit code:</div>
+    <div class="ol-sec" id="olSecJoin"></div>
+    <div id="panelJ">
+      <div class="ol-lbl" id="enterCodeLbl">Enter 4-digit code:</div>
       <div class="join-row" style="margin-bottom:8px">
         <input class="join-inp" id="joinIn" maxlength="4" placeholder="0000"
           inputmode="numeric" pattern="[0-9]*"
@@ -1491,7 +1605,6 @@ body[data-theme=world] .inp{box-shadow:inset 0 3px 6px rgba(0,0,0,.45),inset 0 -
     <div class="ol-st" id="olSt"></div>
   </div>
   <div class="row">
-    <button class="btn btn-ghost" onclick="openLeaderboard()" id="btnTop">🏆 Top 20</button>
     <button class="btn btn-ghost" onclick="cancelOnline()" id="btnBackOl">← Back</button>
   </div>
 </div>
@@ -1502,7 +1615,7 @@ body[data-theme=world] .inp{box-shadow:inset 0 3px 6px rgba(0,0,0,.45),inset 0 -
     <h2 id="frH">👥 Friends</h2>
     <div class="fr-guest" id="frGuest" style="display:none"><div id="frGuestT"></div><button class="btn btn-gold cta" onclick="closeAllModals();openAccount()" id="frGuestB">Sign in</button></div>
     <div class="fr-add"><input class="inp fr-in" id="frIn" maxlength="18" placeholder="Player name" onkeydown="if(event.key==='Enter')frAdd()"><button class="btn btn-gold fr-addb" onclick="frAdd()" id="frAddBtn">+</button></div>
-    <div class="fr-row2"><button class="btn btn-ghost" onclick="frShare()" id="frShareBtn">🔗 Link</button><button class="btn btn-ghost" onclick="enablePush(true)" id="frPushBtn">🔔</button></div>
+    <div class="fr-row2" style="display:none"><button class="btn btn-ghost" onclick="enablePush(true)" id="frPushBtn">🔔</button></div>
     <div id="frInv"></div>
     <div id="frReqs"></div>
     <div class="fr-list" id="frList"></div>
@@ -1538,12 +1651,62 @@ body[data-theme=world] .inp{box-shadow:inset 0 3px 6px rgba(0,0,0,.45),inset 0 -
     <button class="btn btn-gold" onclick="closeAllModals()" style="width:100%;margin-top:8px">OK</button>
   </div>
 </div>
+<!-- PROFILE PICTURE -->
+<div class="overlay" id="avModal" onclick="if(event.target===this)closeAllModals()">
+  <div class="modal" style="max-width:400px">
+    <h2 id="avH">📷</h2>
+    <div class="av-grid" id="avGrid"></div>
+    <div class="fr-note" id="avHint" style="text-align:center;margin-top:8px"></div>
+    <input type="file" id="avFile" accept="image/*" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" onchange="onAvatarFile(this)">
+    <button class="btn btn-gold" onclick="closeAllModals();openAccount()" style="width:100%;margin-top:10px" id="avOk">OK</button>
+  </div>
+</div>
+<!-- CHANGE PASSWORD -->
+<div class="overlay" id="pwModal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal" style="max-width:360px;text-align:center">
+    <h2 id="pwH">🔑</h2>
+    <input class="inp" id="pwNew" type="password" maxlength="80" autocomplete="new-password" autocapitalize="off" style="margin:8px 0;text-align:center;width:100%" onkeydown="if(event.key==='Enter')pwOk()">
+    <div class="fr-note pw-msg" id="pwErr"></div>
+    <button class="btn btn-gold cta" onclick="pwOk()" id="pwOk" style="width:100%">OK</button>
+  </div>
+</div>
+<!-- FIRST LAUNCH: NAME -->
+<div class="overlay" id="nameModal">
+  <div class="modal" style="max-width:380px;text-align:center">
+    <div class="soc-ico">👋</div>
+    <h2 id="nmH">DOTS WAR</h2>
+    <div id="nmAuth"></div>
+    <input id="nmIn" type="hidden"><div id="nmErr" style="display:none"></div>
+  </div>
+</div>
+<!-- CLUB: CREATE -->
+<div class="overlay" id="clubModal" onclick="if(event.target===this)closeAllModals()">
+  <div class="modal" style="max-width:400px;text-align:center">
+    <h2 id="clH">🛡️</h2>
+    <input class="inp" id="clName" maxlength="18" style="margin:6px 0 8px;text-align:center" onkeydown="if(event.key==='Enter')clubCreate()">
+    <div class="av-grid" id="clIcoGrid" style="grid-template-columns:repeat(8,1fr)"></div>
+    <div class="fr-note" id="clErr" style="color:#ff9a7a;min-height:1.2em"></div>
+    <button class="btn btn-gold cta" onclick="clubCreate()" id="clGo" style="width:100%">OK</button>
+  </div>
+</div>
+<!-- PARENTAL GATE -->
+<div class="overlay" id="pgModal" onclick="if(event.target===this)closeAllModals()">
+  <div class="modal" style="max-width:360px;text-align:center">
+    <div class="soc-ico">🔒</div>
+    <h2 id="pgH">Для взрослых</h2>
+    <div class="fr-note" id="pgQ"></div>
+    <input class="inp" id="pgIn" inputmode="numeric" maxlength="3" style="margin:8px auto;text-align:center;max-width:140px" onkeydown="if(event.key==='Enter')parentOk()">
+    <div class="fr-note" id="pgErr" style="color:#ff9a7a;min-height:1.2em"></div>
+    <button class="btn btn-gold cta" onclick="parentOk()" id="pgOk" style="width:100%">OK</button>
+  </div>
+</div>
 <!-- MUSIC LIBRARY -->
 <div class="overlay" id="musicModal" onclick="if(event.target===this)closeAllModals()">
   <div class="modal" style="max-width:420px">
     <h2 id="musH">🎵 Music</h2>
     <div class="mus-list" id="musList"></div>
     <div class="fr-note" id="musNote"></div>
+    <input type="file" id="songFile" accept="audio/*,.mp3,.m4a,.aac,.wav,.ogg,.flac" multiple style="display:none" onchange="onSongFiles(this)">
     <button class="btn btn-gold" onclick="closeAllModals()" style="width:100%;margin-top:8px">OK</button>
   </div>
 </div>
@@ -1679,6 +1842,7 @@ body[data-theme=world] .inp{box-shadow:inset 0 3px 6px rgba(0,0,0,.45),inset 0 -
   <div class="res-rating" id="resR"></div>
   <div class="res-login" id="resLogin" style="display:none"><span id="resLoginT"></span><button class="btn btn-gold cta" onclick="openAccount()" id="resLoginB">Sign in</button></div>
   <div class="res-cry" id="resC"></div>
+  <button class="btn btn-blue cta-blue res-dbl" id="resDbl" style="display:none" onclick="ADS.amount=(G&&G._gain)|0; watchAd('double',function(ok){ if(ok&&G){ G._dbl=1; document.getElementById('resDbl').style.display='none'; } })">📺</button>
   <div class="res-btns">
     <button class="btn btn-gold" id="btnNext" style="display:none;width:100%">Play Again →</button>
     <button class="btn btn-blue" id="btnRematch" style="display:none;width:100%" onclick="askRematch()">🔁 Rematch</button>
@@ -1732,7 +1896,7 @@ body[data-theme=world] .inp{box-shadow:inset 0 3px 6px rgba(0,0,0,.45),inset 0 -
   <div class="modal" style="max-width:440px">
     <h2 id="stAccH">👤 Account</h2>
     <div class="acc-card">
-      <div class="av-row"><div class="av-lbl" id="avLbl">Photo</div><div class="av-grid" id="avGrid"></div><div class="fr-note" id="avHint"></div><input type="file" id="avFile" accept="image/*" style="display:none" onchange="onAvatarFile(this)"></div>
+      <div class="acc-head"><button class="acc-av" id="accAv" onclick="openAvatars()"></button><button class="btn btn-ghost acc-avb" onclick="openAvatars()" id="accAvB">📷</button></div>
       <div class="acc-row"><span class="acc-ic">🙂</span>
         <div class="acc-name-wrap"><label class="acc-lbl" id="accNameLbl">Your name</label>
           <div class="acc-name-row"><input class="inp acc-inp" id="accName" maxlength="18"><button class="btn btn-gold acc-save" onclick="saveMyName()" id="accSave">✔</button></div>
@@ -1740,22 +1904,24 @@ body[data-theme=world] .inp{box-shadow:inset 0 3px 6px rgba(0,0,0,.45),inset 0 -
       </div>
       <p id="accStatus" class="acc-status"></p>
     </div>
+    <div class="acc-card" id="accAuthCard"><div id="accAuth"></div></div>
     <div class="acc-card">
       <p class="acc-why" id="accWhy">Sign in to keep your progress on any device.</p>
-      <button class="btn gbtn" id="btnGoogle" onclick="signInGoogle()"><span class="gmark">G</span><span id="gLbl">Sign in with Google</span></button>
-      <button class="btn abtn" id="btnApple" onclick="signInApple()"><span class="amark"></span><span id="aLbl">Sign in with Apple</span></button>
+      <div class="acc-soc"><button class="btn gbtn" id="btnGoogle" onclick="signInGoogle()"><span class="gmark">G</span><span id="gLbl">Sign in with Google</span></button>
+      <button class="btn abtn" id="btnApple" onclick="signInApple()"><span class="amark"></span><span id="aLbl">Sign in with Apple</span></button></div>
       <button class="btn btn-ghost" id="btnSignOut" onclick="signOutUser()" style="display:none;width:100%;margin-top:8px">↪ <span id="soLbl">Sign out</span></button>
-      <p class="acc-help" id="tcWhy">No Google? Use a transfer code: get it here, enter it on your other phone — your progress follows you.</p>
-      <div class="row" style="gap:8px;justify-content:flex-start">
-        <button class="btn btn-ghost" id="btnTcShow" onclick="showTransferCode()">🔑 <span id="tcLbl">My transfer code</span></button>
-        <button class="btn btn-ghost" id="btnTcEnter" onclick="enterTransferCode()">📥 <span id="tcEnterLbl">Enter a code</span></button>
-      </div>
-      <p id="accCode" style="display:none;text-align:center;font-size:1.35rem;letter-spacing:.12em;font-weight:800;color:var(--acc);margin-top:8px"></p>
-      <p id="accHint" style="font-size:.8rem;opacity:.85"></p>
+      <button class="btn btn-gold" id="btnMail" onclick="openAddEmail()" style="display:none;width:100%;margin-top:8px">📧</button>
+      <button class="btn btn-ghost" id="btnPw" onclick="openPwChange()" style="display:none;width:100%;margin-top:8px">🔑 <span id="pwChLbl">Change password</span></button>
+      <p id="accCode" style="display:none"></p><p id="accHint" style="display:none"></p>
     </div>
-    <h3 id="stStatsH">📊 Statistics</h3>
+    <div class="row acc-foot"><button class="btn btn-ghost" onclick="openStats()" id="accStatsB">📊</button><button class="btn btn-gold" onclick="closeAllModals()" id="accOk">OK</button></div>
+  </div>
+</div>
+<div class="overlay" id="statsModal" onclick="if(event.target===this)closeAllModals()">
+  <div class="modal" style="max-width:420px">
+    <h2 id="stStatsH">📊 Statistics</h2>
     <div class="stat-grid" id="statGrid"></div>
-    <button class="btn btn-gold" onclick="closeAllModals()" style="width:100%;margin-top:12px" id="accOk">OK</button>
+    <button class="btn btn-gold" onclick="closeAllModals();openAccount()" style="width:100%;margin-top:12px">OK</button>
   </div>
 </div>
 
@@ -1841,7 +2007,7 @@ var lang = (function(){ try{ return localStorage.getItem('dwl')||detectLang(); }
 var TR = {
   en:{
    
-    stMusic:'Music', world1:'Green World', world2:'Blue World', world3:'Gold World', wsub1:'A garden by the sea. 12 battles and a boss.', wsub2:'Islands, rivers, continents. Blue is stronger.', wsub3:'Fog, volcanoes and gold. Legends only.', worldLocked:'First beat the boss of the {w}', btnNextWorld:'New world →', boss1:'Forest Warden', boss2:'Captain Storm', boss3:'Golden Pharaoh', bossIntro:'👑 Boss: {b}. No hints!', bossReward:'👑 Boss defeated! +{n} ◆ and the «{s}» skin', fogIntro:'🌫 Fog! Rival stones hide in it. Play near the fog to clear it.', fogEnemy:'🌫 A rival stone was hiding here!', fogTerrain:'🌫 No way through here', expFog:'Fog', bScout:'Scout', bScoutD:'Clears the fog where the rival hides', bScoutOn:'🔭 Fog cleared', ldRand:'Any', ld_africa:'Africa', ld_europe:'Europe', ld_asia:'Asia', ld_namerica:'North America', ld_samerica:'South America', ld_australia:'Australia', ld_antarctica:'Antarctica', ld_greenland:'Greenland', ld_madagascar:'Madagascar', ld_britain:'Great Britain', ld_iceland:'Iceland', ld_borneo:'Borneo', ld_srilanka:'Sri Lanka', ld_newzealand:'New Zealand', mp_volcano:'Volcano', mpd_volcano:'Lava and ◆ crystals', sk_sunstone:'Sunstone', sk_rose:'Rose quartz', shopBossTip:'Reward for the boss of the {w}', ach_world2:'Wave master|Finish the Blue World', ach_world3:'Golden emperor|Finish the Gold World', ach_fogwin:'Through the fog|Win in the fog', sndOn:'🔊 Sound on', sndOff:'🔇 Sound off', stCoach:'Tutorial', coSkip:'Skip', coNext:'Next ›', coDone:'Got it!', coM1:'Start here: the campaign vs AI — three worlds and bosses.', coM2:'Online: battle friends and climb the rating.', coM3:'Friends: add friends and call them to battle.', coM4:'Daily puzzles: three puzzles and ◆ crystals.', coM5:'Crystals ◆ — for skins, boosters and friend invites.', coM6:'Sound and music on/off. The button is on every screen.', coO1:'Invite friends: the first to accept plays you.', coO2:'Quick match: we find a rival for you.', coO3:'Got a code from a friend? Enter it here.', coS1:'Three worlds: beat the boss to open the next one.', coS2:'Your next battle — tap to start.', coS3:'Expedition: any map, continents and fog.', coBoard:'👆 Tap the glowing point to make your first move!', tBronze:'Bronze', tSilver:'Silver', tGold:'Gold', tPlat:'Platinum', tDiamond:'Diamond', tLegend:'Legend', tierUp:'New league: {t}!', roomFull:'The battle already started — someone was faster.', frH:'👥 Friends', frPh:'Player name', frShareBtn:'🔗 Invite by link', frClose:'Done', frInvites:'Battle invites', frReqs:'Friend requests', frCount:'Friends · {n}', frEmpty:'No friends yet. Type a player name or send your link.', frHint:'⚔ — invite to battle, ✕ — remove. Green dot — online now.', frNeedName:'Set your name in the account first', frNotFound:'No player with that name', frSelf:'That is you :)', frAlready:'Already friends', frSent:'Request sent: {n}', frAdded:'You and {n} are friends now!', frReqNew:'👋 {n} wants to be friends — open Friends', frRemoveT:'Remove friend?', frRemoveTx:'You will disappear from each other\'s lists.', frRemoveYes:'Remove', frShareTxt:'{n} invites you to be friends in DOTS WAR!', frLinkT:'{n} wants to be friends', frLinkTx:'Send a friend request? The player will confirm it.', frLinkYes:'Send', frNoFriends:'Add some friends first', btnInvite:'👥 Invite friends', invH:'⚔ Call to battle', invSub:'Pick friends. The first to accept plays you. {c} ◆ per friend.', invCost:'Friends: {k} · Cost: {c} ◆ (you have {b} ◆)', invMax:'Up to {k} friends at once', invPick:'Pick at least one friend', invNoCry:'You need {c} ◆ — top up in the shop', invRefund:'Could not create the room — crystals refunded', invSentSt:'Invites sent: {k}. Waiting for the first one!', invToastGame:'⚔ {n} calls you to battle — open it after this game', invTitle:'{n} calls you to battle!', invText:'Board {s} · {t}', invGo2:'⚔ Fight!', invGoS:'Fight', invLater:'Later', invGo:'Invite', invClose:'Cancel', topAll:'Top 20', topFr:'Friends', chGood:'Nice move!', chLuck:'Good luck!', chWow:'Wow!', chGG:'Good game!', chWait:'Not so fast :)', pushFail:'Notifications unavailable', pushAskT:'Turn on notifications?', pushAskTx:'We will tell you when a friend calls you to battle or adds you.', pushYes:'Turn on', pushNA:'Notifications are not supported on this device yet', pushDenied:'Notifications are blocked in settings', pushOn:'🔔 Notifications on', pushAsk:'Notifications', frGuest:'Sign in with Google or Apple to keep your rating and game history forever, add friends and call them to battle.', frGuestT2:'Sign in required', topGuest:'Sign in to keep your rating and appear in the table', resLogin:'💾 You are playing as a guest. Sign in to keep your rating and history forever.', frAcc:'Accept', pauseT:'Paused', pauseB:'▶ Continue', resumeT:'Continue the battle?', resumeTx:'{w} · score {a} : {b}. The game was saved — you can finish it.', resumeYes:'▶ Continue', resumeNo:'New game', resumeOk:'Battle restored', updT:'Version {v} is available!', updTx:'Update the game to get new features and fixes.', updYes:'⬆️ Update', pushWhy:'🔔 Allow notifications — we will tell you when a friend calls you to battle', musH:'🎵 Music', musNote:'Famous classical and folk melodies (public domain), arranged for the game.', stTrack:'Melody', mp_waters:'Waters', mpd_waters:'A river and a lake', mp_mountains:'Mountains', mpd_mountains:'Ridges with passes', puzBtn:'Puzzle {n}/12', puzProg:'Pieces collected: {n} of 12. Win a battle to get a piece.', puzDone:'The picture is complete!', puzReward:'🧩 Puzzle complete! +{n} ◆', avLbl:'Profile picture', avHint:'Pick one or tap 📷 to use your own photo.', avSaved:'Photo saved', avBad:'Could not read this image', decayT:'📉 Rating −{n}: {d} day(s) without a battle. Play daily to keep it!', bDoubleAgain:'Once more this battle (pricey)', bBp1:'Black point · small', bBp2:'Black point · medium', bBp3:'Black point · large', bBpD:'Frees the captured area around it, {r} points each way', bBpOn:'● Tap a captured area (radius {r})', bBpNotCap:'Tap a point inside a captured area', bBpBig:'The area is bigger than the black point — nothing happened', bBpDone:'● Freed: {f}', puzNew:'New piece found! {n} of 12.', pzf_ring:'Close the ring in 1 move', pzf_twin:'Only one of the two rings captures', pzf_rescue:'Rescue your captured dot', pzf_rescue2:'Rescue in 2 moves', pzf_maxcap:'Capture 3 at once', pzf_maxcap4:'Capture 4 at once', pzf_fork:'Double threat: capture in 2', pzf_forkRow:'Double threat: capture in 2', pzf_forkBig:'Double threat with traps: 2 moves', pzf_classic:'Capture in 3 moves — mind the traps', mTag:'The art of surrounding',
+    stMusic:'Music', world1:'Green World', world2:'Blue World', world3:'Gold World', wsub1:'A garden by the sea. 12 battles and a boss.', wsub2:'Islands, rivers, continents. Blue is stronger.', wsub3:'Fog, volcanoes and gold. Legends only.', worldLocked:'First beat the boss of the {w}', btnNextWorld:'New world →', boss1:'Forest Warden', boss2:'Captain Storm', boss3:'Golden Pharaoh', bossIntro:'👑 Boss: {b}. No hints!', bossReward:'👑 Boss defeated! +{n} ◆ and the «{s}» skin', fogIntro:'🌫 Fog! Rival stones hide in it. Play near the fog to clear it.', fogEnemy:'🌫 A rival stone was hiding here!', fogTerrain:'🌫 No way through here', expFog:'Fog', bScout:'Scout', bScoutD:'Clears the fog where the rival hides', bScoutOn:'🔭 Fog cleared', ldRand:'Any', ld_africa:'Africa', ld_europe:'Europe', ld_asia:'Asia', ld_namerica:'North America', ld_samerica:'South America', ld_australia:'Australia', ld_antarctica:'Antarctica', ld_greenland:'Greenland', ld_madagascar:'Madagascar', ld_britain:'Great Britain', ld_iceland:'Iceland', ld_borneo:'Borneo', ld_srilanka:'Sri Lanka', ld_newzealand:'New Zealand', mp_volcano:'Volcano', mpd_volcano:'Lava and ◆ crystals', sk_sunstone:'Sunstone', sk_rose:'Rose quartz', shopBossTip:'Reward for the boss of the {w}', ach_world2:'Wave master|Finish the Blue World', ach_world3:'Golden emperor|Finish the Gold World', ach_fogwin:'Through the fog|Win in the fog', sndOn:'🔊 Sound on', sndOff:'🔇 Sound off', stCoach:'Tutorial', coSkip:'Skip', coNext:'Next ›', coDone:'Got it!', coM1:'Start here: the campaign vs AI — three worlds and bosses.', coM2:'Online: battle friends and climb the rating.', coM3:'Friends: add friends and call them to battle.', coM4:'Daily puzzles: three puzzles and ◆ crystals.', coM5:'Crystals ◆ — for skins, boosters and friend invites.', coM6:'Sound and music on/off. The button is on every screen.', coO1:'Invite friends: the first to accept plays you.', coO2:'Quick match: we find a rival for you.', coO3:'Got a code from a friend? Enter it here.', coS1:'Three worlds: beat the boss to open the next one.', coS2:'Your next battle — tap to start.', coS3:'Expedition: any map, continents and fog.', coBoard:'👆 Tap the glowing point to make your first move!', tBronze:'Bronze', tSilver:'Silver', tGold:'Gold', tPlat:'Platinum', tDiamond:'Diamond', tLegend:'Legend', tierUp:'New league: {t}!', roomFull:'The battle already started — someone was faster.', frH:'👥 Friends', frPh:'Player name', frShareBtn:'🔗 Invite by link', frClose:'Done', frInvites:'Battle invites', frReqs:'Friend requests', frCount:'Friends · {n}', frEmpty:'No friends yet. Type a player name or send your link.', frHint:'⚔ — invite to battle, ✕ — remove. Green dot — online now.', frNeedName:'Set your name in the account first', frNotFound:'No player with that name', frSelf:'That is you :)', frAlready:'Already friends', frSent:'Request sent: {n}', frAdded:'You and {n} are friends now!', frReqNew:'👋 {n} wants to be friends — open Friends', frRemoveT:'Remove friend?', frRemoveTx:'You will disappear from each other\'s lists.', frRemoveYes:'Remove', frShareTxt:'{n} invites you to be friends in DOTS WAR!', frLinkT:'{n} wants to be friends', frLinkTx:'Send a friend request? The player will confirm it.', frLinkYes:'Send', frNoFriends:'Add some friends first', btnInvite:'👥 Invite friends', invH:'⚔ Call to battle', invSub:'Pick friends. The first to accept plays you. {c} ◆ per friend.', invCost:'Friends: {k} · Cost: {c} ◆ (you have {b} ◆)', invMax:'Up to {k} friends at once', invPick:'Pick at least one friend', invNoCry:'You need {c} ◆ — top up in the shop', invRefund:'Could not create the room — crystals refunded', invSentSt:'Invites sent: {k}. Waiting for the first one!', invToastGame:'⚔ {n} calls you to battle — open it after this game', invTitle:'{n} calls you to battle!', invText:'Board {s} · {t}', invGo2:'⚔ Fight!', invGoS:'Fight', invLater:'Later', invGo:'Invite', invClose:'Cancel', topAll:'Top 20', topFr:'Friends', chGood:'Nice move!', chLuck:'Good luck!', chWow:'Wow!', chGG:'Good game!', chWait:'Not so fast :)', pushFail:'Notifications unavailable', pushAskT:'Turn on notifications?', pushAskTx:'We will tell you when a friend calls you to battle or adds you.', pushYes:'Turn on', pushNA:'Notifications are not supported on this device yet', pushDenied:'Notifications are blocked in settings', pushOn:'🔔 Notifications on', pushAsk:'Notifications', frGuest:'Sign in with Google or Apple to keep your rating and game history forever, add friends and call them to battle.', frGuestT2:'Sign in required', topGuest:'Sign in to keep your rating and appear in the table', resLogin:'💾 You are playing as a guest. Sign in to keep your rating and history forever.', frAcc:'Accept', pauseT:'Paused', pauseB:'▶ Continue', resumeT:'Continue the battle?', resumeTx:'{w} · score {a} : {b}. The game was saved — you can finish it.', resumeYes:'▶ Continue', resumeNo:'New game', resumeOk:'Battle restored', updT:'Version {v} is available!', updTx:'Update the game to get new features and fixes.', updYes:'⬆️ Update', pushWhy:'🔔 Allow notifications — we will tell you when a friend calls you to battle', musH:'🎵 Music', musNote:'Famous classical and folk melodies (public domain), arranged for the game.', stTrack:'Melody', mp_waters:'Waters', mpd_waters:'A river and a lake', mp_mountains:'Mountains', mpd_mountains:'Ridges with passes', puzBtn:'Puzzle {n}/12', puzProg:'Pieces collected: {n} of 12. Win a battle to get a piece.', puzDone:'The picture is complete!', puzReward:'🧩 Puzzle complete! +{n} ◆', avLbl:'Profile picture', avHint:'Pick one or tap 📷 to use your own photo.', avSaved:'Photo saved', avBad:'Could not read this image', decayT:'📉 Rating −{n}: {d} day(s) without a battle. Play daily to keep it!', bDoubleAgain:'Once more this battle (pricey)', bBp1:'Black point · small', bBp2:'Black point · medium', bBp3:'Black point · large', bBpD:'Frees the captured area around it, {r} points each way', bBpOn:'● Tap a captured area (radius {r})', bBpNotCap:'Tap a point inside a captured area', bBpBig:'The area is bigger than the black point — nothing happened', bBpDone:'● Freed: {f}', puzNew:'New piece found! {n} of 12.', pzf_ring:'Close the ring in 1 move', pzf_twin:'Only one of the two rings captures', pzf_rescue:'Rescue your captured dot', pzf_rescue2:'Rescue in 2 moves', pzf_maxcap:'Capture 3 at once', pzf_maxcap4:'Capture 4 at once', pzf_fork:'Double threat: capture in 2', pzf_forkRow:'Double threat: capture in 2', pzf_forkBig:'Double threat with traps: 2 moves', pzf_classic:'Capture in 3 moves — mind the traps', musMine:'My songs', musAdd:'Add songs from the phone', musMineAll:'All my songs', musBuilt:'Game melodies', musBig:'Files over 40 MB are skipped', musAdded:'Added: {n}', musFail:'Could not save the song', rotTx:'Turn the phone upright', nmH:'Welcome!', nmT:'Other players will see it in the rating and in battles.', nmOk:'Continue', nmSign:'Sign in with Google or Apple', nmHi:'Welcome, {n}!', world4:'Ice World', wsub4:'Melting glaciers and snowstorms. 12 battles and the Snow Queen.', boss4:'Snow Queen', sk_aurora:'Aurora', ach_world4:'Ice breaker|Finish the Ice World', mp_glacier:'Glacier', mpd_glacier:'Ice melts during the battle', meltT:'🧊 The ice melted — a new path is open!', stormT:'🌨 Snowstorm! The fog is back away from your stones', glacierIntro:'🧊 Glacier: every 6 moves a cracked ice block melts and opens the way.', stormIntro:'🌨 Snowstorm: every 8 moves the fog returns. Keep your stones close!', topLg:'League', topCl:'Clubs', topLgH:'🏆 League of the week', topFrH:'👥 Friends', topClH:'🛡️ Clubs', lgLeftD:'{d} d {h} h left', lgLeftH:'{h} h {m} min left', lgMine:'Your points: {p}', lgRew:'Monday prizes: 🥇 150 ◆ · 🥈 100 · 🥉 70 · top 10 — 40 · 10+ points — 15', lgGuest:'Sign in to play in the weekly league', lgEmpty:'Nobody has points yet — win a battle!', lgPlus:'🏆 +{n} league points (this week: {p})', clGuest:'Sign in to join or create a club', clTop:'Best clubs this week', clNoRank:'No club points yet this week', clRew:'Monday: members of the top-3 clubs get 60 / 40 / 25 ◆', clInfo:'Members {n}/{max} · Points this week {p}', clMembers:'Members (points this week)', clLeave:'Leave the club', clLeaveT:'Leave the club?', clLeaveTx:'You can join another club later.', clIntro:'A club is a team of up to 20 players. Every league point you earn counts for the club; the best clubs get crystals every Monday.', clCreate:'Create a club · {c} ◆', clJoinH:'Join a club', clJoin:'Join', clNone:'No clubs yet — create the first!', clNew:'🛡️ New club', clNamePh:'Club name', clTaken:'This club name is taken', clMade:'Club «{n}» created!', clJoined:'You joined «{n}»', clFull:'The club is full', rwT:'Weekly results', rwLeague:'League {t}: place {p}. Prize: +{c} ◆', rwClub:'Your club took place {p}. Prize: +{c} ◆', shopCry:'Crystals', stBadge:'ONE TIME', stName:'Starter pack', stDesc:'{c} ◆ + «{s}» skin', stLeft:'{h} h left', pk_bonus:'+17%', pk_hit:'POPULAR', pk_best:'BEST VALUE', pkApp:'in the app', pkAppT:'Buy in the app', shopWeb:'Crystals can be bought in the DOTS WAR app for Android (Google Play) and iPhone (App Store). Crystals bought there appear here after you sign in with the same account.', shopPay:'Payment goes through Google Play / App Store. Crystals arrive right after the purchase is confirmed.', pgH:'For grown-ups', pgQ:'Ask an adult: how much is {a} × {b}?', pgOk:'Continue', pgBad:'Not quite — ask an adult', payCheck:'⏳ Checking the purchase…', payOk:'💎 +{c} ◆ — thank you!', payErr:'Purchase failed', payBad:'The purchase could not be confirmed', payPending:'The payment is pending — crystals will arrive when it completes', payWait:'Finishing the previous purchase…', adTitle:'Watch a short video', adLeft:'{n} of {m} left today', adNote:'Videos are shown by Google AdMob. Crystals arrive after the video ends.', adNoteWeb:'Watch videos for crystals in the DOTS WAR app for Android and iPhone.', adNA:'Videos are available in the app', adLimit:'That is all {n} videos for today — come back tomorrow!', adWait:'Next video in {s} s', adLoading:'📺 Loading the video…', adGot:'📺 +{n} ◆ — thank you!', adSkipped:'The video was closed early — no crystals this time', adNone:'No video available right now, try a bit later', adOffer:'Watch a short video and get +{n} ◆?', adWatch:'Watch', adDouble:'×2 reward: +{n} ◆ more for a video', auReg:'New player', auLog:'I have an account', auName:'Name', auPw:'Password (6+ characters)', auPwNew:'New password', auRegBtn:'Create account', auLogBtn:'Sign in', auRegHint:'Remember your name and password. The e-mail is only for recovering a forgotten password.', auLogHint:'Enter the name and password you registered with.', auSkip:'Play without a password (progress stays on this phone)', auWeak:'Password: at least 6 characters', auBad:'Wrong name, e-mail or password', auMany:'Too many attempts — try again in a few minutes', auRegOk:'Account created. Welcome, {n}!', auLogOk:'Welcome back, {n}!', auSigned:'Signed in as {n}', auNameFixed:'The name is your login and cannot be changed', pwChLbl:'Change password', pwChanged:'Password changed', pwRelog:'Sign out and sign in again, then change the password', avChange:'Change photo', olRoom:'Your room', olJoin:'Have a code?', pGot:'Captured!', pCool:'Cool!', pGreat:'Great!', pSuper:'Super!', pMega:'Mega capture!', pStreak:'Streak ×{n}', pWin:'Victory!', pEarly:'Brilliant!', pFlawless:'Flawless!', auEmail:'E-mail', auNameOrEmail:'Name or e-mail', auForgot:'Forgot your password?', auEmailBad:'Check the e-mail address', emailTaken:'This e-mail is already registered — tap “I already play”', rsH:'Recover password', rsBtn:'Send the link', rsHint:'Enter your e-mail or name — we will send a link to set a new password.', rsSent:'Letter sent to {e}. Open the link in it and set a new password.', rsSentE:'If this e-mail is registered, the letter is on its way. Open the link and set a new password (check Spam too).', rsNoEmail:'This account has no e-mail, so the password cannot be recovered.', rsNoName:'No player with this name', addEmail:'Add e-mail', addEmailHint:'With an e-mail you can recover a forgotten password.', addEmailSent:'We sent a letter to {e}. Tap the link in it and the e-mail will be added.', auSignedE:'Signed in as {n} · {e}', mTag:'The art of surrounding',
     mPveT:'PLAY', mPveS:'Campaign vs AI',
     mPvpT:'DUEL', mPvpS:'Two players, one screen',
     mOnT:'ONLINE', mOnS:'Friends & rating',
@@ -1850,7 +2016,7 @@ var TR = {
     stTitle:'⚙ Settings', stSound:'Sound', stVibe:'Vibration', stTimer:'Move timer',
     stOn:'On', stOff:'Off', stStatsH:'📊 Statistics', stOk:'OK',
     signIn:'Sign in', accSigned:'Signed in', accNameLbl:'Name', accWhy:'Sign in to keep progress on every device.',
-    cryGot:'+{n} ◆', cryNotEnough:'Not enough ◆', shopTitle:'◆ Shop', shopStones:'Stones', shopBoards:'Boards', shopEquip:'Use', shopEquipped:'In use', shopSoon:'Crystal packs are coming soon. Earn ◆ for wins, stars, puzzles, the chest, logins and achievements.', sk_base:'Classic', sk_ruby:'Ruby', sk_amethyst:'Amethyst', sk_gold:'Gold', sk_obsidian:'Obsidian', bd_base:'Sandstone', bd_marble:'Marble', bd_sand:'Gold sand', bd_terra:'Terracotta', bd_slate:'Slate', boostTitle:'◆ Boosters', bHint:'Hint', bHintD:'Shows a strong move', bDouble:'Double move', bDoubleD:'Two dots in a row, once a battle', bUndo:'Undo move', bUndoD:'Take back your move', bUsed:'Already used', bNoUndo:'Nothing to undo', bNotNow:'Wait for your turn', bHintOn:'💡 Gold ring = strong move', bDoubleOn:'⚡ One more dot!', loginTitle:'🎁 Daily reward', loginDay:'Day {d}', loginGot:'+{n} ◆ — more tomorrow!', loginOk:'Claim', chestOpen:'🎁 Chest: +{n} ◆', chestProg:'🎁 Chest {w}/3', resCry:'+{n} ◆', expTitle:'🧭 Expedition', expSub:'Pick a land and a rival. Maps are new every time. Take ◆ on the volcano!', expOpp:'Rival', expSize:'Board', expGo:'⚔ Fight', expBack:'← Back', expWins:'Wins: {w}', expReward:'Victory: +{n} ◆', expAnother:'🧭 New map', mp_plain:'Plains', mp_island:'Island', mp_river:'River', mp_lake:'Lake', mp_forest:'Forest', mpd_plain:'Open field', mpd_island:'Continents & islands', mpd_river:'Two banks, few fords', mpd_lake:'Fight around the water', mpd_forest:'Trees break lines', gLbl:'Sign in with Google', aLbl:'Sign in with Apple', aFail:'Apple sign-in failed', tcWhy:'No Google? Take a transfer code and enter it on another device.',
+    cryGot:'+{n} ◆', cryNotEnough:'Not enough ◆', shopTitle:'◆ Shop', shopStones:'Stones', shopBoards:'Boards', shopEquip:'Use', shopEquipped:'In use', shopSoon:'Earn ◆ for wins, stars, puzzles, the chest, logins, achievements and league prizes.', sk_base:'Classic', sk_ruby:'Ruby', sk_amethyst:'Amethyst', sk_gold:'Gold', sk_obsidian:'Obsidian', bd_base:'Sandstone', bd_marble:'Marble', bd_sand:'Gold sand', bd_terra:'Terracotta', bd_slate:'Slate', boostTitle:'◆ Boosters', bHint:'Hint', bHintD:'Shows a strong move', bDouble:'Double move', bDoubleD:'Two dots in a row, once a battle', bUndo:'Undo move', bUndoD:'Take back your move', bUsed:'Already used', bNoUndo:'Nothing to undo', bNotNow:'Wait for your turn', bHintOn:'💡 Gold ring = strong move', bDoubleOn:'⚡ One more dot!', loginTitle:'🎁 Daily reward', loginDay:'Day {d}', loginGot:'+{n} ◆ — more tomorrow!', loginOk:'Claim', chestOpen:'🎁 Chest: +{n} ◆', chestProg:'🎁 Chest {w}/3', resCry:'+{n} ◆', expTitle:'🧭 Expedition', expSub:'Pick a land and a rival. Maps are new every time. Take ◆ on the volcano!', expOpp:'Rival', expSize:'Board', expGo:'⚔ Fight', expBack:'← Back', expWins:'Wins: {w}', expReward:'Victory: +{n} ◆', expAnother:'🧭 New map', mp_plain:'Plains', mp_island:'Island', mp_river:'River', mp_lake:'Lake', mp_forest:'Forest', mpd_plain:'Open field', mpd_island:'Continents & islands', mpd_river:'Two banks, few fords', mpd_lake:'Fight around the water', mpd_forest:'Trees break lines', gLbl:'Sign in with Google', aLbl:'Sign in with Apple', aFail:'Apple sign-in failed', tcWhy:'No Google? Take a transfer code and enter it on another device.',
     nameSaved:'Saved', nameEmpty:'Enter a name', nameTaken:'Name taken — try another', nameInvalid:'2–18 letters, digits, space, - or _', nameOffline:'Offline — can\'t check the name', nameChecking:'Checking…',
     stGames:'Battles', stWins:'Wins', stPct:'Win %', stStreak:'Streak', stBest:'Best streak', stRating:'Rating', stOnline:'Rated', stStars:'Stars', stAch:'Achievements', stDaily:'Puzzle streak', mSetLbl:'Settings', mAchLbl:'Achievements', achTitle:'🏆 Achievements', achOk:'OK', accOk:'OK',
     achCount:'Unlocked: {u} of {t}',
@@ -1949,7 +2115,7 @@ var TR = {
   },
   ru:{
    
-    stMusic:'Музыка', world1:'Зелёный мир', world2:'Синий мир', world3:'Золотой мир', wsub1:'Сад над морем. 12 битв и босс.', wsub2:'Острова, реки и материки. Синие сильнее.', wsub3:'Туман, вулканы и золото. Только для легенд.', worldLocked:'Сначала победите босса: {w}', btnNextWorld:'Новый мир →', boss1:'Лесной Страж', boss2:'Капитан Шторм', boss3:'Золотой Фараон', bossIntro:'👑 Босс: {b}. Без подсказок!', bossReward:'👑 Босс повержен! +{n} ◆ и скин «{s}»', fogIntro:'🌫 Туман! В нём прячутся камни соперника. Ходите рядом — туман рассеется.', fogEnemy:'🌫 Здесь прятался соперник!', fogTerrain:'🌫 Здесь не пройти', expFog:'Туман', bScout:'Разведка', bScoutD:'Рассеет туман там, где прячется соперник', bScoutOn:'🔭 Туман рассеян', ldRand:'Любой', ld_africa:'Африка', ld_europe:'Европа', ld_asia:'Азия', ld_namerica:'Северная Америка', ld_samerica:'Южная Америка', ld_australia:'Австралия', ld_antarctica:'Антарктида', ld_greenland:'Гренландия', ld_madagascar:'Мадагаскар', ld_britain:'Великобритания', ld_iceland:'Исландия', ld_borneo:'Калимантан', ld_srilanka:'Шри-Ланка', ld_newzealand:'Новая Зеландия', mp_volcano:'Вулкан', mpd_volcano:'Лава и кристаллы ◆', sk_sunstone:'Солнечный камень', sk_rose:'Розовый кварц', shopBossTip:'Награда за босса: {w}', ach_world2:'Повелитель волн|Пройдите Синий мир', ach_world3:'Золотой император|Пройдите Золотой мир', ach_fogwin:'Сквозь туман|Победа в тумане', sndOn:'🔊 Звук включён', sndOff:'🔇 Звук выключен', stCoach:'Обучение', coSkip:'Пропустить', coNext:'Дальше ›', coDone:'Понятно!', coM1:'Начните здесь: кампания против ИИ — три мира и боссы.', coM2:'Онлайн: бои с друзьями и по рейтингу.', coM3:'Друзья: добавляйте друзей и зовите их в бой.', coM4:'Задания дня: три головоломки и кристаллы ◆.', coM5:'Кристаллы ◆ — на скины, усилители и приглашения друзей.', coM6:'Звук и музыка: включить или выключить. Кнопка есть на каждом экране.', coO1:'Позовите друзей: кто первый примет — с тем и бой.', coO2:'Быстрая игра: найдём соперника сами.', coO3:'Есть код от друга? Введите его здесь.', coS1:'Три мира: пройдите босса, чтобы открыть следующий.', coS2:'Следующая битва — нажмите, чтобы начать.', coS3:'Экспедиция: любые карты, материки и туман.', coBoard:'👆 Коснитесь светящейся точки, чтобы сделать первый ход!', tBronze:'Бронза', tSilver:'Серебро', tGold:'Золото', tPlat:'Платина', tDiamond:'Алмаз', tLegend:'Легенда', tierUp:'Новая лига: {t}!', roomFull:'Игра уже началась — вас опередили.', frH:'👥 Друзья', frPh:'Имя игрока', frShareBtn:'🔗 Пригласить ссылкой', frClose:'Готово', frInvites:'Зовут в бой', frReqs:'Заявки в друзья', frCount:'Друзья · {n}', frEmpty:'Пока нет друзей. Введите имя игрока или отправьте ссылку.', frHint:'⚔ — позвать в бой, ✕ — удалить. Зелёная точка — сейчас в игре.', frNeedName:'Сначала задайте своё имя в аккаунте', frNotFound:'Игрок с таким именем не найден', frSelf:'Это вы :)', frAlready:'Уже в друзьях', frSent:'Заявка отправлена: {n}', frAdded:'Теперь вы друзья с {n}!', frReqNew:'👋 {n} хочет дружить — откройте «Друзья»', frRemoveT:'Удалить из друзей?', frRemoveTx:'Игрок исчезнет из вашего списка, вы — из его.', frRemoveYes:'Удалить', frShareTxt:'{n} зовёт тебя в друзья в DOTS WAR!', frLinkT:'{n} зовёт в друзья', frLinkTx:'Отправить заявку? Игрок увидит её и подтвердит.', frLinkYes:'Отправить', frNoFriends:'Сначала добавьте друзей', btnInvite:'👥 Позвать друзей', invH:'⚔ Позвать в бой', invSub:'Отметьте друзей. Кто первым примет — с тем и бой. {c} ◆ за каждого.', invCost:'Друзей: {k} · Стоимость: {c} ◆ (у вас {b} ◆)', invMax:'Не больше {k} друзей за раз', invPick:'Отметьте хотя бы одного друга', invNoCry:'Нужно {c} ◆ — пополните в магазине', invRefund:'Комнату создать не удалось — кристаллы возвращены', invSentSt:'Приглашения отправлены: {k}. Ждём, кто первый!', invToastGame:'⚔ {n} зовёт в бой — откройте после партии', invTitle:'{n} зовёт в бой!', invText:'Поле {s} · {t}', invGo2:'⚔ В бой!', invGoS:'В бой', invLater:'Позже', invGo:'Позвать', invClose:'Отмена', topAll:'Топ-20', topFr:'Друзья', chGood:'Хороший ход!', chLuck:'Удачи!', chWow:'Ого!', chGG:'Хорошая игра!', chWait:'Не так быстро :)', pushFail:'Уведомления недоступны', pushAskT:'Включить уведомления?', pushAskTx:'Сообщим, когда друг позовёт в бой или добавит в друзья.', pushYes:'Включить', pushNA:'Уведомления на этом устройстве пока не поддерживаются', pushDenied:'Уведомления запрещены в настройках', pushOn:'🔔 Уведомления включены', pushAsk:'Уведомления', frGuest:'Войдите через Google или Apple — тогда рейтинг и история партий сохранятся навсегда, а вы сможете добавлять друзей и звать их в бой.', frGuestT2:'Нужен вход в аккаунт', topGuest:'Войдите, чтобы ваш рейтинг сохранился и попал в таблицу', resLogin:'💾 Вы играете как гость. Войдите, чтобы рейтинг и история партий сохранились навсегда.', frAcc:'Принять', pauseT:'Пауза', pauseB:'▶ Продолжить', resumeT:'Продолжить партию?', resumeTx:'{w} · счёт {a} : {b}. Партия сохранилась, можно доиграть.', resumeYes:'▶ Продолжить', resumeNo:'Новая игра', resumeOk:'Партия восстановлена', updT:'Доступна версия {v}!', updTx:'Обновите игру, чтобы получить новые функции и исправления.', updYes:'⬆️ Обновить', pushWhy:'🔔 Разрешите уведомления — сообщим, когда друг позовёт в бой', musH:'🎵 Музыка', musNote:'Известные мелодии классиков и народные песни (общественное достояние) в обработке для игры.', stTrack:'Мелодия', mp_waters:'Воды', mpd_waters:'Река и озеро', mp_mountains:'Горы', mpd_mountains:'Хребты с перевалами', puzBtn:'Пазл {n}/12', puzProg:'Собрано {n} из 12. Выигрывайте битвы — получайте кусочки.', puzDone:'Картина собрана!', puzReward:'🧩 Пазл собран! +{n} ◆', avLbl:'Фото профиля', avHint:'Выберите картинку или нажмите 📷, чтобы поставить своё фото.', avSaved:'Фото сохранено', avBad:'Не удалось открыть картинку', decayT:'📉 Рейтинг −{n}: {d} дн. без битв. Играйте каждый день, чтобы не терять его!', bDoubleAgain:'Ещё раз в этом бою (дорого)', bBp1:'Чёрная точка · малая', bBp2:'Чёрная точка · средняя', bBp3:'Чёрная точка · большая', bBpD:'Освобождает захваченную область вокруг: {r} клетки в стороны', bBpOn:'● Нажмите на захваченную область (радиус {r})', bBpNotCap:'Нажмите на точку внутри захваченной области', bBpBig:'Область больше чёрной точки — ничего не произошло', bBpDone:'● Освобождено: {f}', puzNew:'Новый кусочек! Собрано {n} из 12.', pzf_ring:'Замкните кольцо за 1 ход', pzf_twin:'Лишь одно из двух колец даст захват', pzf_rescue:'Спасите пленную точку', pzf_rescue2:'Спасение за 2 хода', pzf_maxcap:'Захватите 3 точки за раз', pzf_maxcap4:'Захватите 4 точки за раз', pzf_fork:'Двойная угроза: захват за 2 хода', pzf_forkRow:'Двойная угроза: захват за 2 хода', pzf_forkBig:'Двойная угроза с ловушками: 2 хода', pzf_classic:'Захват за 3 хода — берегитесь ловушек', mTag:'Искусство окружать',
+    stMusic:'Музыка', world1:'Зелёный мир', world2:'Синий мир', world3:'Золотой мир', wsub1:'Сад над морем. 12 битв и босс.', wsub2:'Острова, реки и материки. Синие сильнее.', wsub3:'Туман, вулканы и золото. Только для легенд.', worldLocked:'Сначала победите босса: {w}', btnNextWorld:'Новый мир →', boss1:'Лесной Страж', boss2:'Капитан Шторм', boss3:'Золотой Фараон', bossIntro:'👑 Босс: {b}. Без подсказок!', bossReward:'👑 Босс повержен! +{n} ◆ и скин «{s}»', fogIntro:'🌫 Туман! В нём прячутся камни соперника. Ходите рядом — туман рассеется.', fogEnemy:'🌫 Здесь прятался соперник!', fogTerrain:'🌫 Здесь не пройти', expFog:'Туман', bScout:'Разведка', bScoutD:'Рассеет туман там, где прячется соперник', bScoutOn:'🔭 Туман рассеян', ldRand:'Любой', ld_africa:'Африка', ld_europe:'Европа', ld_asia:'Азия', ld_namerica:'Северная Америка', ld_samerica:'Южная Америка', ld_australia:'Австралия', ld_antarctica:'Антарктида', ld_greenland:'Гренландия', ld_madagascar:'Мадагаскар', ld_britain:'Великобритания', ld_iceland:'Исландия', ld_borneo:'Калимантан', ld_srilanka:'Шри-Ланка', ld_newzealand:'Новая Зеландия', mp_volcano:'Вулкан', mpd_volcano:'Лава и кристаллы ◆', sk_sunstone:'Солнечный камень', sk_rose:'Розовый кварц', shopBossTip:'Награда за босса: {w}', ach_world2:'Повелитель волн|Пройдите Синий мир', ach_world3:'Золотой император|Пройдите Золотой мир', ach_fogwin:'Сквозь туман|Победа в тумане', sndOn:'🔊 Звук включён', sndOff:'🔇 Звук выключен', stCoach:'Обучение', coSkip:'Пропустить', coNext:'Дальше ›', coDone:'Понятно!', coM1:'Начните здесь: кампания против ИИ — три мира и боссы.', coM2:'Онлайн: бои с друзьями и по рейтингу.', coM3:'Друзья: добавляйте друзей и зовите их в бой.', coM4:'Задания дня: три головоломки и кристаллы ◆.', coM5:'Кристаллы ◆ — на скины, усилители и приглашения друзей.', coM6:'Звук и музыка: включить или выключить. Кнопка есть на каждом экране.', coO1:'Позовите друзей: кто первый примет — с тем и бой.', coO2:'Быстрая игра: найдём соперника сами.', coO3:'Есть код от друга? Введите его здесь.', coS1:'Три мира: пройдите босса, чтобы открыть следующий.', coS2:'Следующая битва — нажмите, чтобы начать.', coS3:'Экспедиция: любые карты, материки и туман.', coBoard:'👆 Коснитесь светящейся точки, чтобы сделать первый ход!', tBronze:'Бронза', tSilver:'Серебро', tGold:'Золото', tPlat:'Платина', tDiamond:'Алмаз', tLegend:'Легенда', tierUp:'Новая лига: {t}!', roomFull:'Игра уже началась — вас опередили.', frH:'👥 Друзья', frPh:'Имя игрока', frShareBtn:'🔗 Пригласить ссылкой', frClose:'Готово', frInvites:'Зовут в бой', frReqs:'Заявки в друзья', frCount:'Друзья · {n}', frEmpty:'Пока нет друзей. Введите имя игрока или отправьте ссылку.', frHint:'⚔ — позвать в бой, ✕ — удалить. Зелёная точка — сейчас в игре.', frNeedName:'Сначала задайте своё имя в аккаунте', frNotFound:'Игрок с таким именем не найден', frSelf:'Это вы :)', frAlready:'Уже в друзьях', frSent:'Заявка отправлена: {n}', frAdded:'Теперь вы друзья с {n}!', frReqNew:'👋 {n} хочет дружить — откройте «Друзья»', frRemoveT:'Удалить из друзей?', frRemoveTx:'Игрок исчезнет из вашего списка, вы — из его.', frRemoveYes:'Удалить', frShareTxt:'{n} зовёт тебя в друзья в DOTS WAR!', frLinkT:'{n} зовёт в друзья', frLinkTx:'Отправить заявку? Игрок увидит её и подтвердит.', frLinkYes:'Отправить', frNoFriends:'Сначала добавьте друзей', btnInvite:'👥 Позвать друзей', invH:'⚔ Позвать в бой', invSub:'Отметьте друзей. Кто первым примет — с тем и бой. {c} ◆ за каждого.', invCost:'Друзей: {k} · Стоимость: {c} ◆ (у вас {b} ◆)', invMax:'Не больше {k} друзей за раз', invPick:'Отметьте хотя бы одного друга', invNoCry:'Нужно {c} ◆ — пополните в магазине', invRefund:'Комнату создать не удалось — кристаллы возвращены', invSentSt:'Приглашения отправлены: {k}. Ждём, кто первый!', invToastGame:'⚔ {n} зовёт в бой — откройте после партии', invTitle:'{n} зовёт в бой!', invText:'Поле {s} · {t}', invGo2:'⚔ В бой!', invGoS:'В бой', invLater:'Позже', invGo:'Позвать', invClose:'Отмена', topAll:'Топ-20', topFr:'Друзья', chGood:'Хороший ход!', chLuck:'Удачи!', chWow:'Ого!', chGG:'Хорошая игра!', chWait:'Не так быстро :)', pushFail:'Уведомления недоступны', pushAskT:'Включить уведомления?', pushAskTx:'Сообщим, когда друг позовёт в бой или добавит в друзья.', pushYes:'Включить', pushNA:'Уведомления на этом устройстве пока не поддерживаются', pushDenied:'Уведомления запрещены в настройках', pushOn:'🔔 Уведомления включены', pushAsk:'Уведомления', frGuest:'Войдите через Google или Apple — тогда рейтинг и история партий сохранятся навсегда, а вы сможете добавлять друзей и звать их в бой.', frGuestT2:'Нужен вход в аккаунт', topGuest:'Войдите, чтобы ваш рейтинг сохранился и попал в таблицу', resLogin:'💾 Вы играете как гость. Войдите, чтобы рейтинг и история партий сохранились навсегда.', frAcc:'Принять', pauseT:'Пауза', pauseB:'▶ Продолжить', resumeT:'Продолжить партию?', resumeTx:'{w} · счёт {a} : {b}. Партия сохранилась, можно доиграть.', resumeYes:'▶ Продолжить', resumeNo:'Новая игра', resumeOk:'Партия восстановлена', updT:'Доступна версия {v}!', updTx:'Обновите игру, чтобы получить новые функции и исправления.', updYes:'⬆️ Обновить', pushWhy:'🔔 Разрешите уведомления — сообщим, когда друг позовёт в бой', musH:'🎵 Музыка', musNote:'Известные мелодии классиков и народные песни (общественное достояние) в обработке для игры.', stTrack:'Мелодия', mp_waters:'Воды', mpd_waters:'Река и озеро', mp_mountains:'Горы', mpd_mountains:'Хребты с перевалами', puzBtn:'Пазл {n}/12', puzProg:'Собрано {n} из 12. Выигрывайте битвы — получайте кусочки.', puzDone:'Картина собрана!', puzReward:'🧩 Пазл собран! +{n} ◆', avLbl:'Фото профиля', avHint:'Выберите картинку или нажмите 📷, чтобы поставить своё фото.', avSaved:'Фото сохранено', avBad:'Не удалось открыть картинку', decayT:'📉 Рейтинг −{n}: {d} дн. без битв. Играйте каждый день, чтобы не терять его!', bDoubleAgain:'Ещё раз в этом бою (дорого)', bBp1:'Чёрная точка · малая', bBp2:'Чёрная точка · средняя', bBp3:'Чёрная точка · большая', bBpD:'Освобождает захваченную область вокруг: {r} клетки в стороны', bBpOn:'● Нажмите на захваченную область (радиус {r})', bBpNotCap:'Нажмите на точку внутри захваченной области', bBpBig:'Область больше чёрной точки — ничего не произошло', bBpDone:'● Освобождено: {f}', puzNew:'Новый кусочек! Собрано {n} из 12.', pzf_ring:'Замкните кольцо за 1 ход', pzf_twin:'Лишь одно из двух колец даст захват', pzf_rescue:'Спасите пленную точку', pzf_rescue2:'Спасение за 2 хода', pzf_maxcap:'Захватите 3 точки за раз', pzf_maxcap4:'Захватите 4 точки за раз', pzf_fork:'Двойная угроза: захват за 2 хода', pzf_forkRow:'Двойная угроза: захват за 2 хода', pzf_forkBig:'Двойная угроза с ловушками: 2 хода', pzf_classic:'Захват за 3 хода — берегитесь ловушек', musMine:'Мои песни', musAdd:'Добавить песни с телефона', musMineAll:'Все мои песни', musBuilt:'Мелодии игры', musBig:'Файлы больше 40 МБ пропущены', musAdded:'Добавлено: {n}', musFail:'Не удалось сохранить песню', rotTx:'Поверните телефон вертикально', nmH:'Добро пожаловать!', nmT:'Это имя увидят другие игроки в рейтинге и в боях.', nmOk:'Продолжить', nmSign:'Войти через Google или Apple', nmHi:'Добро пожаловать, {n}!', world4:'Ледяной мир', wsub4:'Тающие ледники и метели. 12 битв и Снежная Королева.', boss4:'Снежная Королева', sk_aurora:'Северное сияние', ach_world4:'Ледокол|Пройдите Ледяной мир', mp_glacier:'Ледник', mpd_glacier:'Лёд тает во время боя', meltT:'🧊 Лёд растаял — открылся новый путь!', stormT:'🌨 Метель! Туман вернулся везде, кроме ваших камней', glacierIntro:'🧊 Ледник: каждые 6 ходов треснувшая льдина тает и открывает путь.', stormIntro:'🌨 Метель: каждые 8 ходов туман возвращается. Держите камни вместе!', topLg:'Лига', topCl:'Клубы', topLgH:'🏆 Лига недели', topFrH:'👥 Друзья', topClH:'🛡️ Клубы', lgLeftD:'осталось {d} д {h} ч', lgLeftH:'осталось {h} ч {m} мин', lgMine:'Ваши очки: {p}', lgRew:'Призы в понедельник: 🥇 150 ◆ · 🥈 100 · 🥉 70 · топ-10 — 40 · от 10 очков — 15', lgGuest:'Войдите, чтобы участвовать в лиге недели', lgEmpty:'Очков пока ни у кого нет — выиграйте битву!', lgPlus:'🏆 +{n} очк. лиги (за неделю: {p})', clGuest:'Войдите, чтобы вступить в клуб или создать свой', clTop:'Лучшие клубы недели', clNoRank:'На этой неделе у клубов пока нет очков', clRew:'В понедельник участники клубов топ-3 получают 60 / 40 / 25 ◆', clInfo:'Участников {n}/{max} · Очков за неделю {p}', clMembers:'Участники (очки за неделю)', clLeave:'Выйти из клуба', clLeaveT:'Выйти из клуба?', clLeaveTx:'Потом можно вступить в другой клуб.', clIntro:'Клуб — команда до 20 игроков. Каждое ваше очко лиги идёт в копилку клуба; лучшие клубы каждый понедельник получают кристаллы.', clCreate:'Создать клуб · {c} ◆', clJoinH:'Вступить в клуб', clJoin:'Вступить', clNone:'Клубов пока нет — создайте первый!', clNew:'🛡️ Новый клуб', clNamePh:'Название клуба', clTaken:'Такое название уже занято', clMade:'Клуб «{n}» создан!', clJoined:'Вы вступили в «{n}»', clFull:'В клубе нет мест', rwT:'Итоги недели', rwLeague:'Лига {t}: {p} место. Приз: +{c} ◆', rwClub:'Ваш клуб занял {p} место. Приз: +{c} ◆', shopCry:'Кристаллы', stBadge:'ОДИН РАЗ', stName:'Стартовый набор', stDesc:'{c} ◆ + скин «{s}»', stLeft:'осталось {h} ч', pk_bonus:'+17%', pk_hit:'ХИТ', pk_best:'ВЫГОДНО', pkApp:'в приложении', pkAppT:'Покупка в приложении', shopWeb:'Кристаллы покупаются в приложении DOTS WAR для Android (Google Play) и iPhone (App Store). Купленные там кристаллы появятся и здесь, если войти в тот же аккаунт.', shopPay:'Оплата через Google Play / App Store. Кристаллы придут сразу после подтверждения покупки.', pgH:'Для взрослых', pgQ:'Попросите взрослого: сколько будет {a} × {b}?', pgOk:'Продолжить', pgBad:'Неверно — попросите взрослого', payCheck:'⏳ Проверяем покупку…', payOk:'💎 +{c} ◆ — спасибо!', payErr:'Покупка не удалась', payBad:'Покупку не удалось подтвердить', payPending:'Платёж в обработке — кристаллы придут, когда он завершится', payWait:'Завершаем предыдущую покупку…', adTitle:'Посмотреть короткое видео', adLeft:'осталось {n} из {m} сегодня', adNote:'Видео показывает Google AdMob. Кристаллы приходят после окончания ролика.', adNoteWeb:'Смотрите видео за кристаллы в приложении DOTS WAR для Android и iPhone.', adNA:'Видео доступно в приложении', adLimit:'На сегодня все {n} видео просмотрены — приходите завтра!', adWait:'Следующее видео через {s} с', adLoading:'📺 Загружаем видео…', adGot:'📺 +{n} ◆ — спасибо!', adSkipped:'Видео закрыто раньше времени — кристаллов нет', adNone:'Сейчас нет видео, попробуйте чуть позже', adOffer:'Посмотреть короткое видео и получить +{n} ◆?', adWatch:'Смотреть', adDouble:'×2 награда: ещё +{n} ◆ за видео', auReg:'Новый игрок', auLog:'Уже играю', auName:'Имя', auPw:'Пароль (от 6 символов)', auPwNew:'Новый пароль', auRegBtn:'Создать аккаунт', auLogBtn:'Войти', auRegHint:'Запомните имя и пароль. Почта нужна только чтобы восстановить забытый пароль.', auLogHint:'Введите имя и пароль, с которыми регистрировались.', auSkip:'Играть без пароля (прогресс только на этом телефоне)', auWeak:'Пароль: не меньше 6 символов', auBad:'Неверное имя, почта или пароль', auMany:'Слишком много попыток — попробуйте через несколько минут', auRegOk:'Аккаунт создан. Добро пожаловать, {n}!', auLogOk:'С возвращением, {n}!', auSigned:'Вы вошли как {n}', auNameFixed:'Имя — это ваш логин, его нельзя изменить', pwChLbl:'Сменить пароль', pwChanged:'Пароль изменён', pwRelog:'Выйдите и войдите снова, затем смените пароль', avChange:'Изменить фото', olRoom:'Своя комната', olJoin:'Есть код от друга?', pGot:'Есть!', pCool:'Класс!', pGreat:'Отлично!', pSuper:'Супер!', pMega:'Мега-захват!', pStreak:'Серия ×{n}', pWin:'Победа!', pEarly:'Блестяще!', pFlawless:'Безупречно!', auEmail:'Почта', auNameOrEmail:'Имя или почта', auForgot:'Забыли пароль?', auEmailBad:'Проверьте адрес почты', emailTaken:'Эта почта уже зарегистрирована — нажмите «Уже играю»', rsH:'Восстановить пароль', rsBtn:'Прислать ссылку', rsHint:'Введите почту или имя — пришлём ссылку, чтобы задать новый пароль.', rsSent:'Письмо отправлено на {e}. Откройте ссылку в письме и задайте новый пароль.', rsSentE:'Если эта почта зарегистрирована, письмо уже в пути. Откройте ссылку и задайте новый пароль (проверьте и «Спам»).', rsNoEmail:'У этого аккаунта нет почты — пароль восстановить нельзя.', rsNoName:'Игрока с таким именем нет', addEmail:'Добавить почту', addEmailHint:'С почтой можно восстановить забытый пароль.', addEmailSent:'Мы отправили письмо на {e}. Нажмите ссылку в письме — и почта будет добавлена.', auSignedE:'Вы вошли как {n} · {e}', mTag:'Искусство окружать',
     mPveT:'ИГРАТЬ', mPveS:'Кампания против ИИ',
     mPvpT:'ДУЭЛЬ', mPvpS:'Вдвоём на одном экране',
     mOnT:'ОНЛАЙН', mOnS:'Друзья и рейтинг',
@@ -1958,7 +2124,7 @@ var TR = {
     stTitle:'⚙ Настройки', stSound:'Звук', stVibe:'Вибрация', stTimer:'Таймер хода',
     stOn:'Вкл', stOff:'Выкл', stStatsH:'📊 Статистика', stOk:'ОК',
     signIn:'Войти', accSigned:'В аккаунте', accNameLbl:'Имя', accWhy:'Войдите — прогресс сохранится на всех устройствах.',
-    cryGot:'+{n} ◆', cryNotEnough:'Мало кристаллов', shopTitle:'◆ Магазин', shopStones:'Камни', shopBoards:'Доски', shopEquip:'Выбрать', shopEquipped:'Выбрано', shopSoon:'Наборы кристаллов скоро появятся. Пока ◆ дают победы, звёзды, задания, сундук, вход и достижения.', sk_base:'Классика', sk_ruby:'Рубин', sk_amethyst:'Аметист', sk_gold:'Золото', sk_obsidian:'Обсидиан', bd_base:'Песчаник', bd_marble:'Мрамор', bd_sand:'Золотой песок', bd_terra:'Терракота', bd_slate:'Сланец', boostTitle:'◆ Усилители', bHint:'Подсказка', bHintD:'Покажет сильный ход', bDouble:'Двойной ход', bDoubleD:'Две точки подряд, раз за бой', bUndo:'Отмена хода', bUndoD:'Вернуть свой ход', bUsed:'Уже использован', bNoUndo:'Нечего отменять', bNotNow:'Дождитесь хода', bHintOn:'💡 Золотое кольцо — сильный ход', bDoubleOn:'⚡ Ставьте ещё точку!', loginTitle:'🎁 Награда дня', loginDay:'День {d}', loginGot:'+{n} ◆ — завтра будет больше!', loginOk:'Забрать', chestOpen:'🎁 Сундук: +{n} ◆', chestProg:'🎁 Сундук {w}/3', resCry:'+{n} ◆', expTitle:'🧭 Экспедиция', expSub:'Выберите землю и соперника. Карта всегда новая. На вулкане — кристаллы ◆!', expOpp:'Соперник', expSize:'Поле', expGo:'⚔ В бой', expBack:'← Назад', expWins:'Побед: {w}', expReward:'Победа: +{n} ◆', expAnother:'🧭 Новая карта', mp_plain:'Равнина', mp_island:'Остров', mp_river:'Река', mp_lake:'Озеро', mp_forest:'Лес', mpd_plain:'Открытое поле', mpd_island:'Материки и острова', mpd_river:'Два берега и броды', mpd_lake:'Бой вокруг воды', mpd_forest:'Деревья рвут линии', gLbl:'Войти через Google', aLbl:'Войти через Apple', aFail:'Apple: вход не удался', tcWhy:'Нет Google? Возьмите код переноса и введите его на другом устройстве.',
+    cryGot:'+{n} ◆', cryNotEnough:'Мало кристаллов', shopTitle:'◆ Магазин', shopStones:'Камни', shopBoards:'Доски', shopEquip:'Выбрать', shopEquipped:'Выбрано', shopSoon:'Кристаллы дают победы, звёзды, задания, сундук, вход, достижения и призы лиги.', sk_base:'Классика', sk_ruby:'Рубин', sk_amethyst:'Аметист', sk_gold:'Золото', sk_obsidian:'Обсидиан', bd_base:'Песчаник', bd_marble:'Мрамор', bd_sand:'Золотой песок', bd_terra:'Терракота', bd_slate:'Сланец', boostTitle:'◆ Усилители', bHint:'Подсказка', bHintD:'Покажет сильный ход', bDouble:'Двойной ход', bDoubleD:'Две точки подряд, раз за бой', bUndo:'Отмена хода', bUndoD:'Вернуть свой ход', bUsed:'Уже использован', bNoUndo:'Нечего отменять', bNotNow:'Дождитесь хода', bHintOn:'💡 Золотое кольцо — сильный ход', bDoubleOn:'⚡ Ставьте ещё точку!', loginTitle:'🎁 Награда дня', loginDay:'День {d}', loginGot:'+{n} ◆ — завтра будет больше!', loginOk:'Забрать', chestOpen:'🎁 Сундук: +{n} ◆', chestProg:'🎁 Сундук {w}/3', resCry:'+{n} ◆', expTitle:'🧭 Экспедиция', expSub:'Выберите землю и соперника. Карта всегда новая. На вулкане — кристаллы ◆!', expOpp:'Соперник', expSize:'Поле', expGo:'⚔ В бой', expBack:'← Назад', expWins:'Побед: {w}', expReward:'Победа: +{n} ◆', expAnother:'🧭 Новая карта', mp_plain:'Равнина', mp_island:'Остров', mp_river:'Река', mp_lake:'Озеро', mp_forest:'Лес', mpd_plain:'Открытое поле', mpd_island:'Материки и острова', mpd_river:'Два берега и броды', mpd_lake:'Бой вокруг воды', mpd_forest:'Деревья рвут линии', gLbl:'Войти через Google', aLbl:'Войти через Apple', aFail:'Apple: вход не удался', tcWhy:'Нет Google? Возьмите код переноса и введите его на другом устройстве.',
     nameSaved:'Сохранено', nameEmpty:'Введите имя', nameTaken:'Имя занято — выберите другое', nameInvalid:'2–18 знаков: буквы, цифры, пробел, - _', nameOffline:'Нет связи — имя не проверить', nameChecking:'Проверяю…',
     stGames:'Битвы', stWins:'Победы', stPct:'% побед', stStreak:'Серия', stBest:'Рекорд серии', stRating:'Рейтинг', stOnline:'Рейтинговые', stStars:'Звёзды', stAch:'Достижения', stDaily:'Серия заданий', mSetLbl:'Настройки', mAchLbl:'Достижения', achTitle:'🏆 Достижения', achOk:'ОК', accOk:'ОК',
     achCount:'Открыто: {u} из {t}',
@@ -2140,13 +2306,16 @@ function applyTheme(name){
 
 var G=null, gameMode='pve', selLv=1, olFSz=1;
 var aiTimer=null, aiLock=false;
-var playerNames=['Red Dots','Green Pix'];
+var playerNames=['','Green'];
+var DEFAULT_NAMES={'red dots':1,'red':1,'красные':1,'green pix':1,'green':1,'зелёные':1,'зеленые':1,'?':1,'player':1,'':1};
+function isDefaultName(n){ return !!DEFAULT_NAMES[String(n||'').trim().toLowerCase()]; }
 var curWorld=1;
 var WORLD_PAL={
   2:{p2:'#2a7fd6',p2d:'rgba(42,127,214,',p2l:'rgba(130,195,255,0.98)',s2:{hi:'#e0f0ff',lt:'#80bdf2',mid:'#2a7fd6',dk:'#0b2f5a',glow:'rgba(95,170,255,0.85)',dead:'#2a6fb8'},glow2:['rgba(42,127,214,0.42)','rgba(42,127,214,0.13)']},
+  4:{p2:'#3fb6e0',p2d:'rgba(63,182,224,',p2l:'rgba(190,240,255,0.98)',s2:{hi:'#f4fdff',lt:'#b4ecff',mid:'#3fb6e0',dk:'#0f4a66',glow:'rgba(150,230,255,0.9)',dead:'#3a9cc0'},glow2:['rgba(63,182,224,0.42)','rgba(63,182,224,0.13)']},
   3:{p2:'#d9a21b',p2d:'rgba(217,162,27,',p2l:'rgba(255,218,110,0.98)',s2:{hi:'#fff6d6',lt:'#ffd56a',mid:'#d9a21b',dk:'#6a4a06',glow:'rgba(255,205,85,0.85)',dead:'#b8861b'},glow2:['rgba(217,162,27,0.42)','rgba(217,162,27,0.13)']}
 };
-function oppTokImg(){ if(curWorld===2) return tintedImg('tokG',{id:'w2',h:0.6,s:1.15,l:1.0}); if(curWorld===3) return tintedImg('tokG',{id:'w3',h:0.13,s:1.35,l:1.22}); return imgEl('tokG'); }
+function oppTokImg(){ if(curWorld===2) return tintedImg('tokG',{id:'w2',h:0.6,s:1.15,l:1.0}); if(curWorld===3) return tintedImg('tokG',{id:'w3',h:0.13,s:1.35,l:1.22}); if(curWorld===4) return tintedImg('tokG',{id:'w4',h:0.53,s:0.75,l:1.35}); return imgEl('tokG'); }
 function setWorldLook(w){
   w=w||1; document.body.setAttribute('data-world',String(w));
   if(curWorld===w&&CC&&CC.name===(w>1?'world'+w:'world')) return;
@@ -2155,7 +2324,7 @@ function setWorldLook(w){
   var av=document.querySelector('.p-avatar.p2');
   if(av){ if(w>1){ var u=canvasURL(oppTokImg()); if(u){ av.src=u; av.setAttribute('data-cur','tokG-w'+w); } } else if(av.getAttribute('data-cur')!=='tokG'){ av.setAttribute('data-cur','tokG'); av.src='data:image/webp;base64,'+IMG.tokG; } }
 }
-function p2Name(){ var ru=lang==='ru'; return curWorld===2?(ru?'Синие':'Blue'):curWorld===3?(ru?'Золотые':'Gold'):(ru?'Зелёные':'Green'); }
+function p2Name(){ var ru=lang==='ru'; return curWorld===2?(ru?'Синие':'Blue'):curWorld===3?(ru?'Золотые':'Gold'):curWorld===4?(ru?'Ледяные':'Ice'):(ru?'Зелёные':'Green'); }
 var db=null, roomRef=null, movesRef=null, resignRef=null, myPNum=1, isHost=false, olReady=false;
 var serverOffset=0, turnInfo=null, olWatchId=null, claimSent=false, offline=false, olGen=0, roomCode='', pendingRoom=null;
 var olRefs=[];   // listeners attached for the current game (detached on rematch/leave)
@@ -2176,7 +2345,7 @@ function avatarURL(a){   // emoji -> small PNG so it can be used in <img> everyw
     c.font='58px sans-serif'; c.textAlign='center'; c.textBaseline='middle'; c.fillText(a,48,54); AVC[a]=cv.toDataURL('image/png'); return AVC[a]; }catch(e){ return ''; }
 }
 function avHtml(a,cls){ var u=avatarURL(a); return u?'<img class="av-img '+(cls||'')+'" src="'+u+'" alt="">':''; }
-function setAvatar(a){ PROF.av=a||''; sfx('pop'); try{ localStorage.setItem('dwProf',JSON.stringify(PROF)); }catch(e){} applyAvatar(); if(db&&UID&&authUser) try{ db.ref('players/'+UID+'/av').set(PROF.av||null); }catch(e){} renderAvatars(); }
+function setAvatar(a){ PROF.av=a||''; sfx('pop'); try{ var av=document.getElementById('accAv'); if(av){ var u0=avatarURL(PROF.av); av.innerHTML=u0?'<img src="'+u0+'" alt="">':'🙂'; } }catch(e){} try{ localStorage.setItem('dwProf',JSON.stringify(PROF)); }catch(e){} applyAvatar(); if(db&&UID&&authUser) try{ db.ref('players/'+UID+'/av').set(PROF.av||null); }catch(e){} renderAvatars(); }
 function applyAvatar(){
   var u=avatarURL(PROF.av), m=document.getElementById('mStarsNum'); if(m){ m.innerHTML=u?'<img src="'+u+'" alt="">':''; m.classList.toggle('has-av',!!u); if(!u){ var st=0; try{ for(var i=0;i<STARS.length;i++) st+=STARS[i]|0; }catch(e){} m.textContent=st; } }
   var p1=document.querySelector('.p-avatar.p1'); if(p1){ if(u&&gameMode!=='online'||u&&myPNum===1){ p1.src=u; p1.setAttribute('data-cur','av'); p1.classList.add('photo'); } else if(p1.getAttribute('data-cur')==='av'){ p1.setAttribute('data-cur','tokR'); p1.src='data:image/webp;base64,'+IMG.tokR; p1.classList.remove('photo'); } }
@@ -2185,17 +2354,17 @@ function setOppAvatar(a){ var p2=document.querySelector('.p-avatar.p2'); if(!p2)
 function renderAvatars(){
   var g=document.getElementById('avGrid'); if(!g) return;
   g.innerHTML=AVATARS.map(function(a){ return '<button class="av-opt'+(PROF.av===a[0]?' on':'')+'" style="background:'+a[1]+'" onclick="setAvatar(\''+a[0]+'\')">'+a[0]+'</button>'; }).join('')+
-    '<button class="av-opt av-up'+(avIsImg(PROF.av)?' on':'')+'" onclick="document.getElementById(\'avFile\').click()">'+(avIsImg(PROF.av)?'<img src="'+PROF.av+'" alt="">':'📷')+'</button>';
-  document.getElementById('avLbl').textContent=T('avLbl'); document.getElementById('avHint').textContent=T('avHint');
+    '<label class="av-opt av-up'+(avIsImg(PROF.av)?' on':'')+'" for="avFile">'+(avIsImg(PROF.av)?'<img src="'+PROF.av+'" alt="">':'📷')+'</label>';
+  var hl=document.getElementById('avHint'); if(hl) hl.textContent=T('avHint');
 }
 function onAvatarFile(inp){
   var f=inp.files&&inp.files[0]; if(!f) return; inp.value='';
-  var rd=new FileReader(); rd.onload=function(){ var im=new Image(); im.onload=function(){
+  if(f.size>25*1024*1024){ showToast(T('avBad'),3000); return; }
+  var url=URL.createObjectURL(f); var rd={result:url}; (function(){ var im=new Image(); im.onload=function(){ try{ URL.revokeObjectURL(url); }catch(e){}
     var cv=document.createElement('canvas'), S=112; cv.width=cv.height=S; var c=cv.getContext('2d'); c.beginPath(); c.arc(S/2,S/2,S/2,0,Math.PI*2); c.clip();
     var sc=Math.max(S/im.width,S/im.height), w=im.width*sc, h=im.height*sc; c.drawImage(im,(S-w)/2,(S-h)/2,w,h);
-    var q=0.82, url=cv.toDataURL('image/jpeg',q); while(url.length>14000&&q>0.3){ q-=0.12; url=cv.toDataURL('image/jpeg',q); }
-    setAvatar(url); showToast(T('avSaved'),2000); }; im.onerror=function(){ showToast(T('avBad')); }; im.src=rd.result; };
-  rd.readAsDataURL(f);
+    var q=0.82, url2=cv.toDataURL('image/jpeg',q); while(url2.length>14000&&q>0.3){ q-=0.12; url2=cv.toDataURL('image/jpeg',q); }
+    setAvatar(url2); showToast(T('avSaved'),2000); }; im.onerror=function(){ showToast(T('avBad'),3500); }; im.src=rd.result; })();
 }
 (function(){ try{ var v=JSON.parse(localStorage.getItem('dwRating')||'{}'); for(var k in v) if(k in RATING) RATING[k]=v[k]; }catch(e){} })();
 function saveRating(){ try{localStorage.setItem('dwRating',JSON.stringify(RATING));}catch(e){} }
@@ -2212,7 +2381,7 @@ function accountStatusText(){
   var pe=function(id){ var d=(authUser.providerData||[]).filter(function(p){return p.providerId===id;})[0]; return (d&&d.email)||authUser.email||''; };
   if(prov.indexOf('google.com')>=0) return tpl(T('accGoogle'),{e:pe('google.com')});
   if(prov.indexOf('apple.com')>=0){ var ae=pe('apple.com'); return tpl(T('accApple'),{e:/privaterelay\.appleid\.com$/i.test(ae)?T('accAppleHidden'):(ae||'Apple ID')}); }
-  if(prov.indexOf('password')>=0) return T('accCode');
+  if(prov.indexOf('password')>=0) return isFakeEmail(authUser.email)?(isNameAccount()?tpl(T('auSigned'),{n:myName()}):T('accCode')):tpl(T('auSignedE'),{n:myName(),e:authUser.email});
   return T('accCloud');
 }
 function renderAccount(){
@@ -2223,8 +2392,16 @@ function renderAccount(){
   var isG=pids.indexOf('google.com')>=0, isA=pids.indexOf('apple.com')>=0, signed=isG||isA;
   document.getElementById('btnGoogle').style.display=signed?'none':'flex';
   var ab=document.getElementById('btnApple'); if(ab) ab.style.display=signed?'none':'';
-  var why=document.getElementById('accWhy'); if(why) why.style.display=signed?'none':'';
-  document.getElementById('btnSignOut').style.display=authUser&&!authUser.isAnonymous?'':'none';
+  var why=document.getElementById('accWhy'); if(why) why.style.display='none';
+  var guest=!(authUser&&!authUser.isAnonymous)&&!(AUTHC&&AUTHC.s);
+  document.getElementById('accAuthCard').style.display=guest?'':'none'; if(guest&&!document.getElementById('accN')) renderAuth('acc');
+  document.getElementById('btnSignOut').style.display=guest?'none':'';
+  document.getElementById('btnPw').style.display=isPwAccount()?'':'none'; document.getElementById('pwChLbl').textContent=T('pwChLbl');
+  var bm=document.getElementById('btnMail'); if(bm){ bm.style.display=needsEmail()?'':'none'; bm.textContent='📧 '+T('addEmail'); }
+  var ni=document.getElementById('accName'); if(ni){ ni.readOnly=isNameAccount(); ni.title=isNameAccount()?T('auNameFixed'):''; }
+  var av=document.getElementById('accAv'); if(av){ var u=avatarURL(PROF.av); av.innerHTML=u?'<img src="'+u+'" alt="">':'🙂'; }
+  var avb=document.getElementById('accAvB'); if(avb) avb.textContent='📷 '+T('avChange');
+  var sb=document.getElementById('accStatsB'); if(sb) sb.textContent=T('stStatsH');
   document.getElementById('accCode').style.display='none'; document.getElementById('accHint').textContent='';
 }
 var AUTHC=(function(){ try{ return JSON.parse(localStorage.getItem('dwAuthC')||'null'); }catch(e){ return null; } })();
@@ -2253,9 +2430,9 @@ function mergeProgress(c){
   if(c.ach){ for(var k in c.ach) if(!ACHV[k]) ACHV[k]=c.ach[k]; try{localStorage.setItem('dwAch',JSON.stringify(ACHV));}catch(e){} }
   if(c.daily){ var cd=c.daily; if((cd.day|0)>DAILY.day||((cd.day|0)===DAILY.day&&(cd.streak|0)>DAILY.streak)){ DAILY.day=cd.day|0; DAILY.streak=cd.streak|0; DAILY.e=cd.e|0; DAILY.m=cd.m|0; DAILY.h=cd.h|0; } DAILY.best=Math.max(DAILY.best,cd.best|0); saveDaily(); }
   if(c.wallet&&typeof c.wallet.c==='number'){
-    var own=Object.assign({},WALLET.owned||{},c.wallet.owned||{});
+    var own=Object.assign({},WALLET.owned||{},c.wallet.owned||{}), pIds=Object.assign({},WALLET.pIds||{},c.wallet.pIds||{}), rw=Object.assign({},WALLET.rw||{},c.wallet.rw||{});
     if((c.wallet.t|0)>(WALLET.t|0)){ var keepT=WALLET.t; for(var wk in c.wallet) WALLET[wk]=c.wallet[wk]; }
-    WALLET.owned=own; try{localStorage.setItem('dwWallet',JSON.stringify(WALLET));}catch(e){} refreshCry(); spriteCache={}; layerKey=''; applySkinImgs();
+    WALLET.owned=own; WALLET.pIds=pIds; WALLET.rw=rw; try{localStorage.setItem('dwWallet',JSON.stringify(WALLET));}catch(e){} refreshCry(); spriteCache={}; layerKey=''; applySkinImgs();
   }
   if((c.pveMax|0)>pveMax) pveMax=c.pveMax|0; if(c.pveChamp) pveChamp=true; savePveProgress();
   if(c.name&&!localStorage.getItem('dwName')) try{localStorage.setItem('dwName',c.name);}catch(e){}
@@ -2285,7 +2462,7 @@ function onSignedIn(u){
 function pushProgress(now){
   if(!authUser||!db) return;
   clearTimeout(progressTimer);
-  var doPush=function(){ try{ db.ref('players/'+authUser.uid).update({progress:collectProgress(),name:(localStorage.getItem('dwName')||playerNames[0]||'?').slice(0,18),r:RATING.r,g:RATING.g,w:RATING.w,t:firebase.database.ServerValue.TIMESTAMP}); }catch(e){} };
+  var doPush=function(){ try{ var up={progress:collectProgress(),t:firebase.database.ServerValue.TIMESTAMP}; if(myName()&&!isDefaultName(myName())){ up.name=myName().slice(0,18); up.r=RATING.r; up.g=RATING.g; up.w=RATING.w; } db.ref('players/'+authUser.uid).update(up); }catch(e){} };
   if(now) doPush(); else progressTimer=setTimeout(doPush,1500);
 }
 // Google sign-in: web = popup; Android app = native bridge (Google blocks OAuth inside WebViews)
@@ -2392,7 +2569,8 @@ function syncMyPlayer(){
 }
 function pushMyPlayer(){
   if(!getDB()) return;
-  try{ db.ref('players/'+UID).update({name:myName()||playerNames[isHost||gameMode!=='online'?0:1]||'?',r:RATING.r,g:RATING.g,w:RATING.w,av:PROF.av||null,t:firebase.database.ServerValue.TIMESTAMP}); }catch(e){}
+  if(!myName()||isDefaultName(myName())) return;   // no rating row until the player has a real name
+  try{ db.ref('players/'+UID).update({name:myName(),r:RATING.r,g:RATING.g,w:RATING.w,av:PROF.av||null,t:firebase.database.ServerValue.TIMESTAMP}); }catch(e){}
 }
 // ── Rating (Elo). One number for the player, updated after every finished battle:
 //    online — against the opponent's rating; vs AI — against a fixed strength for
@@ -2433,13 +2611,17 @@ function abandonPenalty(){
   if(gameMode!=='pve'||!G||G.over||G._counted||(G.moveCount|0)<8) return;
   G._counted=true; recordResult(false,false); applyRating(false,false,aiRating(),0.75);
 }
-var topTab='all';
+var topTab='lg';
 function topRows(arr){ return (isGuest()?'<div class="top-row guest-note">🔑 '+T('topGuest')+'</div>':'')+arr.map(function(p,i){ return '<div class="top-row'+(p.uid===UID?' me':'')+'"><span class="tp">'+(i+1)+'</span>'+avHtml(p.av,'sm')+'<span class="tn">'+String(p.name).replace(/[<>&]/g,'')+'</span><span class="tg">'+p.g+'</span><span class="tr"><span class="tier-ic">'+tierOf(p.r)[1]+'</span>'+p.r+'</span></div>'; }).join(''); }
-function prefetchTop(){ try{ db.ref('players').orderByChild('r').limitToLast(20).once('value').then(function(snap){ var arr=[], v=snap.val()||{}; Object.keys(v).forEach(function(k){ if(v[k]&&typeof v[k].r==='number') arr.push({uid:k,name:v[k].name||'?',r:v[k].r,g:v[k].g|0,av:v[k].av||''}); }); arr.sort(function(a,b){return b.r-a.r;}); try{ localStorage.setItem('dwTop',JSON.stringify(arr)); }catch(e){} }).catch(function(){}); }catch(e){} }
+function prefetchTop(){ try{ db.ref('players').orderByChild('r').limitToLast(20).once('value').then(function(snap){ var arr=[], v=snap.val()||{}; Object.keys(v).forEach(function(k){ if(v[k]&&typeof v[k].r==='number'&&v[k].name&&!isDefaultName(v[k].name)) arr.push({uid:k,name:v[k].name,r:v[k].r,g:v[k].g|0,av:v[k].av||''}); }); arr.sort(function(a,b){return b.r-a.r;}); try{ localStorage.setItem('dwTop',JSON.stringify(arr)); }catch(e){} }).catch(function(){}); }catch(e){} }
 function openLeaderboard(tab){
   if(tab) topTab=tab;
-  document.getElementById('topTabs').innerHTML=['all','fr'].map(function(t){ return '<button class="'+(topTab===t?'on':'')+'" onclick="openLeaderboard(\''+t+'\')">'+T(t==='all'?'topAll':'topFr')+'</button>'; }).join('');
+  document.getElementById('topTabs').innerHTML=['lg','all','fr','cl'].map(function(t){ return '<button class="'+(topTab===t?'on':'')+'" onclick="openLeaderboard(\''+t+'\')">'+T({lg:'topLg',all:'topAll',fr:'topFr',cl:'topCl'}[t])+'</button>'; }).join('');
+  document.getElementById('topTitle').textContent=T({lg:'topLgH',all:'topTitle',fr:'topFrH',cl:'topClH'}[topTab]);
+  document.getElementById('topModal').classList.add('open');
   if(topTab==='fr'){ openFriendTop(); return; }
+  if(topTab==='lg'){ openLeague(); return; }
+  if(topTab==='cl'){ openClubs(); return; }
   var list=document.getElementById('topList'), cached=null; try{ cached=JSON.parse(localStorage.getItem('dwTop')||'null'); }catch(e){}
   list.innerHTML=cached&&cached.length?topRows(cached):'<div class="top-row">…</div>';
   document.getElementById('topModal').classList.add('open');
@@ -2447,7 +2629,7 @@ function openLeaderboard(tab){
     if(!getDB()) throw 0;
     return db.ref('players').orderByChild('r').limitToLast(20).once('value');
   }).then(function(snap){
-    var arr=[]; var v=snap.val()||{}; Object.keys(v).forEach(function(k){ if(v[k]&&typeof v[k].r==='number') arr.push({uid:k,name:v[k].name||'?',r:v[k].r,g:v[k].g|0,av:v[k].av||''}); });
+    var arr=[]; var v=snap.val()||{}; Object.keys(v).forEach(function(k){ if(v[k]&&typeof v[k].r==='number'&&v[k].name&&!isDefaultName(v[k].name)) arr.push({uid:k,name:v[k].name,r:v[k].r,g:v[k].g|0,av:v[k].av||''}); });
     arr.sort(function(a,b){return b.r-a.r;});
     try{ localStorage.setItem('dwTop',JSON.stringify(arr)); }catch(e){}
     if(!arr.length){ list.innerHTML='<div class="top-row">'+T('topEmpty')+'</div>'; return; }
@@ -2499,7 +2681,7 @@ var pressActive=false, pressTimer=null, pressX=0, pressY=0, loupeShow=false, lou
 var HOLD_MS=300, PRESS_SLOP=6;
 var curScreen='screen-menu', _cfCb=null;
 var turnTimerId=null, turnGraceId=null, TURN_SECS=15, TURN_GRACE=5, TURN_WARN=5;
-var APP_VERSION='3.3.0';
+var APP_VERSION='4.2.1';
 // ═══════════════════════
 //  CRYSTALS — soft currency. Earned by playing, spent on boosters (vs AI only) and skins.
 //  Stored locally and in the cloud (progress.wallet); the newest copy wins (t = last change).
@@ -2518,7 +2700,7 @@ function addCrystals(n,silent){
   return n;
 }
 function spendCrystals(n){
-  if(WALLET.c<n){ showToast(T('cryNotEnough')+' (◆ '+WALLET.c+'/'+n+')',3200); sfx('error'); return false; }
+  if(WALLET.c<n){ sfx('error'); if(adsAvailable()){ socPop('📺',T('cryNotEnough')+' (◆ '+WALLET.c+'/'+n+')',tpl(T('adOffer'),{n:ADS.reward}),'📺 '+T('adWatch'),T('invLater'),function(){ watchAd('cry'); }); } else showToast(T('cryNotEnough')+' (◆ '+WALLET.c+'/'+n+')',3200); return false; }
   WALLET.c-=n; saveWallet(); sfx('coin'); burstAt(document.getElementById('mCryNum')||null,'#8ff0ff'); return true;
 }
 function todayKey(){ return dayKey(); }
@@ -2548,7 +2730,7 @@ function checkDailyLogin(){
 // ── skins (pixel-tinted from the art set, so they work on every WebView) ──
 var ST_SKINS=[{id:'base',p:0},{id:'ruby',p:250,h:0.985,s:1.25,l:0.82,acc:'#c0182a'},{id:'amethyst',p:400,h:0.78,s:0.95,l:1.0,acc:'#9b4dd8'},
   {id:'gold',p:450,h:0.115,s:1.15,l:1.12,acc:'#e0a020'},{id:'obsidian',p:600,h:null,s:0.12,l:0.5,acc:'#2a2a33'},
-  {id:'sunstone',p:-1,boss:1,h:0.075,s:1.35,l:1.08,acc:'#ff7a1a'},{id:'rose',p:-1,boss:2,h:0.93,s:0.9,l:1.12,acc:'#ff6fae'}];
+  {id:'sunstone',p:-1,boss:1,h:0.075,s:1.35,l:1.08,acc:'#ff7a1a'},{id:'rose',p:-1,boss:2,h:0.93,s:0.9,l:1.12,acc:'#ff6fae'},{id:'aurora',p:-1,boss:4,h:0.5,s:0.75,l:1.28,acc:'#9ff0ff'}];
 var BD_SKINS=[{id:'base',p:0,lift:'rgba(255,246,222,0.30)'},{id:'marble',p:300,s:0.25,l:1.18,lift:'rgba(250,250,255,0.34)'},
   {id:'sand',p:300,h:0.11,s:1.35,l:1.04,lift:'rgba(255,236,190,0.26)'},{id:'terra',p:400,h:0.04,s:1.5,l:0.92,lift:'rgba(255,220,200,0.20)'},
   {id:'slate',p:600,h:0.58,s:0.25,l:0.62,lift:'rgba(200,215,230,0.10)'}];
@@ -2581,12 +2763,14 @@ function applySkinImgs(){
 }
 function equipSkin(kind,id){ WALLET.eq[kind]=id; saveWallet(); spriteCache={}; layerKey=''; applySkinImgs(); if(typeof G!=='undefined'&&G&&canvas) draw(G); }
 // ── shop ──
-var shopTab='st';
-function openShop(){ renderShop(); document.getElementById('shopModal').classList.add('open'); }
+var shopTab='cry';
+function openShop(tab){ shopTab=tab||'cry'; renderShop(); document.getElementById('shopModal').classList.add('open'); storeInit(); }
 function renderShop(){
   refreshCry();
+  if(shopTab==='cry'){ renderCryShop(); return; }
+  document.getElementById('shopGrid').classList.remove('cry-grid');
   document.getElementById('shopH').textContent=T('shopTitle'); document.getElementById('shopNote').textContent=T('shopSoon');
-  document.getElementById('shopTabs').innerHTML='<button class="'+(shopTab==='st'?'on':'')+'" onclick="shopTab=\'st\';renderShop()">'+T('shopStones')+'</button><button class="'+(shopTab==='bd'?'on':'')+'" onclick="shopTab=\'bd\';renderShop()">'+T('shopBoards')+'</button>';
+  document.getElementById('shopTabs').innerHTML='<button class="'+(shopTab==='cry'?'on':'')+'" onclick="shopTab=\'cry\';renderShop()">◆ '+T('shopCry')+'</button><button class="'+(shopTab==='st'?'on':'')+'" onclick="shopTab=\'st\';renderShop()">'+T('shopStones')+'</button><button class="'+(shopTab==='bd'?'on':'')+'" onclick="shopTab=\'bd\';renderShop()">'+T('shopBoards')+'</button>';
   var list=shopTab==='st'?ST_SKINS:BD_SKINS, pre=shopTab==='st'?'st_':'bd_', cur=WALLET.eq[shopTab];
   var g=document.getElementById('shopGrid'); g.innerHTML='';
   list.forEach(function(sk){
@@ -2684,7 +2868,7 @@ function drawHint(c){
 //  Terrain is neutral: it neither closes a loop nor blocks one.
 // ═══════════════════════
 var MAPS=['plain','island','waters','forest','volcano','mountains'];
-var MAP_ICO={plain:'🌾',island:'🏝',waters:'🌊',forest:'🌲',volcano:'🌋',mountains:'⛰️',river:'🌊',lake:'💧'};
+var MAP_ICO={glacier:'🧊',plain:'🌾',island:'🏝',waters:'🌊',forest:'🌲',volcano:'🌋',mountains:'⛰️',river:'🌊',lake:'💧'};
 function normMap(id){ return (id==='river'||id==='lake')?'waters':id; }
 // trees/water/rocks enclosed by a player's wall count as that player's captured land (drawn filled, fenced)
 function mapTitle(g){ var id=g.mapId||curMap||'plain'; if(id==='island'&&g.landId&&g.landId!=='blob') return (LANDS[g.landId].ico||'🏝')+' '+landName(g.landId); return MAP_ICO[id]+' '+T('mp_'+id); }
@@ -2763,6 +2947,10 @@ function mapRaw(id,n,rnd,land){
       var li=Math.max(2,Math.min(n-3,Math.round(n*(0.3+rnd()*0.4)))), lc2=base+sl*(li-m)+A*Math.sin(li/(n-1)*PI2*f+ph), rx2=Math.max(1.6,n*(0.1+rnd()*0.07)), ry2=Math.max(1.4,n*(0.08+rnd()*0.06)), W2=wob(3,0.18);
       for(var r=1;r<n-1;r++) for(var c=1;c<n-1;c++){ var dr2=(vert?r:c)-li, dc2=(vert?c:r)-lc2, u2=dr2/ry2, v2=dc2/rx2; if(u2*u2+v2*v2<=Math.pow(W2(Math.atan2(u2,v2)),2)) add(r,c,'w'); }
     }
+  } else if(id==='glacier'){
+    var floes=Math.round(n/3.2)+Math.floor(rnd()*3);
+    for(var g2=0;g2<floes;g2++){ var fr=1+rnd()*(n-3), fc=1+rnd()*(n-3), FR=Math.max(1.1,n*(0.05+rnd()*0.07)), W3=wob(3,0.3);
+      for(var r=1;r<n-1;r++) for(var c=1;c<n-1;c++){ var a3=r-fr, b3=c-fc; if(Math.sqrt(a3*a3+b3*b3)<=FR*W3(Math.atan2(a3,b3))) add(r,c,'i'); } }
   } else if(id==='mountains'){
     // 1–2 ridges across the board with passes; peaks 'm' are impassable, loose rocks 'r' around them
     var ridges=n>=16&&rnd()<0.6?2:1;
@@ -2809,6 +2997,7 @@ function mapOk(o,n,id){
   if(id==='lake'&&(frac<0.06||frac>0.3)) return false;
   if(id==='waters'&&(frac<0.1||frac>0.4)) return false;
   if(id==='mountains'&&(frac<0.06||frac>0.3)) return false;
+  if(id==='glacier'&&(frac<0.1||frac>0.3)) return false;
   if(id==='forest'&&(frac<0.07||frac>0.22)) return false;
   if(id==='volcano'&&(frac<0.05||frac>0.3)) return false;
   if(id==='island_land'&&frac>0.85) return false;
@@ -2887,6 +3076,14 @@ function drawRock(ctx,x,y,S){
   ctx.fillStyle=gr; ctx.beginPath(); ctx.moveTo(x-S*0.42,y+S*0.16); ctx.lineTo(x-S*0.3,y-S*0.18); ctx.lineTo(x-S*0.04,y-S*0.38); ctx.lineTo(x+S*0.3,y-S*0.22); ctx.lineTo(x+S*0.44,y+S*0.12); ctx.lineTo(x+S*0.1,y+S*0.24); ctx.closePath(); ctx.fill();
   ctx.fillStyle='rgba(255,255,255,0.22)'; ctx.beginPath(); ctx.moveTo(x-S*0.3,y-S*0.18); ctx.lineTo(x-S*0.04,y-S*0.38); ctx.lineTo(x+S*0.02,y-S*0.12); ctx.closePath(); ctx.fill();
 }
+function drawIce(ctx,x,y,S,crack){
+  var h=S*0.48, gr=ctx.createLinearGradient(x-h,y-h,x+h,y+h); gr.addColorStop(0,'#f2fbff'); gr.addColorStop(0.45,'#b6e4f6'); gr.addColorStop(1,'#6fb8dc');
+  ctx.save(); ctx.shadowColor='rgba(20,60,90,0.35)'; ctx.shadowBlur=S*0.25; ctx.shadowOffsetY=S*0.08;
+  ctx.fillStyle=gr; ctx.beginPath(); if(ctx.roundRect) ctx.roundRect(x-h,y-h,h*2,h*2,S*0.14); else ctx.rect(x-h,y-h,h*2,h*2); ctx.fill(); ctx.restore();
+  ctx.fillStyle='rgba(255,255,255,0.65)'; ctx.beginPath(); ctx.moveTo(x-h*0.8,y-h*0.6); ctx.lineTo(x-h*0.2,y-h*0.85); ctx.lineTo(x-h*0.55,y-h*0.3); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle='rgba(255,255,255,0.75)'; ctx.lineWidth=Math.max(0.6,S*0.035); ctx.beginPath(); ctx.moveTo(x+h*0.1,y-h*0.2); ctx.lineTo(x+h*0.45,y+h*0.25); ctx.moveTo(x+h*0.2,y+h*0.05); ctx.lineTo(x-h*0.1,y+h*0.45); ctx.stroke();
+  if(crack){ ctx.strokeStyle='rgba(30,80,120,0.7)'; ctx.lineWidth=Math.max(0.8,S*0.05); ctx.beginPath(); ctx.moveTo(x-h*0.7,y-h*0.1); ctx.lineTo(x-h*0.1,y+h*0.1); ctx.lineTo(x+h*0.3,y-h*0.4); ctx.lineTo(x+h*0.7,y-h*0.2); ctx.moveTo(x-h*0.1,y+h*0.1); ctx.lineTo(x+h*0.1,y+h*0.7); ctx.stroke(); }
+}
 function drawMountain(ctx,x,y,S){
   ctx.fillStyle='rgba(40,26,10,0.3)'; ctx.beginPath(); ctx.ellipse(x+S*0.1,y+S*0.42,S*0.55,S*0.16,0,0,Math.PI*2); ctx.fill();
   var gr=ctx.createLinearGradient(x-S*0.5,y,x+S*0.5,y); gr.addColorStop(0,'#8e8378'); gr.addColorStop(0.5,'#6a5f55'); gr.addColorStop(1,'#43392f');
@@ -2926,6 +3123,26 @@ function scoutFog(g){
   for(var r=0;r<g.n;r++) for(var c=0;c<g.n;c++){ if(!fogHidden(g,r,c)) continue; var z=fogZone(g,r,c); cnt[z]=(cnt[z]|0)+(g.board[r][c]===P2?10:0)+1; }
   Object.keys(cnt).sort(function(a,b){ return cnt[b]-cnt[a]; }).slice(0,2).forEach(function(z){ g.fog.open[z]=1; });
   g.fog.v++;
+}
+function meltTick(g){
+  if(!g||!g.terrain||g.mapId!=='glacier'||!(g.moveCount>0)||g.moveCount%6!==0||g._meltAt===g.moveCount) return;
+  g._meltAt=g.moveCount; g._melt=g._melt||{}; var n=g.n, ice=Object.keys(g.terrain).filter(function(k){ return g.terrain[k]==='i'; });
+  if(!ice.length) return;
+  var cracked=ice.filter(function(k){ return g._melt[k]; });
+  cracked.forEach(function(k){ k=+k; var r=(k/n)|0, c=k%n; delete g.terrain[k]; delete g._melt[k]; g.board[r][c]=EMPTY; try{ spawnCaptureAnim([[r,c]],'#bfefff',0,[r,c]); }catch(e){} });
+  // the next block to crack: one that touches open ground, preferring the middle of the board
+  var cand=ice.filter(function(k){ if(g._melt[k]||!g.terrain[k]) return false; k=+k; var r=(k/n)|0, c=k%n; return [[1,0],[-1,0],[0,1],[0,-1]].some(function(d){ var rr=r+d[0], cc=c+d[1]; return rr>=0&&cc>=0&&rr<n&&cc<n&&g.board[rr][cc]!==BLK; }); });
+  cand.sort(function(a,b){ var m=(n-1)/2, ra=((a/n)|0)-m, ca=a%n-m, rb=((b/n)|0)-m, cb=b%n-m; return (ra*ra+ca*ca)-(rb*rb+cb*cb); });
+  if(cand.length) g._melt[cand[Math.floor(Math.random()*Math.min(3,cand.length))]]=1;
+  g._ver=(g._ver|0)+1; layerKey='';
+  if(cracked.length){ try{ sfx('piece'); }catch(e){} showBanner(T('meltT'),2200); }
+}
+// snowstorm: every 8 moves the fog comes back everywhere except around your stones
+function stormTick(g){
+  if(!g||!g.fog||!g.storm||!(g.moveCount>0)||g.moveCount%8!==0||g._stormAt===g.moveCount) return;
+  g._stormAt=g.moveCount; var keep={}, n=g.n;
+  for(var r=0;r<n;r++) for(var c=0;c<n;c++){ var v=g.board[r][c]; if(v===P1||v===T1){ for(var dr=-1;dr<=1;dr++) for(var dc=-1;dc<=1;dc++){ var rr=r+dr, cc=c+dc; if(rr>=0&&cc>=0&&rr<n&&cc<n) keep[fogZone(g,rr,cc)]=1; } } }
+  g.fog.open=keep; g.fog.v++; showBanner(T('stormT'),2500); try{ sfx('whoosh'); }catch(e){}
 }
 function setupFog(g,k){
   var n=g.n, zs=Math.ceil(n/4), zn=Math.ceil(n/zs), mid=(zn-1)/2;
@@ -2994,7 +3211,7 @@ function drawTerrain(ctx,g){
     else { ctx.fillStyle='rgba(255,246,190,0.75)'; ctx.beginPath(); ctx.arc(xy[0]+CS*0.12,xy[1]-CS*0.08,Math.max(1,CS*0.07),0,Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.arc(xy[0]-CS*0.16,xy[1]+CS*0.1,Math.max(0.8,CS*0.045),0,Math.PI*2); ctx.fill(); } });
   ctx.restore();
   keys.forEach(function(k){ var t=g.terrain[k], r=(k/n)|0, c=k%n, xy=n2x(r,c); ctx.save();
-    if(t==='t') drawPine(ctx,xy[0],xy[1],CS*0.9); else if(t==='r') drawRock(ctx,xy[0],xy[1],CS*1.05); else if(t==='m') drawMountain(ctx,xy[0],xy[1],CS*1.15); else if(t==='k') drawBlackStone(ctx,xy[0],xy[1],Math.max(4,CS*0.3));
+    if(t==='t') drawPine(ctx,xy[0],xy[1],CS*0.9); else if(t==='r') drawRock(ctx,xy[0],xy[1],CS*1.05); else if(t==='m') drawMountain(ctx,xy[0],xy[1],CS*1.15); else if(t==='i') drawIce(ctx,xy[0],xy[1],CS,(g._melt&&g._melt[k])|0); else if(t==='k') drawBlackStone(ctx,xy[0],xy[1],Math.max(4,CS*0.3));
     ctx.restore(); });
 }
 function drawMapPreviewOld(cv,id,n,seed,land){
@@ -3034,7 +3251,7 @@ function fbm(x,y,sd){ return vnoise(x,y,sd)*0.5+vnoise(x*2.1,y*2.1,sd+1)*0.25+vn
 function drawMapPreview(cv,id,n,seed,land){
   var S=cv.width, c=cv.getContext('2d'); if(!c) return;
   var cells=mapCells(id,n,seed,land), cls=new Uint8Array(n*n);   // 0 land 1 water 2 tree 3 rock 4 mountain 5 lava
-  var gems=[]; cells.forEach(function(q){ var k=q[0]*n+q[1]; if(q[2]==='w') cls[k]=1; else if(q[2]==='t') cls[k]=2; else if(q[2]==='r') cls[k]=3; else if(q[2]==='m') cls[k]=4; else if(q[2]==='l') cls[k]=5; else if(q[2]==='g') gems.push(q); });
+  var gems=[]; cells.forEach(function(q){ var k=q[0]*n+q[1]; if(q[2]==='w') cls[k]=1; else if(q[2]==='t') cls[k]=2; else if(q[2]==='r') cls[k]=3; else if(q[2]==='m') cls[k]=4; else if(q[2]==='l') cls[k]=5; else if(q[2]==='i') cls[k]=3; else if(q[2]==='g') gems.push(q); });
   var F=[new Float32Array(n*n),new Float32Array(n*n),new Float32Array(n*n),new Float32Array(n*n),new Float32Array(n*n)];   // water, tree, rock, mountain, lava
   for(var k=0;k<n*n;k++){ if(cls[k]===1) F[0][k]=1; if(cls[k]===2) F[1][k]=1; if(cls[k]===3) F[2][k]=1; if(cls[k]===4) F[3][k]=1; if(cls[k]===5) F[4][k]=1; }
   function cl(j){ return j<0?0:j>n-1?n-1:j; }
@@ -3087,23 +3304,45 @@ var EXP={map:'island',lv:2,n:16,land:'rand',fog:0}, curMap=null, curFog=0, curMa
 function saveExp(){ try{localStorage.setItem('dwExp',JSON.stringify(EXP)); localStorage.setItem('dwExpW',JSON.stringify(EXPW));}catch(e){} }
 function expWinReward(lv,map,n,fog){ return ([0,5,10,15][lv]|0)+(map!=='plain'?5:0)+(n>=21?5:0)+(fog?5:0); }
 function openExpedition(){ EXP.map=normMap(EXP.map); if(MAPS.indexOf(EXP.map)<0) EXP.map='island'; renderExp(); SS('screen-exp'); }
+function expCardHtml(id){
+  var nm=id==='island'?(function(){ var l=pickLand(EXPSEED[id],EXP.land); return l==='blob'?T('mp_island'):landName(l); })():T('mp_'+id);
+  return '<div class="en">'+MAP_ICO[id]+' '+nm+'</div><div class="ed">'+T('mpd_'+id)+'</div>'+(EXPW[id]?'<div class="ew">'+tpl(T('expWins'),{w:EXPW[id]})+'</div>':'');
+}
+var expBuiltKey='';
+function buildExpCards(){
+  var g=document.getElementById('expGrid'); g.innerHTML=''; EXP.land='rand';
+  MAPS.forEach(function(id){
+    if(!EXPSEED[id]) EXPSEED[id]=newMapSeed();
+    var b=document.createElement('button'); b.className='exp-card'+(EXP.map===id?' sel':''); b.setAttribute('data-map',id);
+    var cv=document.createElement('canvas'); cv.width=240; cv.height=240; b.appendChild(cv);
+    var t=document.createElement('div'); t.className='exp-txt'; t.innerHTML=expCardHtml(id); b.appendChild(t);
+    var dice=document.createElement('span'); dice.className='exp-dice'; dice.textContent='🎲'; b.appendChild(dice);
+    b.onclick=function(){ expPick(id); };
+    g.appendChild(b); try{ drawMapPreview(cv,id,EXP.n,EXPSEED[id],EXP.land); }catch(e){}
+  });
+  expBuiltKey=EXP.n+'|'+lang;
+}
+function expPick(id){
+  var g=document.getElementById('expGrid'), card=g.querySelector('.exp-card[data-map="'+id+'"]');
+  if(EXP.map===id){   // same card again: a new random map — only this card is redrawn
+    if(id==='plain') return;
+    EXPSEED[id]=newMapSeed(); card.classList.remove('reroll'); void card.offsetWidth; card.classList.add('reroll');
+    try{ drawMapPreview(card.querySelector('canvas'),id,EXP.n,EXPSEED[id],EXP.land); }catch(e){}
+    card.querySelector('.exp-txt').innerHTML=expCardHtml(id);
+  } else {
+    g.querySelectorAll('.exp-card.sel').forEach(function(c){ c.classList.remove('sel'); });
+    if(card) card.classList.add('sel'); EXP.map=id;
+  }
+  saveExp(); renderExpOpts();
+}
 function renderExp(){
+  if(expBuiltKey!==EXP.n+'|'+lang||!document.querySelector('#expGrid .exp-card')) buildExpCards();
+  renderExpOpts();
+}
+function renderExpOpts(){
   document.getElementById('expTitle').textContent=T('expTitle'); document.getElementById('expSub').textContent=T('expSub');
   document.getElementById('expOppL').textContent=T('expOpp'); document.getElementById('expSizeL').textContent=T('expSize');
   document.getElementById('expGo').textContent=T('expGo'); document.getElementById('expBack').textContent=T('expBack');
-  var g=document.getElementById('expGrid'); g.innerHTML='';
-  MAPS.forEach(function(id){
-    var b=document.createElement('button'); b.className='exp-card'+(EXP.map===id?' sel':'');
-    var cv=document.createElement('canvas'); cv.width=240; cv.height=240; b.appendChild(cv);
-    if(!EXPSEED[id]) EXPSEED[id]=newMapSeed();
-    var nm=id==='island'?(function(){ var l=pickLand(EXPSEED[id],EXP.land); return l==='blob'?T('mp_island'):landName(l); })():T('mp_'+id);
-    var t=document.createElement('div'); t.innerHTML='<div class="en">'+MAP_ICO[id]+' '+nm+'</div><div class="ed">'+T('mpd_'+id)+'</div>'+(EXPW[id]?'<div class="ew">'+tpl(T('expWins'),{w:EXPW[id]})+'</div>':'');
-    b.appendChild(t);
-    if(!EXPSEED[id]) EXPSEED[id]=newMapSeed();
-    if(EXP.map===id&&id!=='plain'){ var dice=document.createElement('span'); dice.className='exp-dice'; dice.textContent='🎲'; b.appendChild(dice); }
-    b.onclick=function(){ if(EXP.map===id) EXPSEED[id]=newMapSeed(); EXP.map=id; saveExp(); renderExp(); };
-    g.appendChild(b); try{ drawMapPreview(cv,id,EXP.n,EXPSEED[id],EXP.land); }catch(e){}
-  });
   var LE=document.getElementById('expLands');
   EXP.land='rand';   // the land is random every time; its name is shown on the card (tap it again for another)
   if(LE){ LE.style.display='none'; LE.innerHTML=''; }
@@ -3111,13 +3350,13 @@ function renderExp(){
     LE.innerHTML=['rand','blob'].concat(LAND_IDS).map(function(l){ var lab=l==='rand'?'🎲 '+T('ldRand'):l==='blob'?'🏝 '+T('mp_island'):LANDS[l].ico+' '+landName(l);
       return '<button class="'+(EXP.land===l?'on':'')+'" onclick="EXP.land=\''+l+'\';EXPSEED.island=newMapSeed();saveExp();renderExp()">'+lab+'</button>'; }).join(''); }
   document.getElementById('expFogL').textContent=T('expFog');
-  document.getElementById('segExpFog').innerHTML=[0,1].map(function(v){ return '<button class="'+((EXP.fog|0)===v?'on':'')+'" onclick="EXP.fog='+v+';saveExp();renderExp()">'+(v?'🌫 '+T('stOn'):T('stOff'))+'</button>'; }).join('');
+  document.getElementById('segExpFog').innerHTML=[0,1].map(function(v){ return '<button class="'+((EXP.fog|0)===v?'on':'')+'" onclick="EXP.fog='+v+';saveExp();renderExpOpts()">'+(v?'🌫 '+T('stOn'):T('stOff'))+'</button>'; }).join('');
   var lvs=[{v:1,l:T('lv1n')},{v:2,l:T('lv2n')},{v:3,l:T('lv3n')}];
-  document.getElementById('segExpLv').innerHTML=lvs.map(function(o){ return '<button class="'+(EXP.lv===o.v?'on':'')+'" onclick="EXP.lv='+o.v+';saveExp();renderExp()">'+o.l+'</button>'; }).join('');
+  document.getElementById('segExpLv').innerHTML=lvs.map(function(o){ return '<button class="'+(EXP.lv===o.v?'on':'')+'" onclick="EXP.lv='+o.v+';saveExp();renderExpOpts()">'+o.l+'</button>'; }).join('');
   document.getElementById('segExpN').innerHTML=[11,16,21].map(function(v){ return '<button class="'+(EXP.n===v?'on':'')+'" onclick="EXP.n='+v+';saveExp();renderExp()">'+v+'×'+v+'</button>'; }).join('');
   document.getElementById('expReward').innerHTML=tpl(T('expReward'),{n:expWinReward(EXP.lv,EXP.map,EXP.n,EXP.fog)})+' · '+chestText();
 }
-function startExpedition(){ gameMode='pve'; curStage=-1; selLv=EXP.lv; curMap=EXP.map; curFog=EXP.fog|0; curMapSeed=EXPSEED[EXP.map]||null; EXPSEED={}; startGame(); }
+function startExpedition(){ gameMode='pve'; curStage=-1; selLv=EXP.lv; curMap=EXP.map; curFog=EXP.fog|0; curMapSeed=EXPSEED[EXP.map]||null; EXPSEED={}; expBuiltKey=''; startGame(); }
 
 var SET={sound:true,music:true,vibe:true,pveTimer:15,theme:'world',assist:true,coach:true,track:'gen'};
 (function(){ try{ var v=JSON.parse(localStorage.getItem('dwSet')||'{}'); for(var k in v) if(k in SET) SET[k]=v[k]; if(!localStorage.getItem('dwTheme24')){ SET.theme='world'; localStorage.setItem('dwTheme24','1'); } SET.theme='world'; }catch(e){} })();
@@ -3178,7 +3417,7 @@ function renderStats(){
   g.innerHTML=items.map(function(x){ return '<div class="stat"><div class="stat-v">'+x[0]+'</div><div class="stat-l">'+T(x[1])+'</div></div>'; }).join('');
 }
 function openAccount(){
-  renderAccount(); ensureAuth(); renderStats(); renderAvatars();
+  var a=document.getElementById('accAuth'); if(a) a.innerHTML=''; renderAccount(); ensureAuth(); renderStats();
   document.getElementById('accName').value=myName();
   document.getElementById('accountModal').classList.add('open');
 }
@@ -3840,7 +4079,7 @@ function saveGameNow(){
   try{
     if(!G||G.over||gameMode!=='pve'){ return; }
     var sv={v:1,t:Date.now(),n:G.n,lv:G.level,board:G.board,sc:G.sc,cur:G.cur,mc:G.moveCount|0,last:G.last,st:curStage,map:curMap||null,
-      seed:G.mapSeed||null,land:EXP.land,gems:G.gems||null,fog:G.fog?{open:G.fog.open,k:1}:null,dbl:!!G.dblUsed};
+      seed:G.mapSeed||null,land:EXP.land,gems:G.gems||null,terr:G.mapId==='glacier'?G.terrain:null,melt:G._melt||null,fog:G.fog?{open:G.fog.open,k:1}:null,dbl:!!G.dblUsed};
     localStorage.setItem('dwSave',JSON.stringify(sv));
   }catch(e){}
 }
@@ -3852,10 +4091,141 @@ function resumeGame(sv){
   if(curMap){ curMapSeed=sv.seed; EXP.land=sv.land||'rand'; if(curStage<0) EXP.n=sv.n; } else _resumeSeed=sv.seed;
   startGame(); _resumeSeed=null;
   G.board=sv.board; G.sc=sv.sc; G.cur=sv.cur; G.moveCount=sv.mc; G.last=sv.last; G.dblUsed=!!sv.dbl;
-  if(sv.gems) G.gems=sv.gems; if(sv.fog&&G.fog){ G.fog.open=sv.fog.open; G.fog.v++; }
+  if(sv.gems) G.gems=sv.gems; if(sv.terr){ G.terrain=sv.terr; G._melt=sv.melt||{}; G._liq=null; } if(sv.fog&&G.fog){ G.fog.open=sv.fog.open; G.fog.v++; }
   G._ver=(G._ver|0)+7; layerKey=''; G.coachDot=null;
   setTimeout(function(){ draw(G); updateHUD(); refreshTurnTimer(); if(G.cur===2) schedAI(); },120);
   showToast(T('resumeOk'),2500);
+}
+// ═══════════════════════
+//  ACCOUNTS — name + password. Under the hood a Firebase email/password account with a
+//  hidden e-mail derived from the name; the guest's progress is kept (the account is linked to it).
+// ═══════════════════════
+function b32(bytes){ var al='abcdefghijklmnopqrstuvwxyz234567', out='', bits=0, val=0; for(var i=0;i<bytes.length;i++){ val=(val<<8)|bytes[i]; bits+=8; while(bits>=5){ out+=al[(val>>>(bits-5))&31]; bits-=5; } } if(bits>0) out+=al[(val<<(5-bits))&31]; return out; }
+function nameEmail(n){ var b=unescape(encodeURIComponent(nameKey(n))), a=[]; for(var i=0;i<b.length;i++) a.push(b.charCodeAt(i)); return 'n'+b32(a)+'@players.dotswar.app'; }
+function isFakeEmail(e){ return /@(players\.)?dotswar\.app$/i.test(String(e||'')); }
+function isPwAccount(){ return !!(authUser&&!authUser.isAnonymous&&(authUser.providerData||[]).some(function(p){ return p.providerId==='password'; })); }
+function isNameAccount(){ return !!(authUser&&!authUser.isAnonymous&&/@players\.dotswar\.app$/i.test(authUser.email||'')); }   // 4.2 accounts: e-mail made from the name
+function needsEmail(){ return isPwAccount()&&isFakeEmail(authUser.email); }
+function validEmail(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(e||'')); }
+var NAMEAUTH_URL='https://us-central1-dots-2d4e4.cloudfunctions.net/nameAuth';
+function nameAuthCall(body){ return fetch(NAMEAUTH_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(function(r){ if(!r.ok) throw {code:'fn-'+r.status}; return r.json(); }); }
+var AUTHMODE='reg';
+function authFormHtml(host){
+  var reg=AUTHMODE==='reg';
+  return '<div class="seg auth-tabs"><button class="'+(reg?'on':'')+'" onclick="AUTHMODE=\'reg\';renderAuth(\''+host+'\')">'+T('auReg')+'</button><button class="'+(reg?'':'on')+'" onclick="AUTHMODE=\'log\';renderAuth(\''+host+'\')">'+T('auLog')+'</button></div>'+
+    '<input class="inp auth-in" id="'+host+'N" maxlength="'+(reg?18:80)+'" autocomplete="username" autocapitalize="off" placeholder="'+T(reg?'auName':'auNameOrEmail')+'" value="'+escH(reg&&myName()&&!isDefaultName(myName())?myName():'')+'">'+
+    (reg?'<input class="inp auth-in" id="'+host+'M" type="email" maxlength="80" autocomplete="email" autocapitalize="off" inputmode="email" placeholder="'+T('auEmail')+'">':'')+
+    '<div class="auth-pw"><input class="inp auth-in" id="'+host+'P" type="password" maxlength="40" autocomplete="'+(reg?'new-password':'current-password')+'" placeholder="'+T('auPw')+'" onkeydown="if(event.key===\'Enter\')authGo(\''+host+'\')"><button class="auth-eye" onclick="var p=document.getElementById(\''+host+'P\');p.type=p.type===\'password\'?\'text\':\'password\'">👁</button></div>'+
+    '<div class="fr-note auth-err" id="'+host+'E"></div>'+
+    '<button class="btn btn-gold cta auth-go" id="'+host+'G" onclick="authGo(\''+host+'\')">'+T(reg?'auRegBtn':'auLogBtn')+'</button>'+
+    (reg?'<div class="fr-note auth-hint">'+T('auRegHint')+'</div>':'<button class="auth-skip auth-forgot" onclick="openReset()">'+T('auForgot')+'</button>')+
+    (host==='nm'&&reg?'<button class="auth-skip" onclick="authSkip()">'+T('auSkip')+'</button>':'');
+}
+function renderAuth(host){ var el=document.getElementById(host==='nm'?'nmAuth':'accAuth'); if(el) el.innerHTML=authFormHtml(host); }
+function authErr(host,t){ var e=document.getElementById(host+'E'); if(e) e.textContent=t||''; if(t) sfx('error'); }
+function authBusy(host,on){ var b=document.getElementById(host+'G'); if(b){ b.disabled=on; b.textContent=on?'…':T(AUTHMODE==='reg'?'auRegBtn':'auLogBtn'); } }
+function authCode(e){ var c=String(e&&(e.code||e.message)||''); if(/name-taken/.test(c)) return T('nameTaken'); if(/email-already-in-use|credential-already-in-use|provider-already-linked/.test(c)) return T('emailTaken'); if(/invalid-email/.test(c)) return T('auEmailBad'); if(/weak-password/.test(c)) return T('auWeak');
+  if(/wrong-password|user-not-found|invalid-credential|invalid-login|INVALID_LOGIN/.test(c)) return T('auBad'); if(/too-many-requests/.test(c)) return T('auMany'); if(/network/.test(c)) return T('netNeed'); return T('netErr'); }
+function authGo(host){
+  var n=(document.getElementById(host+'N').value||'').trim(), pw=document.getElementById(host+'P').value||'', reg=AUTHMODE==='reg';
+  var mEl=document.getElementById(host+'M'), mail=mEl?(mEl.value||'').trim().toLowerCase():'', byMail=!reg&&n.indexOf('@')>0;
+  if(byMail){ if(!validEmail(n)){ authErr(host,T('auEmailBad')); return; } }
+  else if(!validName(n)||isDefaultName(n)){ authErr(host,T('nameInvalid')); return; }
+  if(reg&&!validEmail(mail)){ authErr(host,T('auEmailBad')); if(mEl) mEl.focus(); return; }
+  if(pw.length<6){ authErr(host,T('auWeak')); return; }
+  authErr(host,''); authBusy(host,true);
+  var email=reg?mail:(byMail?n.toLowerCase():null);
+  loadFirebase().then(function(){ if(!getDB()) throw {code:'network'}; return waitAuth(6000); }).then(function(){
+    var cur=firebase.auth().currentUser;
+    if(AUTHMODE==='reg'){
+      return db.ref('usernames/'+nameKey(n)).once('value').then(function(sn){
+        if(sn.exists()&&(!cur||sn.val()!==cur.uid)) throw {code:'name-taken'};
+        var cred=firebase.auth.EmailAuthProvider.credential(email,pw);
+        var p=(cur&&cur.isAnonymous)?cur.linkWithCredential(cred):firebase.auth().createUserWithEmailAndPassword(email,pw);
+        return p.then(function(res){ return claimName(n).then(function(){ return res; }); });
+      });
+    }
+    if(email) return firebase.auth().signInWithEmailAndPassword(email,pw);
+    // by name: the server finds the e-mail (only when the password is right); 4.2 accounts fall back to the name e-mail
+    var legacy=function(){ return firebase.auth().signInWithEmailAndPassword(nameEmail(n),pw); };
+    return nameAuthCall({a:'login',name:n,pw:pw}).then(function(r){
+      if(r&&r.email) return firebase.auth().signInWithEmailAndPassword(r.email,pw);
+      if(r&&r.err==='many') throw {code:'too-many-requests'};
+      return legacy();
+    },legacy);
+  }).then(function(res){
+    if(!byMail) return authDone(res);
+    // signed in by e-mail: take the player's name from the server
+    var u0=(res&&res.user)||firebase.auth().currentUser; n='';
+    return (u0?db.ref('players/'+u0.uid+'/name').once('value').then(function(sn){ n=sn.val()||''; }).catch(function(){}):Promise.resolve()).then(function(){ authDone(res); });
+  }).catch(function(e){ console.warn('auth',e); authBusy(host,false); authErr(host,authCode(e)); });
+  function authDone(res){
+    if(!n||n.indexOf('@')>0) n=myName();
+    try{ localStorage.setItem('dwName',n); }catch(e){} playerNames[0]=n;
+    var u=(res&&res.user)||firebase.auth().currentUser; if(u) onSignedIn(u);
+    authBusy(host,false); closeAllModals(); sfx('friend'); sparkBurst(innerWidth/2,innerHeight*0.4,'#ffd76a',18);
+    showToast(tpl(T(AUTHMODE==='reg'?'auRegOk':'auLogOk'),{n:n}),3000); refreshProfileChip(); pushMyPlayer(); pushProgress(true);
+    setTimeout(function(){ coachTry('menu','screen-menu'); },900);
+  }
+}
+// ── forgotten password: Firebase e-mails a link to set a new one ──
+function openReset(){ var m=document.getElementById('pwModal'); m.dataset.mode='reset';
+  document.getElementById('pwH').textContent='🔑 '+T('rsH'); var i=document.getElementById('pwNew'); i.type='text'; i.autocomplete='email'; i.placeholder=T('auNameOrEmail');
+  var pre=''; ['nmN','accN'].forEach(function(id){ var e=document.getElementById(id); if(e&&e.value&&!pre) pre=e.value.trim(); }); i.value=pre;
+  pwMsg(T('rsHint')); document.getElementById('pwOk').textContent=T('rsBtn'); m.classList.add('open'); }
+function openAddEmail(){ var m=document.getElementById('pwModal'); m.dataset.mode='email';
+  document.getElementById('pwH').textContent='📧 '+T('addEmail'); var i=document.getElementById('pwNew'); i.type='email'; i.autocomplete='email'; i.placeholder=T('auEmail'); i.value='';
+  pwMsg(T('addEmailHint')); document.getElementById('pwOk').textContent='OK'; m.classList.add('open'); }
+function pwMsg(t,bad){ var e=document.getElementById('pwErr'); e.textContent=t||''; e.className='fr-note pw-msg'+(bad?' bad':''); if(bad) sfx('error'); }
+function resetSend(){
+  var v=(document.getElementById('pwNew').value||'').trim(), b=document.getElementById('pwOk');
+  if(!v){ pwMsg(T('rsHint'),true); return; }
+  if(v.indexOf('@')>0&&!validEmail(v)){ pwMsg(T('auEmailBad'),true); return; }
+  b.disabled=true; b.textContent='…';
+  var done=function(t){ b.disabled=false; b.textContent=T('rsBtn'); pwMsg(t); sfx('friend'); }, fail=function(t){ b.disabled=false; b.textContent=T('rsBtn'); pwMsg(t,true); };
+  loadFirebase().then(function(){ if(!getDB()) throw {code:'network'}; try{ firebase.auth().languageCode=lang; }catch(e){}
+    if(v.indexOf('@')>0) return firebase.auth().sendPasswordResetEmail(v.toLowerCase()).then(function(){ done(T('rsSentE')); });
+    return nameAuthCall({a:'reset',name:v,lang:lang}).then(function(r){ if(r&&r.sent) done(tpl(T('rsSent'),{e:r.sent})); else if(r&&r.err==='noemail') fail(T('rsNoEmail')); else fail(T('rsNoName')); });
+  }).catch(function(e){ console.warn('reset',e); var c=String(e&&e.code||''); fail(/invalid-email/.test(c)?T('auEmailBad'):/network/.test(c)?T('netNeed'):T('netErr')); });
+}
+function addEmailSave(){
+  var v=(document.getElementById('pwNew').value||'').trim().toLowerCase(), b=document.getElementById('pwOk');
+  if(!validEmail(v)){ pwMsg(T('auEmailBad'),true); return; }
+  var u=firebase.auth().currentUser; if(!u) return; b.disabled=true;
+  try{ firebase.auth().languageCode=lang; }catch(e){}
+  u.verifyBeforeUpdateEmail(v).then(function(){ b.disabled=false; pwMsg(tpl(T('addEmailSent'),{e:v})); sfx('friend'); })
+   .catch(function(e){ b.disabled=false; pwMsg(/recent-login/.test(String(e.code))?T('pwRelog'):authCode(e),true); });
+}
+function pwOk(){ var m=document.getElementById('pwModal').dataset.mode; if(m==='reset') resetSend(); else if(m==='email') addEmailSave(); else pwChangeSave(); }
+// play without a password: just a name, kept on this device
+function authSkip(){
+  var n=(document.getElementById('nmN').value||'').trim();
+  if(!validName(n)||isDefaultName(n)){ authErr('nm',T('nameInvalid')); return; }
+  claimName(n).then(function(r){ if(!r.ok&&r.reason!=='offline'){ authErr('nm',nameProblemText(r.reason)); return; }
+    try{ localStorage.setItem('dwName',n); }catch(e){} playerNames[0]=n; refreshProfileChip(); closeAllModals(); pushMyPlayer(); showToast(tpl(T('nmHi'),{n:n}),2500); setTimeout(function(){ coachTry('menu','screen-menu'); },800); })
+  .catch(function(){ try{ localStorage.setItem('dwName',n); }catch(e){} playerNames[0]=n; refreshProfileChip(); closeAllModals(); });
+}
+function openPwChange(){ var m=document.getElementById('pwModal'); m.dataset.mode='pw'; var i=document.getElementById('pwNew'); i.type='password'; i.autocomplete='new-password'; document.getElementById('pwOk').textContent='OK'; document.getElementById('pwErr').className='fr-note pw-msg bad'; document.getElementById('pwH').textContent='🔑 '+T('pwChLbl'); document.getElementById('pwNew').placeholder=T('auPwNew'); document.getElementById('pwNew').value=''; document.getElementById('pwErr').textContent=''; document.getElementById('pwModal').classList.add('open'); }
+function pwChangeSave(){
+  var pw=document.getElementById('pwNew').value||'', err=document.getElementById('pwErr');
+  if(pw.length<6){ err.textContent=T('auWeak'); return; }
+  firebase.auth().currentUser.updatePassword(pw).then(function(){ closeAllModals(); showToast(T('pwChanged'),2500); sfx('friend'); })
+    .catch(function(e){ err.textContent=/recent-login/.test(String(e.code))?T('pwRelog'):authCode(e); });
+}
+function openStats(){ renderStats(); document.getElementById('stStatsH').textContent=T('stStatsH'); document.getElementById('statsModal').classList.add('open'); }
+function openAvatars(){ renderAvatars(); document.getElementById('avH').textContent='📷 '+T('avLbl'); document.getElementById('avModal').classList.add('open'); }
+function askName(){
+  if(myName()&&!isDefaultName(myName())) return;
+  if(curScreen!=='screen-menu'||document.querySelector('.overlay.open')){ setTimeout(askName,1200); return; }
+  document.getElementById('nmH').textContent=T('nmH'); AUTHMODE='reg'; renderAuth('nm');
+  document.getElementById('nameModal').classList.add('open'); setTimeout(function(){ try{ document.getElementById('nmN').focus(); }catch(e){} },400);
+}
+function nameSave(){
+  var n=document.getElementById('nmIn').value.trim(), err=document.getElementById('nmErr');
+  if(!validName(n)||isDefaultName(n)){ err.textContent=T('nameInvalid'); sfx('error'); return; }
+  err.textContent=T('nameChecking');
+  var done=function(){ try{ localStorage.setItem('dwName',n); }catch(e){} playerNames[0]=n; refreshProfileChip(); try{ renderAccount(); }catch(e){} document.getElementById('nameModal').classList.remove('open'); sfx('friend'); showToast(tpl(T('nmHi'),{n:n}),2500); pushMyPlayer(); pushProgress(); setTimeout(function(){ coachTry('menu','screen-menu'); },800); };
+  claimName(n).then(function(r){ if(r.ok) done(); else if(r.reason==='offline') done(); else { err.textContent=nameProblemText(r.reason); sfx('error'); } }).catch(function(){ done(); });
 }
 function offerResume(){
   var sv=loadSave(); if(!sv||pendingRoom) return;
@@ -3987,6 +4357,25 @@ function requestAIMove(g,cb){
 }
 
 // ═══════════════════════
+//  PRAISE — big pop-up words for good moves, wins and crystals ("Класс!", "Отлично!", "Мега-захват!")
+// ═══════════════════════
+var capStreak=0;
+function praise(txt,cls,sub){
+  var el=document.createElement('div'); el.className='praise '+(cls||''); el.innerHTML='<b>'+txt+'</b>'+(sub?'<small>'+sub+'</small>':'');
+  document.body.appendChild(el); setTimeout(function(){ el.classList.add('out'); setTimeout(function(){ el.remove(); },450); },1150);
+}
+function capturePraise(n,byMe){
+  if(!byMe){ capStreak=0; return; }
+  capStreak++;
+  var words=n>=7?['pMega','p-mega']:n>=5?['pSuper','p-super']:n>=3?['pGreat','p-great']:n>=2?['pCool','p-cool']:['pGot','p-got'];
+  var bonus=(gameMode==='pve'||gameMode==='online')?(n>=7?5:n>=4?2:0):0;
+  var sub=capStreak>=2?tpl(T('pStreak'),{n:capStreak}):'';
+  if(bonus){ addCrystals(bonus,true); sub=(sub?sub+' · ':'')+'+'+bonus+' ◆'; }
+  praise(T(words[0]),words[1],sub);
+  if(n>=5) try{ fireConfetti(['#ffd700','#ff8800','#ffee88']); }catch(e){}
+}
+
+// ═══════════════════════
 //  SOUND BUTTON (every screen) — one tap mutes / unmutes sound + music
 // ═══════════════════════
 function isMuted(){ return !SET.sound&&!SET.music; }
@@ -4017,6 +4406,7 @@ function coachReset(){ try{ ['menu','online','stages','board'].forEach(function(
 function coachSeen(n){ try{ return !!localStorage.getItem('dwCo_'+n); }catch(e){ return true; } }
 function coachTry(name,scr,tries){
   if(!SET.coach||coachSeen(name)||COACH) return;
+  if(name==='menu'&&!myName()){ return; }
   tries=tries|0; if(tries>12) return;
   if(curScreen!==scr||document.querySelector('.overlay.open')){ setTimeout(function(){ coachTry(name,scr,tries+1); },900); return; }
   var lay=!/jsdom/.test(navigator.userAgent), steps=COACH_TOURS[name].filter(function(st){ var el=document.querySelector(st[0]); return el&&(!lay||(el.offsetParent!==null&&el.getBoundingClientRect().width>0)); });
@@ -4072,12 +4462,18 @@ function tierLabel(r){ var t=tierOf(r); return t[1]+' '+T(t[2]); }
 // ═══════════════════════
 var _ac = null;
 function getAC(){
-  if(!_ac) try{ _ac = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){}
-  if(_ac&&_ac.state==='suspended') try{ _ac.resume(); }catch(e){}
+  if(_ac&&_ac.state==='closed'){ _ac=null; MUS.master=null; MUS.bus=null; MUS.noise=null; if(MUS.timer){ clearInterval(MUS.timer); MUS.timer=null; } }
+  if(!_ac) try{ _ac = new (window.AudioContext||window.webkitAudioContext)(); _ac.onstatechange=function(){ if(_ac&&_ac.state==='running') setTimeout(musicSync,0); }; }catch(e){}
+  // 'suspended' (no tap yet) and 'interrupted' (iPhone: call, alert, background) both need resume()
+  if(_ac&&_ac.state!=='running') try{ var p=_ac.resume(); if(p&&p.catch) p.catch(function(){}); }catch(e){}
   return _ac;
 }
-// Mobile browsers only allow sound after a user gesture: warm the context up on the first touch/click
-(function(){ var done=false; function unlock(){ if(done) return; done=true; getAC(); } ['touchstart','mousedown','keydown'].forEach(function(ev){ document.addEventListener(ev,unlock,{once:true,passive:true}); }); })();
+// Browsers allow sound only after a real tap. touchstart/pointerdown do NOT count on Android Chrome
+// (only pointerup/touchend/click/keydown do), and one failed try used to disable the unlock forever.
+// Now every tap re-tries until the sound is running and the music is playing.
+function audioNeedsKick(){ if(!_ac||_ac.state!=='running') return true; if(MUS.appP) return true; if(!musicOn()) return false; return isMyTrack()?(!MYS.audio||MYS.audio.paused):!MUS.timer; }
+function audioKick(){ if(document.hidden) return; MUS.appP=false; if(!SET.sound&&!SET.music) return; getAC(); musicSync(); }
+(function(){ function unlock(){ if(audioNeedsKick()) audioKick(); } ['pointerup','touchend','click','keydown'].forEach(function(ev){ document.addEventListener(ev,unlock,{capture:true,passive:true}); }); })();
 
 // ═══════════════════════
 //  MUSIC — quiet generative background (no audio files, plays forever without repeating)
@@ -4225,39 +4621,79 @@ function trackTick(tr){
 }
 var mixIdx=0;
 function nextMixTrack(){ mixIdx=(mixIdx+1)%TRACKS.length; MUS.tp=null; MUS.bar=0; }
-function curTrack(){ if(SET.track==='mix') return TRACKS[mixIdx%TRACKS.length]; for(var i=0;i<TRACKS.length;i++) if(TRACKS[i].id===SET.track) return TRACKS[i]; return TRACKS[0]; }
-function musicTick(){ var tr=curTrack(); if(tr.gen){ if(SET.track==='mix'&&MUS.bar>=16){ MUS.bar=0; nextMixTrack(); } return genTick(tr.gen==='calm'); } return trackTick(tr); }
+function isMyTrack(){ return String(SET.track||'').indexOf('my')===0; }
+function curTrack(){ if(isMyTrack()) return {id:SET.track,ru:myTrackName(),en:myTrackName(),my:1}; if(SET.track==='mix') return TRACKS[mixIdx%TRACKS.length]; for(var i=0;i<TRACKS.length;i++) if(TRACKS[i].id===SET.track) return TRACKS[i]; return TRACKS[0]; }
+function musicTick(){ if(isMyTrack()) return; var tr=curTrack(); if(tr.gen){ if(SET.track==='mix'&&MUS.bar>=16){ MUS.bar=0; nextMixTrack(); } return genTick(tr.gen==='calm'); } return trackTick(tr); }
 function trackName(tr){ return lang==='ru'?tr.ru:tr.en; }
+// ── own songs ──
+var MYS={list:[],loaded:false,audio:null,cur:null,url:null};
+function songDB(){ return new Promise(function(res,rej){ try{ var r=indexedDB.open('dotswar',1); r.onupgradeneeded=function(){ r.result.createObjectStore('songs',{keyPath:'id'}); }; r.onsuccess=function(){ res(r.result); }; r.onerror=function(){ rej(r.error); }; }catch(e){ rej(e); } }); }
+function songsLoad(){ return songDB().then(function(db2){ return new Promise(function(res){ var out=[], tx=db2.transaction('songs','readonly'), cur=tx.objectStore('songs').openCursor();
+  cur.onsuccess=function(){ var c=cur.result; if(c){ out.push({id:c.value.id,name:c.value.name}); c.continue(); } else { out.sort(function(a,b){ return a.id<b.id?-1:1; }); MYS.list=out; MYS.loaded=true; res(out); try{ renderMusicList(); }catch(e){} } }; cur.onerror=function(){ res([]); }; }); }).catch(function(){ return []; }); }
+function onSongFiles(inp){
+  var files=[].slice.call(inp.files||[]); inp.value=''; if(!files.length) return;
+  var big=files.filter(function(f){ return f.size>40*1024*1024; }); files=files.filter(function(f){ return f.size<=40*1024*1024&&(/^audio\//.test(f.type)||/\.(mp3|m4a|aac|wav|ogg|flac|opus)$/i.test(f.name)); });
+  if(big.length) showToast(T('musBig'),3000); if(!files.length) return;
+  songDB().then(function(db2){ var tx=db2.transaction('songs','readwrite'), st=tx.objectStore('songs'), t0=Date.now(), firstId=null;
+    files.forEach(function(f,i){ var id='s'+(t0+i); if(!firstId) firstId=id; st.put({id:id,name:f.name.replace(/\.[^.]+$/,'').slice(0,60),blob:f}); });
+    tx.oncomplete=function(){ showToast(tpl(T('musAdded'),{n:files.length}),2500); sfx('pop'); songsLoad().then(function(){ pickTrack(files.length>1?'my':'my:'+firstId); }); };
+    tx.onerror=function(){ showToast(T('musFail'),3000); }; }).catch(function(){ showToast(T('musFail'),3000); });
+}
+function songDel(id){ songDB().then(function(db2){ var tx=db2.transaction('songs','readwrite'); tx.objectStore('songs').delete(id); tx.oncomplete=function(){ if(SET.track==='my:'+id||(SET.track==='my'&&MYS.list.length<=1)) pickTrack('gen'); songsLoad(); }; }); }
+function myTrackName(){ if(SET.track==='my') return T('musMineAll'); var id=String(SET.track).slice(3); for(var i=0;i<MYS.list.length;i++) if(MYS.list[i].id===id) return MYS.list[i].name; return T('musMine'); }
+function myPlayId(id){
+  songDB().then(function(db2){ var rq=db2.transaction('songs','readonly').objectStore('songs').get(id); rq.onsuccess=function(){ var v=rq.result; if(!v){ if(SET.track==='my'&&MYS.list.length) myNext(); return; }
+    if(!MYS.audio){ MYS.audio=new Audio(); MYS.audio.preload='auto'; MYS.audio.addEventListener('ended',function(){ if(SET.track==='my') myNext(); else { MYS.audio.currentTime=0; MYS.audio.play().catch(function(){}); } }); }
+    if(MYS.url) URL.revokeObjectURL(MYS.url); MYS.url=URL.createObjectURL(v.blob); MYS.cur=id; MYS.audio.src=MYS.url; MYS.audio.volume=myVol(); if(musicOn()) MYS.audio.play().catch(function(){}); }; });
+}
+function myNext(){ if(!MYS.list.length) return; var i=0; for(var k=0;k<MYS.list.length;k++) if(MYS.list[k].id===MYS.cur) i=k+1; myPlayId(MYS.list[i%MYS.list.length].id); }
+function myVol(){ var gs=document.getElementById('screen-game'); return (gs&&gs.classList.contains('active'))?0.35:0.55; }
+function mySync(){
+  if(!isMyTrack()||!musicOn()){ if(MYS.audio&&!MYS.audio.paused) MYS.audio.pause(); return; }
+  var want=SET.track==='my'?null:String(SET.track).slice(3);
+  if(!MYS.loaded){ songsLoad().then(function(){ mySync(); }); return; }
+  if(SET.track==='my'&&!MYS.list.length){ SET.track='gen'; saveSet(); return; }
+  if(!MYS.audio||(want&&MYS.cur!==want)||(!want&&!MYS.list.some(function(x){ return x.id===MYS.cur; }))){ myPlayId(want||MYS.list[0].id); return; }
+  MYS.audio.volume=myVol(); if(MYS.audio.paused) MYS.audio.play().catch(function(){});
+}
 function pickTrack(id){
   SET.track=id; if(!SET.music) SET.music=true; saveSet(); refreshMute();
   MUS.tp=null; MUS.bar=0; MUS.bi=0; MUS.loop=0; if(id==='mix') mixIdx=0;
   if(_ac) MUS.next=_ac.currentTime+0.15;
   musicSync(); renderMusicList(); try{ renderSettings(); }catch(e){}
 }
-function openMusic(){ renderMusicList(); document.getElementById('musicModal').classList.add('open'); getAC(); musicSync(); }
+function openMusic(){ var st=document.getElementById('settingsModal'); if(st) st.classList.remove('open'); renderMusicList(); document.getElementById('musicModal').classList.add('open'); getAC(); musicSync(); songsLoad(); }
 function renderMusicList(){
   var L=document.getElementById('musList'); if(!L) return;
   document.getElementById('musH').textContent=T('musH'); document.getElementById('musNote').textContent=T('musNote');
   var items=[{id:'mix',ru:'🔀 Все по очереди',en:'🔀 Play all in turn'}].concat(TRACKS);
-  L.innerHTML=items.map(function(tr){ var on=SET.track===tr.id;
+  var mine='<div class="mus-sec">'+T('musMine')+'</div>'+
+    '<button class="mus-it mus-add" onclick="document.getElementById(\'songFile\').click()"><span class="mus-ic">➕</span><span class="mus-n">'+T('musAdd')+'</span></button>'+
+    (MYS.list.length?'<button class="mus-it'+(SET.track==='my'?' on':'')+'" onclick="pickTrack(\'my\')"><span class="mus-ic">'+(SET.track==='my'?'🔊':'📱')+'</span><span class="mus-n">'+T('musMineAll')+' ('+MYS.list.length+')</span></button>':'')+
+    MYS.list.map(function(sg){ var on=SET.track==='my:'+sg.id; return '<div class="mus-row"><button class="mus-it'+(on?' on':'')+'" onclick="pickTrack(\'my:'+sg.id+'\')"><span class="mus-ic">'+(on?'🔊':'🎧')+'</span><span class="mus-n">'+escH(sg.name)+'</span></button><button class="mus-del" onclick="songDel(\''+sg.id+'\')">✕</button></div>'; }).join('');
+  L.innerHTML=mine+'<div class="mus-sec">'+T('musBuilt')+'</div>'+items.map(function(tr){ var on=SET.track===tr.id;
     return '<button class="mus-it'+(on?' on':'')+'" onclick="pickTrack(\''+tr.id+'\')"><span class="mus-ic">'+(on?'🔊':'🎵')+'</span><span class="mus-n">'+trackName(tr)+'</span>'+(tr.a?'<span class="mus-a">'+tr.a+'</span>':'')+'</button>'; }).join('');
 }
-function musicOn(){ return SET.music&&!MUS.paused&&!document.hidden; }
+function musicOn(){ return SET.music&&!MUS.paused&&!MUS.appP&&!document.hidden; }
 function musicSync(){
   var ac=_ac;
-  if(!musicOn()){ if(MUS.master&&ac){ var g=MUS.master.gain; g.cancelScheduledValues(ac.currentTime); g.setValueAtTime(g.value,ac.currentTime); g.linearRampToValueAtTime(0.0001,ac.currentTime+0.6); }
+  mySync();
+  if(!musicOn()||isMyTrack()){ if(MUS.master&&ac){ var g=MUS.master.gain; g.cancelScheduledValues(ac.currentTime); g.setValueAtTime(g.value,ac.currentTime); g.linearRampToValueAtTime(0.0001,ac.currentTime+0.6); }
     if(MUS.timer){ clearInterval(MUS.timer); MUS.timer=null; } return; }
   ac=getAC(); if(!ac) return;
   if(!MUS.master) musicBuild(ac);
   if(!MUS.timer){ MUS.next=ac.currentTime+0.1; MUS.timer=setInterval(musicTick,300); musicTick(); }
   var g=MUS.master.gain; g.cancelScheduledValues(ac.currentTime); g.setValueAtTime(Math.max(0.0001,g.value),ac.currentTime); g.linearRampToValueAtTime(musicVol(),ac.currentTime+2.5);
 }
-function appPause(){ MUS.paused=true; musicSync(); gamePause(); }
-function appResume(){ MUS.paused=false; musicSync(); }
-document.addEventListener('visibilitychange',function(){ musicSync(); if(document.hidden) gamePause(); if(document.hidden&&_ac&&_ac.state==='running'&&!SET.sound) try{_ac.suspend();}catch(e){} });
+// app pause has its own flag, so a missed resume can never keep the music off (any tap clears it)
+function appPause(){ MUS.appP=true; musicSync(); gamePause(); }
+function appResume(){ MUS.appP=false; getAC(); musicSync(); }
+window.addEventListener('pageshow',function(){ if(!document.hidden) audioKick(); });
+window.addEventListener('focus',function(){ if(audioNeedsKick()) audioKick(); });
+document.addEventListener('visibilitychange',function(){ if(!document.hidden){ MUS.appP=false; if(SET.sound||SET.music) getAC(); } musicSync(); if(document.hidden) gamePause(); if(document.hidden&&_ac&&_ac.state==='running'&&!SET.sound) try{_ac.suspend();}catch(e){} });
 // music may only start after the first tap (browser rule)
-(function(){ function go(){ document.removeEventListener('pointerdown',go,true); document.removeEventListener('keydown',go,true); setTimeout(musicSync,50); }
-  document.addEventListener('pointerdown',go,true); document.addEventListener('keydown',go,true); })();
+// start right away: in the Android/iPhone app sound needs no tap; in a browser this waits for the first tap
+setTimeout(audioKick,300);
 
 // ═══════════════════════
 //  SFX — short synthesised sounds for every action (wood, stone, bells, chimes); no files
@@ -4898,7 +5334,8 @@ function closeAllModals(){
   _cfCb=null;
 }
 // any window that opens makes a sound (every openX() just adds the "open" class)
-(function(){ try{ var mo=new MutationObserver(function(ms){ ms.forEach(function(m){ var el=m.target; if(el.classList.contains('open')&&!el._wasOpen){ el._wasOpen=true; el.classList.remove('closing'); sfx(el.id==='socPop'?'pop':'open'); } else if(!el.classList.contains('open')) el._wasOpen=false; }); });
+var ovZ=1000;
+(function(){ try{ var mo=new MutationObserver(function(ms){ ms.forEach(function(m){ var el=m.target; if(el.classList.contains('open')&&!el._wasOpen){ el._wasOpen=true; el.classList.remove('closing'); el.style.zIndex=++ovZ; sfx(el.id==='socPop'?'pop':'open'); } else if(!el.classList.contains('open')) el._wasOpen=false; }); });
   document.querySelectorAll('.overlay').forEach(function(o){ mo.observe(o,{attributes:true,attributeFilter:['class']}); }); }catch(e){} })();
 // taps: every button clicks like wood on stone
 document.addEventListener('click',function(e){ var b=e.target.closest&&e.target.closest('.btn,.mtool,.mcard,.stg,.exp-card,.seg button,.wtab,.fr-b,.bst-row,.mus-it,.shop-it,.av-opt,.lv-card,.mini-lv,.otab,.coach-ok,.coach-skip,.lseg,.mseg,.mchip'); if(!b||b.disabled) return; sfx(b.classList.contains('stg')||b.classList.contains('exp-card')?'stone':'tap'); },true);
@@ -4967,7 +5404,7 @@ function confirmNames(){
     if(!r.ok){ showToast(nameProblemText(r.reason),5000); document.getElementById('ni1').classList.add('bad'); return; }
     playerNames[0]=n1;
     try{localStorage.setItem('dwName',n1);}catch(e){}
-    buildOlLvs();SS('screen-online');setOS('','');
+    buildOlLvs();SS('screen-online');setOS('',''); olLabels();
     setTimeout(function(){ coachTry('online','screen-online'); },700);
   });
   refreshOlMe(); ensureAuth(); loadFirebase().then(function(){ syncMyPlayer(); }).catch(function(){});
@@ -4976,6 +5413,7 @@ function confirmNames(){
   if(pendingRoom){ var code=pendingRoom; pendingRoom=null; switchTab('j'); document.getElementById('joinIn').value=code; joinRoom(); }
 }
 function startGame(){
+  capStreak=0;
   if(gameMode==='online'&&!olReady) return;
   if(aiTimer){clearTimeout(aiTimer);aiTimer=null;}
   aiToken++;
@@ -4988,7 +5426,7 @@ function startGame(){
   setWorldLook(st?st.w:1);
   if(gameMode==='pve'){
     n=st?st.n:(curMap?EXP.n:(selLv===1?11:selLv===2?16:21));
-    playerNames[0]=lang==='ru'?'Красные':'Red';
+    playerNames[0]=myName()||(lang==='ru'?'Красные':'Red');
     playerNames[1]=p2Name();
     if(st&&st.boss) playerNames[1]=T('boss'+st.w);
   } else {
@@ -5008,6 +5446,8 @@ function startGame(){
   }
   var fogK=st?(st.fog|0):(gameMode==='pve'&&curMap&&curFog?(n<=11?2:n<=16?3:4):0);
   if(fogK) setupFog(G,fogK);
+  if(st&&st.storm) G.storm=1;
+  if(G.mapId==='glacier'){ G._melt={}; G._meltAt=0; }
   var tag=document.getElementById('stageTag');
   if(tag) tag.textContent = st ? WORLD_ICO[st.w]+' '+(st.boss?'👑 '+T('boss'+st.w):tpl(T('stgName'),{n:curStage%12+1}))+(st.map?' · '+mapTitle(G):'')+(st.fog?' · 🌫':'')+(st.cond&&!st.boss?' · '+stageCondText(st):'') : (gameMode==='pve'&&curMap ? mapTitle(G) : '');
   var bb=document.getElementById('btnBoost'); if(bb) bb.style.display=gameMode==='pve'?'':'none';
@@ -5017,7 +5457,8 @@ function startGame(){
   undoStack=[]; undoLeft=undoLimit();
   SS('screen-game'); sfx('start');
   if(st&&st.boss) setTimeout(function(){ showBanner(tpl(T('bossIntro'),{b:T('boss'+st.w)}),4000); },700);
-  else if(G.fog) setTimeout(function(){ showBanner(T('fogIntro'),3500); },700);
+  else if(G.mapId==='glacier') setTimeout(function(){ showBanner(T('glacierIntro'),4000); },700);
+  else if(G.fog) setTimeout(function(){ showBanner(T(G.storm?'stormIntro':'fogIntro'),3500); },700);
   refreshUndoBtn();
   document.getElementById('btnRst').style.display=gameMode==='online'?'none':'';
   // Delay to allow DOM to paint and measure correctly
@@ -5094,10 +5535,15 @@ var STAGES=[
   {lv:2,n:13,fog:2}, {lv:3,n:13,map:'volcano'}, {lv:3,n:16,fog:3},
   {lv:3,n:16,map:'volcano',cond:'first',k:5}, {lv:3,n:16,fog:3,map:'forest'}, {lv:3,n:16,map:'volcano',cond:'handicap',k:2},
   {lv:3,n:16,fog:4,cond:'blitz',k:10}, {lv:3,n:21,map:'volcano'}, {lv:3,n:21,fog:4,map:'waters'},
-  {lv:3,n:21,fog:4,cond:'first',k:8}, {lv:3,n:21,map:'volcano',fog:3,cond:'handicap',k:2}, {lv:3,n:21,fog:5,map:'volcano',cond:'handicap',k:3,boss:1}
+  {lv:3,n:21,fog:4,cond:'first',k:8}, {lv:3,n:21,map:'volcano',fog:3,cond:'handicap',k:2}, {lv:3,n:21,fog:5,map:'volcano',cond:'handicap',k:3,boss:1},
+  // IV. Ice world — glaciers that melt during the battle, snowstorms that bring the fog back
+  {lv:3,n:13,map:'glacier'}, {lv:3,n:13,map:'glacier',cond:'first',k:4}, {lv:3,n:16,map:'glacier'},
+  {lv:3,n:16,fog:3,storm:1}, {lv:3,n:16,map:'glacier',cond:'handicap',k:2}, {lv:3,n:16,map:'glacier',fog:3,storm:1},
+  {lv:3,n:16,map:'mountains',cond:'blitz',k:10}, {lv:3,n:21,map:'glacier'}, {lv:3,n:21,map:'glacier',fog:4,storm:1},
+  {lv:3,n:21,map:'glacier',cond:'first',k:8}, {lv:3,n:21,map:'glacier',fog:3,storm:1,cond:'handicap',k:3}, {lv:3,n:21,map:'glacier',fog:4,storm:1,cond:'handicap',k:4,boss:1}
 ];
 STAGES.forEach(function(st,i){ st.w=Math.floor(i/12)+1; });
-var WORLD_ICO={1:'🌿',2:'🌊',3:'☀️'}, stgWorld=0;
+var WORLD_ICO={1:'🌿',2:'🌊',3:'☀️',4:'❄️'}, stgWorld=0, NWORLDS=4;
 var curStage=-1, STARS=[];
 (function(){ try{ var v=JSON.parse(localStorage.getItem('dwStars')||'[]'); if(Array.isArray(v)) STARS=v.map(function(x){return x|0;}); }catch(e){} while(STARS.length<STAGES.length) STARS.push(0); })();
 function saveStars(){ try{localStorage.setItem('dwStars',JSON.stringify(STARS));}catch(e){} pushProgress(); }
@@ -5120,7 +5566,7 @@ function checkPuzzleReward(w){
   if(puzzleCount(w)<12) return; WALLET.puz=WALLET.puz||{}; if(WALLET.puz[w]) return; WALLET.puz[w]=1; saveWallet(); addCrystals(100,true);
   setTimeout(function(){ openPuzzle(w,-1); sfx('fanfare'); showToast(tpl(T('puzReward'),{n:100}),5000); try{ fireConfetti(['#ffd700','#8ff0ff','#ff8800']); }catch(e){} },1200);
 }
-var BOSS_SKIN={1:'sunstone',2:'rose',3:'obsidian'};
+var BOSS_SKIN={1:'sunstone',2:'rose',3:'obsidian',4:'aurora'};
 function bossReward(w){
   WALLET.bossW=WALLET.bossW||{}; if(WALLET.bossW[w]) return; WALLET.bossW[w]=1;
   var sk=BOSS_SKIN[w], extra=WALLET.owned['st_'+sk]?150:0; WALLET.owned['st_'+sk]=1; saveWallet(); addCrystals(100+extra,true);
@@ -5137,7 +5583,7 @@ function refreshStageMap(){
   var nextIdx=-1; for(var i=0;i<STAGES.length;i++){ if(stageUnlocked(i)&&STARS[i]===0){nextIdx=i;break;} }
   if(!stgWorld) stgWorld=nextIdx>=0?STAGES[nextIdx].w:1;
   var wt=document.getElementById('wTabs');
-  if(wt){ wt.innerHTML=''; [1,2,3].forEach(function(w){ var un=worldUnlocked(w), sum=0; for(var j=(w-1)*12;j<w*12;j++) sum+=STARS[j]|0;
+  if(wt){ wt.innerHTML=''; [1,2,3,4].forEach(function(w){ var un=worldUnlocked(w), sum=0; for(var j=(w-1)*12;j<w*12;j++) sum+=STARS[j]|0;
     var b=document.createElement('button'); b.className='wtab'+(w===stgWorld?' on':'')+(un?'':' locked'); b.setAttribute('data-w',w);
     var pc=puzzleCount(w);
     b.innerHTML='<span class="wi">'+(un?WORLD_ICO[w]:'🔒')+'</span><span class="wn">'+T('world'+w)+'</span><span class="ws">★ '+sum+'/36 · 🧩 '+pc+'/12</span>';
@@ -5154,7 +5600,7 @@ function refreshStageMap(){
     if(st.boss) el.className+=' boss';
     puzPos(el,puzPiece(st.w,i));
     if(STARS[i]>0&&i===lastRevealed){ el.className+=' reveal'; lastRevealed=-1; }
-    var ex=(st.map?MAP_ICO[st.map]+' ':'')+(st.fog?'🌫 ':'');
+    var ex=(st.map?MAP_ICO[st.map]+' ':'')+(st.fog?(st.storm?'🌨 ':'🌫 '):'');
     el.innerHTML='<div class="stg-n">'+(st.boss?'👑':(i%12+1))+'</div><div class="stg-lv">'+(st.boss?T('boss'+st.w):T('lv'+st.lv+'n')+' · '+(st.n-1)+'×'+(st.n-1))+'</div><div class="stg-cond">'+ex+(st.boss?'':stageCondText(st))+'</div><div class="stg-stars">'+stars+'</div>'+(un?'':'<span class="lock">🔒</span>');
     el.style.setProperty('--i',i%12); el.onclick=function(){ pickStage(i); };
     g.appendChild(el);
@@ -5180,7 +5626,7 @@ function checkStageEnd(g){
 //  ACHIEVEMENTS
 // ═══════════════════════
 var ACH=[{id:'cap1',ico:'🎯'},{id:'cap3',ico:'💥'},{id:'cap5',ico:'🌋'},{id:'flawless',ico:'🛡'},{id:'streak3',ico:'🔥'},{id:'streak10',ico:'🐉'},
-  {id:'legend',ico:'👑'},{id:'campaign',ico:'🏆'},{id:'online1',ico:'🌐'},{id:'games50',ico:'💎'},{id:'stars36',ico:'⭐'},{id:'blitz',ico:'⚡'},{id:'daily3',ico:'👑'},{id:'daily7',ico:'📅'},{id:'daily30',ico:'🗓'},{id:'world2',ico:'🌊'},{id:'world3',ico:'☀️'},{id:'fogwin',ico:'🌫'}];
+  {id:'legend',ico:'👑'},{id:'campaign',ico:'🏆'},{id:'online1',ico:'🌐'},{id:'games50',ico:'💎'},{id:'stars36',ico:'⭐'},{id:'blitz',ico:'⚡'},{id:'daily3',ico:'👑'},{id:'daily7',ico:'📅'},{id:'daily30',ico:'🗓'},{id:'world2',ico:'🌊'},{id:'world3',ico:'☀️'},{id:'world4',ico:'❄️'},{id:'fogwin',ico:'🌫'}];
 var ACHV={};
 (function(){ try{ ACHV=JSON.parse(localStorage.getItem('dwAch')||'{}')||{}; }catch(e){ACHV={};} })();
 function achText(id){ var t=T('ach_'+id).split('|'); return {n:t[0],d:t[1]||''}; }
@@ -5382,7 +5828,7 @@ function showPuzzleResult(){
   if(solved){
     var day=dayKey();
     var firstToday=!(DAILY.day===day&&DAILY[lv]);
-    if(firstToday){ var pg={e:10,m:20,h:40}[lv]||10; addCrystals(pg,true); setTimeout(function(){ showToast(tpl(T('cryGot'),{n:pg}),2500); },900); }
+    if(firstToday){ leagueAdd(1); var pg={e:10,m:20,h:40}[lv]||10; addCrystals(pg,true); setTimeout(function(){ showToast(tpl(T('cryGot'),{n:pg}),2500); },900); }
     if(DAILY.day!==day){ var st=dailyStreakNow(); DAILY.streak=st+1; DAILY.day=day; DAILY.e=0; DAILY.m=0; DAILY.h=0; if(DAILY.streak>DAILY.best) DAILY.best=DAILY.streak; }
     DAILY[lv]=1; DAILY.done=(DAILY.e&&DAILY.m&&DAILY.h)?1:0; saveDaily();
     line=tpl(T('pzStreakUp'),{s:DAILY.streak})+' · '+tpl(T('dlyProg'),{d:dailyCount()});
@@ -5425,7 +5871,7 @@ function schedAI(){
       }
       refreshUndoBtn();
     }
-    aiLock=false;checkEarly(G); saveGameNow();checkStageEnd(G);checkPuzzleEnd(G);
+    aiLock=false; meltTick(G); stormTick(G); checkEarly(G); saveGameNow();checkStageEnd(G);checkPuzzleEnd(G);
     computeAssist();
     if(G.over){clearTurnTimer();setTimeout(showResult,600);}
     else if(G.cur===2) schedAI();
@@ -5465,6 +5911,8 @@ function commitMove(r,c){
   // Play sound + capture animation if territory was captured
   var justMoved=3-G.cur;
   var gained=G.sc[justMoved-1]-before[justMoved-1];
+  if(gained>0&&gameMode!=='puzzle') capturePraise(gained,gameMode!=='online'?justMoved===1:justMoved===myPNum);
+  else if(gameMode!=='puzzle'&&justMoved===(gameMode==='online'?myPNum:1)) capStreak=0;
   if(gained>0){
     playCaptureSound(gained);
     spawnCaptureAnim(animCellsFromCap(G._lastCap),justMoved===1?CC.p1:CC.p2,gained,[r,c]);
@@ -5684,6 +6132,7 @@ function showResult(){
   if(!G._counted){ G._counted=true; var me=gameMode==='online'?myPNum:1; recordResult(w===me, w===0);
     if(gameMode==='online'){ G._rd=applyRating(w===me,w===0); }
     else if(gameMode==='pve'){ G._rd=applyRating(w===1,w===0,aiRating(),0.75); }
+    leagueAdd(gamePoints(w===me,w===0));
   }
   var rl=document.getElementById('resLogin'); if(rl){ var sg=isGuest()&&(gameMode==='pve'||gameMode==='online'); rl.style.display=sg?'':'none'; if(sg){ document.getElementById('resLoginT').textContent=T('resLogin'); document.getElementById('resLoginB').textContent=T('signIn'); } }
   if(typeof G._rd==='number'){ rEl.innerHTML=tpl(T('ratingLine'),{r:RATING.r,d:'<span class="'+(G._rd>=0?'up':'dn')+'">'+(G._rd>=0?'+':'')+G._rd+'</span>'})+' · '+tierLabel(RATING.r); }
@@ -5749,12 +6198,15 @@ function showResult(){
     if(iWon2&&(gameMode==='pve'||gameMode==='online')) chest=chestStep();
     addCrystals(gain+chest,true); G._gain=gain; G._chest=chest;
   }
+  var dbl=document.getElementById('resDbl'); if(dbl){ var canD=G._gain>0&&!G._dbl&&adsAvailable(); dbl.style.display=canD?'':'none'; if(canD) dbl.textContent='📺 '+tpl(T('adDouble'),{n:G._gain}); }
   if(cEl){ cEl.textContent=(G._gain?tpl(T('resCry'),{n:G._gain})+' · ':'')+(G._chest?tpl(T('chestOpen'),{n:G._chest}):chestText()); if(!G._gain&&!G._chest&&gameMode!=='pve'&&gameMode!=='online') cEl.textContent=''; }
   // Victory animation — confetti in the winner's colors, only for an
   // actual win by the local player (not for a loss, not for a draw)
   var iWon = w!==0 && (gameMode==='online' ? w===myPNum : w===1);
   var rsc=document.getElementById('screen-result'); rsc.classList.toggle('win',iWon); rsc.classList.toggle('lose',!iWon&&w!==0);
   if(iWon) playWinSound(); else if(w!==0) playLoseSound();
+  if(iWon) setTimeout(function(){ praise(T(G.sc[2-(gameMode==='online'?myPNum:1)]===0?'pFlawless':G.earlyW?'pEarly':'pWin'),'p-win',G._gain?'+'+(G._gain+(G._chest|0))+' ◆':''); },350);
+  capStreak=0;
   if(iWon) fireConfetti(w===1?['#ff3300','#ffd700','#ff8800','#c81000','#ffee88']
                               :['#0a7a20','#3ee880','#ffd700','#22bb55','#c8ffb0']);
   if(gameMode==='online') showRematchUI(); else hideRematchUI();
@@ -5896,7 +6348,7 @@ function loadScript(src){
 function loadFirebase(){
   if(fbReady()) return Promise.resolve();
   if(fbLoading) return fbLoading;
-  fbLoading=loadScript(FB_SRC[0]).then(function(){return loadScript(FB_SRC[1]);}).then(function(){return loadScript(FB_SRC[2]);})
+  fbLoading=loadScript(FB_SRC[0]).then(function(){ return Promise.all([loadScript(FB_SRC[1]),loadScript(FB_SRC[2])]); })
     .catch(function(e){ fbLoading=null; throw e; });
   return fbLoading;
 }
@@ -5959,7 +6411,8 @@ function leaveRoom(){
     roomRef=null;
   }
 }
-function switchTab(t){
+function switchTab(t){ return;   // both panels are always visible now
+
   document.getElementById('tabC').className='otab'+(t==='c'?' on':'');
   document.getElementById('tabJ').className='otab'+(t==='j'?' on':'');
   document.getElementById('panelC').style.display=t==='c'?'':'none';
@@ -5974,7 +6427,9 @@ function buildOlLvs(){
     (function(idx,me){me.onclick=function(){olFSz=idx;g.querySelectorAll('.mini-lv').forEach(function(c){c.classList.remove('sel');});me.classList.add('sel');};})(i,el);
     g.appendChild(el);
   }
+  olLabels();
 }
+function olLabels(){ var a=document.getElementById('olSecRoom'), b=document.getElementById('olSecJoin'); if(a) a.textContent=T('olRoom'); if(b) b.textContent=T('olJoin'); }
 function cancelOnline(){leaveRoom();goMenu();}
 // Apply one remote move if it is exactly the next move of the game. Returns true when applied.
 function applyRemoteMove(d){
@@ -6285,6 +6740,247 @@ function _join(code){
 }
 
 // ═══════════════════════
+//  REWARDED VIDEO — the player watches a short ad and gets crystals. Ads come from Google AdMob
+//  (Android / iPhone) and, if configured, Google AdSense for H5 games (website). You are paid by Google per view.
+// ═══════════════════════
+var STORE_ON=false;              // in-app purchases are built but switched off for now; set true to sell crystal packs
+var ADS_ON=false;               // rewarded videos are built but switched off for now
+var ADS={reward:10, perDay:10, gap:45000, busy:false, last:0, why:null, cb:null};
+var ADSENSE_CLIENT='';           // website only: your AdSense publisher id "ca-pub-…" after AdSense approves H5 games ads
+function adPlatform(){ if(!ADS_ON) return ''; if(window.AndroidBridge&&AndroidBridge.showRewarded) return 'android'; if(iosBridge()) return 'ios'; if(ADSENSE_CLIENT&&/^https:/.test(location.protocol)) return 'web'; return ''; }
+function adsToday(){ var d=dayKey(); WALLET.ads=WALLET.ads||{d:0,n:0}; if(WALLET.ads.d!==d){ WALLET.ads={d:d,n:0}; } return WALLET.ads.n; }
+function adsLeft(){ return Math.max(0,ADS.perDay-adsToday()); }
+function adsAvailable(){ return !!adPlatform()&&adsLeft()>0; }
+// why: 'cry' (+10 ◆) | 'double' (win reward ×2) ; cb(earned)
+function watchAd(why,cb){
+  if(!adPlatform()){ showToast(T('adNA'),3000); return; }
+  if(adsLeft()<=0){ showToast(tpl(T('adLimit'),{n:ADS.perDay}),3000); return; }
+  if(ADS.busy) return;
+  var wait=ADS.last+ADS.gap-Date.now(); if(wait>0){ showToast(tpl(T('adWait'),{s:Math.ceil(wait/1000)}),2000); return; }
+  ADS.busy=true; ADS.why=why||'cry'; ADS.cb=cb||null; MUS.paused=true; musicSync();
+  showToast(T('adLoading'),2500);
+  try{ var pf=adPlatform(); if(pf==='android') AndroidBridge.showRewarded(); else if(pf==='ios') iosPost({cmd:'showRewarded'}); else webRewarded(); }catch(e){ onAdError('bridge'); }
+  setTimeout(function(){ if(ADS.busy&&!ADS.showing){ onAdError('timeout'); } },15000);
+}
+function onAdShown(){ ADS.showing=true; }
+function onAdReward(){
+  ADS.earned=true; WALLET.ads=WALLET.ads||{d:dayKey(),n:0}; adsToday(); WALLET.ads.n++; ADS.last=Date.now();
+  var n=ADS.why==='double'?(ADS.amount|0):ADS.reward; if(n>0){ addCrystals(n,true); } saveWallet();
+}
+function onAdClosed(){
+  var earned=!!ADS.earned, why=ADS.why, cb=ADS.cb, n=why==='double'?(ADS.amount|0):ADS.reward;
+  ADS.busy=false; ADS.showing=false; ADS.earned=false; ADS.cb=null; MUS.paused=false; musicSync();
+  if(earned){ sfx('gem'); sparkBurst(innerWidth/2,innerHeight*0.35,'#8ff0ff',22); showToast(tpl(T('adGot'),{n:n}),2800); try{ if(document.getElementById('shopModal').classList.contains('open')) renderShop(); }catch(e){} }
+  else showToast(T('adSkipped'),2500);
+  if(cb) cb(earned);
+}
+function onAdError(m){ ADS.busy=false; ADS.showing=false; MUS.paused=false; musicSync(); showToast(T('adNone')+(m&&m!=='timeout'?'':''),3000); }
+// website: Google AdSense "Ad Placement API" for H5 games (needs AdSense approval)
+var _adsenseLoaded=false;
+function webRewarded(){
+  if(!_adsenseLoaded){ _adsenseLoaded=true; window.adsbygoogle=window.adsbygoogle||[]; window.adBreak=window.adConfig=function(o){ window.adsbygoogle.push(o); };
+    var sc=document.createElement('script'); sc.async=true; sc.setAttribute('data-ad-client',ADSENSE_CLIENT); sc.setAttribute('data-ad-frequency-hint','30s'); sc.crossOrigin='anonymous';
+    sc.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client='+ADSENSE_CLIENT; document.head.appendChild(sc); adConfig({preloadAdBreaks:'on',sound:'on'}); }
+  adBreak({type:'reward',name:'crystals',beforeReward:function(show){ onAdShown(); show(); },adViewed:function(){ onAdReward(); },adDismissed:function(){},afterAd:function(){},
+    adBreakDone:function(info){ if(info&&info.breakStatus!=='viewed'&&info.breakStatus!=='dismissed'&&!ADS.showing){ onAdError(info.breakStatus); return; } onAdClosed(); }});
+}
+function adCardHtml(){
+  if(!adPlatform()) return '';
+  var left=adsLeft();
+  return '<button class="ad-card'+(left?'':' off')+'" onclick="watchAd(\'cry\')"><span class="ad-ico">📺</span><span class="ad-t"><b>'+T('adTitle')+'</b><small>'+tpl(T('adLeft'),{n:left,m:ADS.perDay})+'</small></span><span class="ad-p">+'+ADS.reward+' ◆</span></button>';
+}
+
+// ═══════════════════════
+//  CRYSTAL STORE — packs are sold by Google Play (Android) and the App Store (iPhone).
+//  The phone reports the purchase → purchaseReq/<uid> → Cloud Function verifies it with Google/Apple →
+//  purchases/<uid>/<order> → the game adds the crystals once and tells the store the purchase is delivered.
+// ═══════════════════════
+var PACKS=[{id:'crystals_120',c:120,ico:'💎'},{id:'crystals_350',c:350,ico:'💎💎',tag:'bonus'},{id:'crystals_800',c:800,ico:'💰',tag:'hit'},{id:'crystals_2000',c:2000,ico:'👑',tag:'best'}];
+var STARTER={id:'starter_pack',c:300,skin:'ruby'};
+var STORE={prices:{},asked:false,busy:false};
+function storePlatform(){ if(window.AndroidBridge&&AndroidBridge.buy) return 'android'; if(iosBridge()) return 'ios'; return 'web'; }
+function storeIds(){ return PACKS.map(function(p){ return p.id; }).concat([STARTER.id]); }
+function storeInit(){
+  if(!STORE_ON||STORE.asked) return; STORE.asked=true; var pf=storePlatform();
+  try{ if(pf==='android') AndroidBridge.storeProducts(storeIds().join(',')); else if(pf==='ios') iosPost({cmd:'products',ids:storeIds()}); }catch(e){}
+}
+function onStoreProducts(list){ (list||[]).forEach(function(p){ if(p&&p.id) STORE.prices[p.id]=p.price; }); if(document.getElementById('shopModal').classList.contains('open')&&shopTab==='cry') renderCryShop(); }
+function starterLeft(){ if(!WALLET.first){ WALLET.first=Date.now(); saveWallet(); } if(WALLET.starter) return 0; return Math.max(0,WALLET.first+72*3600000-Date.now()); }
+function renderCryShop(){
+  document.getElementById('shopH').textContent=T('shopTitle');
+  document.getElementById('shopTabs').innerHTML='<button class="on">◆ '+T('shopCry')+'</button><button onclick="shopTab=\'st\';renderShop()">'+T('shopStones')+'</button><button onclick="shopTab=\'bd\';renderShop()">'+T('shopBoards')+'</button>';
+  var pf=storePlatform(), g=document.getElementById('shopGrid'), h=adCardHtml(), sl=STORE_ON?starterLeft():0;
+  if(sl>0){ var hh=Math.floor(sl/3600000); h+='<button class="cry-starter" onclick="storeBuy(\''+STARTER.id+'\')"><span class="cs-badge">'+T('stBadge')+'</span><span class="cs-ico">🎁</span><span class="cs-t"><b>'+T('stName')+'</b><small>'+tpl(T('stDesc'),{c:STARTER.c,s:T('sk_'+STARTER.skin)})+'</small><small class="cs-tm">⏳ '+tpl(T('stLeft'),{h:hh})+'</small></span><span class="cs-p">'+(STORE.prices[STARTER.id]||(pf==='web'?'':'…'))+'</span></button>'; }
+  if(STORE_ON) h+=PACKS.map(function(p){ return '<button class="cry-pack'+(p.tag?' t-'+p.tag:'')+'" onclick="storeBuy(\''+p.id+'\')">'+(p.tag?'<span class="cp-tag">'+T('pk_'+p.tag)+'</span>':'')+'<span class="cp-ico">'+p.ico+'</span><span class="cp-c">◆ '+p.c+'</span><span class="cp-p">'+(STORE.prices[p.id]||(pf==='web'?T('pkApp'):'…'))+'</span></button>'; }).join('');
+  g.innerHTML=h; g.classList.add('cry-grid');
+  if(!STORE_ON){ if(!adPlatform()) h+='<div class="cry-earn">'+T('shopSoon')+'</div>'; g.innerHTML=h; }
+  document.getElementById('shopNote').textContent=STORE_ON?(pf==='web'?T('shopWeb'):T('shopPay')):(adPlatform()?T('adNote'):T('adNoteWeb'));
+}
+var _pgCb=null;
+function parentGate(cb){
+  var a=3+Math.floor(Math.random()*7), b=3+Math.floor(Math.random()*7); _pgCb=cb; document.getElementById('pgQ').textContent=tpl(T('pgQ'),{a:a,b:b}); document.getElementById('pgIn').value=''; document.getElementById('pgIn').setAttribute('data-x',a*b);
+  document.getElementById('pgH').textContent=T('pgH'); document.getElementById('pgOk').textContent=T('pgOk'); document.getElementById('pgErr').textContent='';
+  document.getElementById('pgModal').classList.add('open'); setTimeout(function(){ try{ document.getElementById('pgIn').focus(); }catch(e){} },350);
+}
+function parentOk(){ var inp=document.getElementById('pgIn'); if(String(inp.value).trim()===inp.getAttribute('data-x')){ document.getElementById('pgModal').classList.remove('open'); var cb=_pgCb; _pgCb=null; if(cb) cb(); } else { document.getElementById('pgErr').textContent=T('pgBad'); sfx('error'); } }
+function storeBuy(id){
+  var pf=storePlatform();
+  if(pf==='web'){ socPop('📱',T('pkAppT'),T('shopWeb'),'OK','',null); document.getElementById('spNo').style.display='none'; return; }
+  if(STORE.busy){ showToast(T('payWait'),2000); return; }
+  parentGate(function(){
+    socialReady().then(function(){
+      STORE.busy=true; setTimeout(function(){ STORE.busy=false; },20000);
+      if(pf==='android') AndroidBridge.buy(id,String(UID||''));
+      else iosPost({cmd:'buy',id:id,uid:String(UID||'')});
+    }).catch(function(){ showToast(T('netErr')); });
+  });
+}
+// native → page
+function onStorePurchase(p){
+  STORE.busy=false; if(!p||!p.id) return;
+  showBanner(T('payCheck'),4000);
+  var send=function(){ try{ db.ref('purchaseReq/'+UID).push({pl:p.platform,id:p.id,tk:p.token||'',tx:p.tx||'',oid:p.order||'',t:TSV()}).catch(function(e){ showToast(dbErrText(e),4000); }); }catch(e){} };
+  socialReady().then(send).catch(function(){ setTimeout(function(){ onStorePurchase(p); },8000); });
+}
+function onStoreCancel(){ STORE.busy=false; }
+function onStorePending(){ STORE.busy=false; showToast(T('payPending'),4000); }
+function onStoreError(m){ STORE.busy=false; showToast(T('payErr')+(m?' ('+m+')':''),4000); sfx('error'); }
+function listenPurchases(){
+  db.ref('purchases/'+UID).on('child_added',function(sn){ var x=sn.val(), k=sn.key; if(!x) return; WALLET.pIds=WALLET.pIds||{};
+    var fresh=!WALLET.pIds[k];
+    if(fresh){ WALLET.pIds[k]=1; if(x.pid===STARTER.id){ WALLET.starter=1; WALLET.owned['st_'+STARTER.skin]=1; } saveWallet(); addCrystals(x.c|0,true);
+      hideBanner(); sfx('fanfare'); sparkBurst(innerWidth/2,innerHeight*0.4,'#8ff0ff',24); showToast(tpl(T('payOk'),{c:x.c}),4000); try{ renderShop(); }catch(e){} }
+    // tell the store the crystals were delivered (Android: consume, iPhone: finish the transaction)
+    try{ if(x.pl==='android'&&x.tk&&window.AndroidBridge&&AndroidBridge.consume) AndroidBridge.consume(x.tk); else if(x.pl==='ios'&&x.tx) iosPost({cmd:'finish',tx:String(x.tx)}); }catch(e){}
+  },function(){});
+  db.ref('purchaseReq/'+UID).on('child_changed',function(sn){ var x=sn.val(); if(x&&x.err){ showToast(T('payBad')+' ('+x.err+')',5000); sfx('error'); } },function(){});
+  // unfinished purchases left from a previous launch are reported again by the phone
+  try{ if(window.AndroidBridge&&AndroidBridge.storeRestore) AndroidBridge.storeRestore(); else if(iosBridge()) iosPost({cmd:'storeRestore'}); }catch(e){}
+}
+
+// ═══════════════════════
+//  WEEKLY LEAGUE — points for battles this week (Monday 00:00 UTC → Sunday). Rewards are paid by the server on Monday.
+//  league/<week>/<uid> = {n,p,r,tr,av,cl,cn}
+// ═══════════════════════
+function weekId(t){ return Math.floor(((t||serverNow())/86400000+3)/7); }
+function weekLeft(){ var end=((weekId()+1)*7-3)*86400000, ms=Math.max(0,end-serverNow()), d=Math.floor(ms/86400000), h=Math.floor(ms%86400000/3600000); return d>0?tpl(T('lgLeftD'),{d:d,h:h}):tpl(T('lgLeftH'),{h:h,m:Math.floor(ms%3600000/60000)}); }
+var LG=(function(){ try{ return JSON.parse(localStorage.getItem('dwLg')||'null')||{wk:0,p:0}; }catch(e){ return {wk:0,p:0}; } })();
+function leaguePts(){ return LG.wk===weekId()?LG.p:0; }
+function leagueAdd(pts){
+  if(!(pts>0)) return; var w=weekId(); if(LG.wk!==w){ LG.wk=w; LG.p=0; } LG.p+=pts; try{ localStorage.setItem('dwLg',JSON.stringify(LG)); }catch(e){}
+  leaguePush(); setTimeout(function(){ showToast(tpl(T('lgPlus'),{n:pts,p:LG.p}),2200); },2400);
+}
+function leaguePush(){
+  if(!getDB()||!authUser||!myName()||isDefaultName(myName())||LG.wk!==weekId()) return;
+  try{ db.ref('league/'+LG.wk+'/'+authUser.uid).set({n:myName(),p:LG.p,r:RATING.r,tr:tierOf(RATING.r)[2],av:(PROF.av&&!avIsImg(PROF.av))?PROF.av:null,cl:CLUB.id||null,cn:CLUB.name||null,ci:CLUB.ico||null,t:TSV()}).catch(function(){}); }catch(e){}
+}
+function gamePoints(won,draw){ if(gameMode==='online') return won?3:draw?1:0; if(gameMode==='pve') return won?(G.level>=3?3:G.level===2?2:1):0; return 0; }
+var LGT={}; // cached tables
+function lgRows(arr,mineKey){ return arr.map(function(p,i){ return '<div class="top-row'+(p.uid===mineKey?' me':'')+'"><span class="tp">'+(i<3?['🥇','🥈','🥉'][i]:(i+1))+'</span>'+avHtml(p.av,'sm')+'<span class="tn">'+escH(p.n)+(p.ci?' <span class="lg-club">'+p.ci+'</span>':'')+'</span><span class="tr">'+p.p+'</span></div>'; }).join(''); }
+function openLeague(){
+  var list=document.getElementById('topList'), tr=tierOf(RATING.r);
+  var head='<div class="lg-head"><div class="lg-tier">'+tr[1]+' '+T(tr[2])+'</div><div class="lg-sub">'+tpl(T('lgMine'),{p:leaguePts()})+' · '+weekLeft()+'</div><div class="lg-rew">'+T('lgRew')+'</div></div>';
+  if(isGuest()){ list.innerHTML=head+'<div class="top-row guest-note">🔑 '+T('lgGuest')+'</div>'; return; }
+  list.innerHTML=head+(LGT.rows?lgRows(LGT.rows,UID):'<div class="top-row">…</div>');
+  socialReady().then(function(){ return db.ref('league/'+weekId()).orderByChild('p').limitToLast(300).once('value'); }).then(function(sn){
+    var v=sn.val()||{}, arr=[]; Object.keys(v).forEach(function(k){ var e=v[k]; if(e&&e.tr===tr[2]&&e.n&&!isDefaultName(e.n)) arr.push({uid:k,n:e.n,p:e.p|0,av:e.av||'',ci:e.ci||''}); });
+    if(leaguePts()&&!arr.some(function(x){ return x.uid===UID; })) arr.push({uid:UID,n:myName(),p:leaguePts(),av:PROF.av&&!avIsImg(PROF.av)?PROF.av:'',ci:CLUB.ico||''});
+    arr.sort(function(a,b){ return b.p-a.p; }); var me=-1; arr.forEach(function(x,i){ if(x.uid===UID) me=i; });
+    var top=arr.slice(0,30); LGT.rows=top; if(document.getElementById('topModal').classList.contains('open')&&topTab==='lg')
+      list.innerHTML=head+(top.length?lgRows(top,UID):'<div class="top-row">'+T('lgEmpty')+'</div>')+(me>=30?'<div class="top-row me"><span class="tp">'+(me+1)+'</span><span class="tn">'+escH(myName())+'</span><span class="tr">'+arr[me].p+'</span></div>':'');
+  }).catch(function(){ if(topTab==='lg') list.innerHTML=head+'<div class="top-row">'+T('netErr')+'</div>'; });
+}
+
+// ═══════════════════════
+//  CLUBS — up to 20 players; the club's weekly score is the sum of its members' league points
+//  clubs/<cid> = {name,ico,owner,cnt,t,m:{uid:{n,r,av}}}   clubNames/<key> = cid   players/<uid>/club = cid
+// ═══════════════════════
+var CLUB=(function(){ try{ return JSON.parse(localStorage.getItem('dwClub')||'null')||{}; }catch(e){ return {}; } })();
+var CLUB_ICONS=['🦁','🐺','🦅','🐉','⚔️','🛡️','👑','🔥','⚡','🌊','❄️','🌿','☀️','🌙','⭐','🏰'], CLUB_COST=100, CLUB_MAX=20;
+function saveClub(){ try{ localStorage.setItem('dwClub',JSON.stringify(CLUB)); }catch(e){} }
+function clubSync(){
+  if(!db||!UID) return;
+  db.ref('players/'+UID+'/club').once('value').then(function(sn){ var cid=sn.val()||CLUB.id; if(!cid){ CLUB={}; saveClub(); return; }
+    return db.ref('clubs/'+cid).once('value').then(function(c){ var v=c.val(); if(!v||!v.m||!v.m[UID]){ CLUB={}; saveClub(); db.ref('players/'+UID+'/club').remove().catch(function(){}); return; }
+      CLUB={id:cid,name:v.name,ico:v.ico,owner:v.owner===UID}; saveClub(); if(!sn.val()) db.ref('players/'+UID+'/club').set(cid).catch(function(){}); }); }).catch(function(){});
+}
+function openClubs(){
+  var list=document.getElementById('topList');
+  if(isGuest()){ list.innerHTML='<div class="top-row guest-note">🔑 '+T('clGuest')+'</div>'; return; }
+  list.innerHTML='<div class="top-row">…</div>';
+  socialReady().then(function(){ return Promise.all([db.ref('league/'+weekId()).orderByChild('p').limitToLast(500).once('value'), CLUB.id?db.ref('clubs/'+CLUB.id).once('value'):null, CLUB.id?null:db.ref('clubs').orderByChild('cnt').limitToLast(30).once('value')]); })
+  .then(function(rs){
+    var lv=rs[0].val()||{}, sums={}, names={}, mp={}; Object.keys(lv).forEach(function(k){ var e=lv[k]; if(e&&e.cl){ sums[e.cl]=(sums[e.cl]|0)+(e.p|0); names[e.cl]=(e.ci||'')+' '+(e.cn||''); mp[k]=e.p|0; } });
+    var rank=Object.keys(sums).sort(function(a,b){ return sums[b]-sums[a]; }).slice(0,10);
+    var rankHtml='<div class="fr-sec">'+T('clTop')+'</div>'+(rank.length?rank.map(function(cid,i){ return '<div class="top-row'+(cid===CLUB.id?' me':'')+'"><span class="tp">'+(i<3?['🥇','🥈','🥉'][i]:(i+1))+'</span><span class="tn">'+escH(names[cid])+'</span><span class="tr">'+sums[cid]+'</span></div>'; }).join(''):'<div class="top-row">'+T('clNoRank')+'</div>')+'<div class="lg-rew">'+T('clRew')+'</div>';
+    if(CLUB.id){ var c=rs[1]&&rs[1].val(); if(!c){ CLUB={}; saveClub(); openClubs(); return; }
+      var mem=Object.keys(c.m||{}).map(function(u){ var x=c.m[u]; return {uid:u,n:x.n,r:x.r|0,av:x.av||'',p:mp[u]|0}; }).sort(function(a,b){ return b.p-a.p||b.r-a.r; });
+      list.innerHTML='<div class="cl-card"><div class="cl-ico">'+(c.ico||'🛡️')+'</div><div class="cl-n">'+escH(c.name)+'</div><div class="cl-sub">'+tpl(T('clInfo'),{n:mem.length,max:CLUB_MAX,p:sums[CLUB.id]|0})+'</div></div>'+
+        '<div class="fr-sec">'+T('clMembers')+'</div>'+mem.map(function(m){ return '<div class="top-row'+(m.uid===UID?' me':'')+'">'+avHtml(m.av,'sm')+'<span class="tn">'+escH(m.n)+(m.uid===c.owner?' 👑':'')+'</span><span class="tg">'+tierOf(m.r)[1]+' '+m.r+'</span><span class="tr">'+m.p+'</span>'+(c.owner===UID&&m.uid!==UID?'<button class="fr-b x" onclick="clubKick(\''+m.uid+'\')">✕</button>':'')+'</div>'; }).join('')+
+        rankHtml+'<button class="btn btn-ghost" style="width:100%;margin-top:8px" onclick="clubLeave()">'+T('clLeave')+'</button>';
+    } else {
+      var cl=rs[2]&&rs[2].val()||{}, arr=Object.keys(cl).map(function(k){ return {id:k,n:cl[k].name,ico:cl[k].ico,cnt:cl[k].cnt|0,p:sums[k]|0}; }).filter(function(x){ return x.n; }).sort(function(a,b){ return b.p-a.p||b.cnt-a.cnt; });
+      list.innerHTML='<div class="cl-intro">'+T('clIntro')+'</div><button class="btn btn-gold cta" style="width:100%;margin:6px 0" onclick="openClubCreate()">➕ '+tpl(T('clCreate'),{c:CLUB_COST})+'</button>'+
+        '<div class="fr-sec">'+T('clJoinH')+'</div>'+(arr.length?arr.map(function(x){ return '<div class="top-row"><span class="tp">'+(x.ico||'🛡️')+'</span><span class="tn">'+escH(x.n)+'</span><span class="tg">👥 '+x.cnt+'/'+CLUB_MAX+'</span>'+(x.cnt<CLUB_MAX?'<button class="fr-b cta" onclick="clubJoin(\''+x.id+'\')">'+T('clJoin')+'</button>':'')+'</div>'; }).join(''):'<div class="top-row">'+T('clNone')+'</div>')+rankHtml;
+    }
+  }).catch(function(e){ console.warn('clubs',e); list.innerHTML='<div class="top-row">'+T('netErr')+'</div>'; });
+}
+var clubIcoSel='🦁';
+function openClubCreate(){
+  if(WALLET.c<CLUB_COST){ showToast(tpl(T('invNoCry'),{c:CLUB_COST}),3000); sfx('error'); openShop('cry'); return; }
+  document.getElementById('clIcoGrid').innerHTML=CLUB_ICONS.map(function(ic){ return '<button class="av-opt'+(ic===clubIcoSel?' on':'')+'" style="background:#5a3a22" onclick="clubIcoSel=\''+ic+'\';openClubCreate()">'+ic+'</button>'; }).join('');
+  document.getElementById('clH').textContent=T('clNew'); document.getElementById('clName').placeholder=T('clNamePh'); document.getElementById('clGo').textContent=tpl(T('clCreate'),{c:CLUB_COST}); document.getElementById('clErr').textContent='';
+  document.getElementById('clubModal').classList.add('open');
+}
+function clubCreate(){
+  var name=document.getElementById('clName').value.trim(), err=document.getElementById('clErr');
+  if(!validName(name)){ err.textContent=T('nameInvalid'); sfx('error'); return; }
+  if(WALLET.c<CLUB_COST){ err.textContent=tpl(T('invNoCry'),{c:CLUB_COST}); return; }
+  var cid='c'+String(UID).slice(0,6)+Date.now().toString(36), key=nameKey(name);
+  socialReady().then(function(){ return new Promise(function(res,rej){ db.ref('clubNames/'+key).transaction(function(cur){ if(cur!==null) return; return cid; },function(e,ok){ if(e) rej(e); else res(ok); }); }); })
+  .then(function(ok){ if(!ok){ err.textContent=T('clTaken'); sfx('error'); return; }
+    var m={}; m[UID]={n:myName(),r:RATING.r,av:(PROF.av&&!avIsImg(PROF.av))?PROF.av:null,t:TSV()};
+    return db.ref('clubs/'+cid).set({name:name,ico:clubIcoSel,owner:UID,cnt:1,t:TSV(),m:m}).then(function(){ return db.ref('players/'+UID+'/club').set(cid); }).then(function(){
+      spendCrystals(CLUB_COST); CLUB={id:cid,name:name,ico:clubIcoSel,owner:true}; saveClub(); leaguePush(); document.getElementById('clubModal').classList.remove('open');
+      sfx('fanfare'); sparkBurst(innerWidth/2,innerHeight/2,'#ffd76a',20); showToast(tpl(T('clMade'),{n:name}),3000); openLeaderboard('cl'); }); })
+  .catch(function(e){ err.textContent=dbErrText(e); });
+}
+function clubJoin(cid){
+  if(CLUB.id) return;
+  socialReady().then(function(){ return new Promise(function(res,rej){ db.ref('clubs/'+cid+'/cnt').transaction(function(c){ c=c|0; if(c>=CLUB_MAX) return; return c+1; },function(e,ok){ if(e) rej(e); else res(ok); }); }); })
+  .then(function(ok){ if(!ok){ showToast(T('clFull'),2500); return; }
+    return db.ref('clubs/'+cid+'/m/'+UID).set({n:myName(),r:RATING.r,av:(PROF.av&&!avIsImg(PROF.av))?PROF.av:null,t:TSV()}).then(function(){ return db.ref('players/'+UID+'/club').set(cid); })
+      .then(function(){ return db.ref('clubs/'+cid).once('value'); }).then(function(c){ var v=c.val()||{}; CLUB={id:cid,name:v.name,ico:v.ico,owner:false}; saveClub(); leaguePush(); sfx('friend'); showToast(tpl(T('clJoined'),{n:v.name}),2500); openClubs(); }); })
+  .catch(function(e){ showToast(dbErrText(e)); });
+}
+function clubLeave(){
+  askConfirm('clLeaveT','clLeaveTx','clLeave',function(){ var cid=CLUB.id; if(!cid) return;
+    db.ref('clubs/'+cid).once('value').then(function(c){ var v=c.val()||{}, others=Object.keys(v.m||{}).filter(function(u){ return u!==UID; });
+      var jobs=[];
+      if(!others.length){ jobs.push(db.ref('clubs/'+cid).remove()); jobs.push(db.ref('clubNames/'+nameKey(v.name||'')).remove()); }
+      else { if(v.owner===UID) jobs.push(db.ref('clubs/'+cid+'/owner').set(others[0]));
+        jobs.push(db.ref('clubs/'+cid+'/m/'+UID).remove()); jobs.push(new Promise(function(res){ db.ref('clubs/'+cid+'/cnt').transaction(function(n){ return Math.max(0,(n|0)-1); },function(){ res(); }); })); }
+      jobs.push(db.ref('players/'+UID+'/club').remove());
+      return Promise.all(jobs); }).then(function(){ CLUB={}; saveClub(); leaguePush(); openClubs(); }).catch(function(e){ showToast(dbErrText(e)); }); });
+}
+function clubKick(uid){
+  var cid=CLUB.id; if(!cid) return;
+  db.ref('clubs/'+cid+'/m/'+uid).remove().then(function(){ db.ref('clubs/'+cid+'/cnt').transaction(function(n){ return Math.max(0,(n|0)-1); },function(){ openClubs(); }); }).catch(function(e){ showToast(dbErrText(e)); });
+}
+
+// ═══════════════════════
+//  SERVER REWARDS — league / club prizes written by the Cloud Function to rewards/<uid>; claimed once
+// ═══════════════════════
+function listenRewards(){
+  db.ref('rewards/'+UID).on('value',function(sn){ var v=sn.val()||{}; WALLET.rw=WALLET.rw||{};
+    Object.keys(v).forEach(function(k){ var x=v[k]; db.ref('rewards/'+UID+'/'+k).remove().catch(function(){}); if(WALLET.rw[k]||!x||!(x.c>0)) return;
+      WALLET.rw[k]=1; addCrystals(x.c,true); saveWallet();
+      var txt=x.why==='club'?tpl(T('rwClub'),{p:x.place,c:x.c}):tpl(T('rwLeague'),{p:x.place||'—',t:x.tier?T(x.tier):'',c:x.c});
+      setTimeout(function(){ socPop('🏆',T('rwT'),txt,'OK','',null); document.getElementById('spNo').style.display='none'; sfx('fanfare'); },1500); });
+  },function(){});
+}
+
+// ═══════════════════════
 //  FRIENDS · INVITES · CHAT · PUSH
 //  friends/<me>/<uid>   friendReq/<to>/<from>   invites/<to>/<from>   presence/<uid>   pushTokens/<uid>/<kind>
 // ═══════════════════════
@@ -6306,6 +7002,7 @@ function socialStart(){
     Object.keys(v).forEach(function(k){ var x=v[k]; if(!x||!x.room||(typeof x.t==='number'&&now-x.t>INVITE_TTL)){ db.ref('invites/'+UID+'/'+k).remove().catch(function(){}); return; } SOC.invites[k]=x; });
     refreshFrBadge(); renderFriends(); showPendingInvite(); },function(){});
   flushPushToken(); handleFriendLink(); setTimeout(prefetchTop,1500); setTimeout(checkUpdate,2500);
+  listenRewards(); listenPurchases(); clubSync(); setTimeout(leaguePush,2000);
   try{ if(localStorage.getItem('dwPush')==='1') setTimeout(function(){ enablePush(false); },3000); }catch(e){}
 }
 function watchFriend(fid){
@@ -6329,7 +7026,7 @@ function renderFriends(){
   if(SOC.on) saveSocCache();
   var guest=isGuest(), gp=document.getElementById('frGuest');
   if(gp){ gp.style.display=guest?'':'none'; document.getElementById('frGuestT').textContent=T('frGuest'); document.getElementById('frGuestB').textContent=T('signIn'); }
-  document.querySelector('#friendsModal .fr-add').style.display=guest?'none':''; document.querySelector('#friendsModal .fr-row2').style.display=guest?'none':'';
+  document.querySelector('#friendsModal .fr-add').style.display=guest?'none':''; 
   document.getElementById('frIn').placeholder=T('frPh'); document.getElementById('frPushBtn').title=T('pushAsk');
   var inv=Object.keys(SOC.invites), h='';
   if(inv.length){ h+='<div class="fr-sec">'+T('frInvites')+'</div>'+inv.map(function(fid){ var x=SOC.invites[fid];
@@ -6614,11 +7311,15 @@ refreshDailyCard();
 // Invite link: ?room=123456 -> straight to the join flow
 try{ var _rm=(location.search||'').match(/[?&]room=(\d{4,6})/); if(_rm){ pendingRoom=_rm[1]; initMode('online'); } }catch(e){}
 // Cloud save: sign in anonymously in the background when online (never blocks the game)
-setTimeout(function(){ if(navigator.onLine!==false) ensureAuth(); },250);
+if(navigator.onLine!==false) ensureAuth();
 refreshMute();
 setTimeout(function(){ coachTry('menu','screen-menu'); },2600);
 setTimeout(offerResume,1800);
+setTimeout(askName,1300);
 setTimeout(ratingDecay,1500);
+(function(){ function setH(){ document.documentElement.style.setProperty('--app-h',window.innerHeight+'px'); } setH(); window.addEventListener('resize',setH); window.addEventListener('orientationchange',function(){ setTimeout(setH,300); }); })();
+try{ if(screen.orientation&&screen.orientation.lock) screen.orientation.lock('portrait').catch(function(){}); }catch(e){}
+try{ document.getElementById('rotTx').textContent=T('rotTx'); }catch(e){}
 setTimeout(function(){ refreshCry(); applySkinImgs(); checkDailyLogin(); },1500);
 // Very first visit: show "How to play" right away
 (function(){ var seen=false; try{seen=!!localStorage.getItem('dwSeen');}catch(e){} if(!seen) setTimeout(openRules,350); })();

@@ -43,6 +43,38 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.messaging.FirebaseMessaging;
 import android.net.Uri;
+import android.content.pm.ActivityInfo;
+import android.webkit.ValueCallback;
+import android.content.ClipData;
+import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.BillingClientStateListener;
+import com.android.billingclient.api.BillingFlowParams;
+import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.ConsumeParams;
+import com.android.billingclient.api.PendingPurchasesParams;
+import com.android.billingclient.api.ProductDetails;
+import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.PurchasesUpdatedListener;
+import com.android.billingclient.api.QueryProductDetailsParams;
+import com.android.billingclient.api.QueryPurchasesParams;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.RequestConfiguration;
+import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+import com.google.android.ump.ConsentInformation;
+import com.google.android.ump.ConsentRequestParameters;
+import com.google.android.ump.UserMessagingPlatform;
 import com.google.android.play.core.appupdate.AppUpdateInfo;
 import com.google.android.play.core.appupdate.AppUpdateManager;
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
@@ -64,6 +96,19 @@ public class MainActivity extends Activity {
     private static final String FCM_APP_ID = "PASTE_ANDROID_APP_ID";
     private static final String FCM_API_KEY = "AIzaSyCxGB68ogFcdRk5Aeav_6rZmCNmIHY8_K0";
     private static final int REQ_NOTIF = 77;
+    private static final int REQ_FILE = 78;
+    private ValueCallback<Uri[]> fileCallback;
+    // ── Google Play Billing ──
+    private BillingClient billing;
+    private final Map<String, ProductDetails> products = new HashMap<>();
+    // ── Google AdMob: rewarded video ──
+    // AdMob → Apps → DOTS WAR (Android) → Ad units → Rewarded → copy the id "ca-app-pub-XXXX/YYYY".
+    // The value below is Google's TEST unit: it always shows a test video and pays nothing.
+    private static final String REWARDED_UNIT = "ca-app-pub-3940256099942544/5224354917";
+    // Set true if the game's target audience in Play Console includes children under 13 (Families policy)
+    private static final boolean ADS_CHILD_DIRECTED = false;
+    private RewardedAd rewarded;
+    private boolean adsReady = false, adLoading = false, wantShow = false;
     private boolean pageReady = false;
     private String pendingPushJs = null;
 
@@ -71,6 +116,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);   // the game is portrait only
 
         // ── Edge-to-edge: the WebView covers the whole screen, system bars are transparent,
         //    and the page itself keeps its content clear of them via safe-area insets
@@ -140,7 +186,21 @@ public class MainActivity extends Activity {
                 if (pendingPushJs != null) { final String pj = pendingPushJs; pendingPushJs = null; view.postDelayed(() -> js(pj), 2500); }
             }
         });
-        webView.setWebChromeClient(new WebChromeClient());
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public boolean onShowFileChooser(WebView view, ValueCallback<Uri[]> callback, FileChooserParams params) {
+                if (fileCallback != null) fileCallback.onReceiveValue(null);
+                fileCallback = callback;
+                try {
+                    Intent i = params.createIntent();
+                    i.addCategory(Intent.CATEGORY_OPENABLE);
+                    if (params.getMode() == FileChooserParams.MODE_OPEN_MULTIPLE) i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                    startActivityForResult(Intent.createChooser(i, null), REQ_FILE);
+                } catch (Exception e) { fileCallback = null; return false; }
+                return true;
+            }
+        });
+        // billing and ads start only when the game asks for them (both are switched off for now)
         webView.addJavascriptInterface(new Bridge(), "AndroidBridge");
 
         // System bar / display-cutout insets -> CSS variables --sat/--sar/--sab/--sal (CSS px)
@@ -151,7 +211,7 @@ public class MainActivity extends Activity {
                     "(function(s){s.setProperty('--sat','%dpx');s.setProperty('--sar','%dpx');" +
                     "s.setProperty('--sab','%dpx');s.setProperty('--sal','%dpx');" +
                     "window.dispatchEvent(new Event('resize'));})(document.documentElement.style);",
-                    Math.round(sb.top / d), Math.round(sb.right / d), Math.round(sb.bottom / d), Math.round(sb.left / d));
+                    Math.max(10, Math.round(sb.top / d)), Math.round(sb.right / d), Math.round(sb.bottom / d), Math.round(sb.left / d));
             pushInsets();
             return WindowInsetsCompat.CONSUMED;
         });
@@ -219,6 +279,110 @@ public class MainActivity extends Activity {
         fetchPushToken();
     }
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode != REQ_FILE || fileCallback == null) return;
+        Uri[] result = null;
+        if (resultCode == RESULT_OK && data != null) {
+            ClipData clip = data.getClipData();
+            if (clip != null) { result = new Uri[clip.getItemCount()]; for (int i = 0; i < clip.getItemCount(); i++) result[i] = clip.getItemAt(i).getUri(); }
+            else if (data.getData() != null) result = new Uri[]{ data.getData() };
+        }
+        fileCallback.onReceiveValue(result);
+        fileCallback = null;
+    }
+
+    // ═══ AdMob rewarded video ═══
+    private void setupAds() {
+        // ask for consent where the law requires it (EEA/UK) — the form is configured in AdMob → Privacy & messaging
+        final ConsentInformation ci = UserMessagingPlatform.getConsentInformation(this);
+        ci.requestConsentInfoUpdate(this, new ConsentRequestParameters.Builder().setTagForUnderAgeOfConsent(ADS_CHILD_DIRECTED).build(),
+                () -> UserMessagingPlatform.loadAndShowConsentFormIfRequired(this, err -> { if (ci.canRequestAds()) initAds(); }),
+                err -> initAds());
+        if (ci.canRequestAds()) initAds();
+    }
+    private void initAds() {
+        if (adsReady) return; adsReady = true;
+        RequestConfiguration.Builder rc = new RequestConfiguration.Builder().setMaxAdContentRating(RequestConfiguration.MAX_AD_CONTENT_RATING_G);
+        if (ADS_CHILD_DIRECTED) rc.setTagForChildDirectedTreatment(RequestConfiguration.TAG_FOR_CHILD_DIRECTED_TREATMENT_TRUE);
+        MobileAds.setRequestConfiguration(rc.build());
+        new Thread(() -> MobileAds.initialize(this, status -> runOnUiThread(this::loadRewarded))).start();
+    }
+    private void loadRewarded() {
+        if (adLoading || rewarded != null) return; adLoading = true;
+        RewardedAd.load(this, REWARDED_UNIT, new AdRequest.Builder().build(), new RewardedAdLoadCallback() {
+            @Override public void onAdLoaded(RewardedAd ad) { adLoading = false; rewarded = ad; if (wantShow) { wantShow = false; showRewarded(); } }
+            @Override public void onAdFailedToLoad(LoadAdError e) { adLoading = false; rewarded = null; if (wantShow) { wantShow = false; js("window.onAdError&&onAdError(" + jsStr(String.valueOf(e.getCode())) + ")"); } }
+        });
+    }
+    private boolean adsSetup = false;
+    private void showRewarded() {
+        if (!adsSetup) { adsSetup = true; wantShow = true; setupAds(); return; }
+        if (!adsReady) { initAds(); wantShow = true; return; }
+        if (rewarded == null) { wantShow = true; loadRewarded(); return; }
+        RewardedAd ad = rewarded; rewarded = null;
+        ad.setFullScreenContentCallback(new FullScreenContentCallback() {
+            @Override public void onAdShowedFullScreenContent() { js("window.onAdShown&&onAdShown()"); }
+            @Override public void onAdDismissedFullScreenContent() { js("window.onAdClosed&&onAdClosed()"); loadRewarded(); }
+            @Override public void onAdFailedToShowFullScreenContent(AdError e) { js("window.onAdError&&onAdError('show')"); loadRewarded(); }
+        });
+        ad.show(this, reward -> js("window.onAdReward&&onAdReward()"));
+    }
+
+    // ═══ Google Play Billing: crystals are consumable in-app products ═══
+    private void setupBilling() {
+        billing = BillingClient.newBuilder(this)
+                .setListener(new PurchasesUpdatedListener() {
+                    @Override public void onPurchasesUpdated(BillingResult r, List<Purchase> purchases) {
+                        int code = r.getResponseCode();
+                        if (code == BillingClient.BillingResponseCode.OK && purchases != null) { for (Purchase p : purchases) deliver(p); }
+                        else if (code == BillingClient.BillingResponseCode.USER_CANCELED) runOnUiThread(() -> js("window.onStoreCancel&&onStoreCancel()"));
+                        else runOnUiThread(() -> js("window.onStoreError&&onStoreError(" + jsStr(String.valueOf(code)) + ")"));
+                    }
+                })
+                .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
+                .build();
+    }
+    private void connectBilling(final Runnable then) {
+        if (billing == null) setupBilling();
+        if (billing.isReady()) { if (then != null) then.run(); return; }
+        billing.startConnection(new BillingClientStateListener() {
+            @Override public void onBillingSetupFinished(BillingResult r) { if (r.getResponseCode() == BillingClient.BillingResponseCode.OK && then != null) then.run(); }
+            @Override public void onBillingServiceDisconnected() { }
+        });
+    }
+    private void deliver(Purchase p) {
+        if (p.getPurchaseState() == Purchase.PurchaseState.PENDING) { runOnUiThread(() -> js("window.onStorePending&&onStorePending()")); return; }
+        if (p.getPurchaseState() != Purchase.PurchaseState.PURCHASED) return;
+        for (String pid : p.getProducts()) {
+            final String code = "window.onStorePurchase&&onStorePurchase({platform:'android',id:" + jsStr(pid) + ",token:" + jsStr(p.getPurchaseToken()) + ",order:" + jsStr(p.getOrderId() == null ? "" : p.getOrderId()) + "})";
+            runOnUiThread(() -> js(code));
+        }
+    }
+    private void queryProducts(final List<String> ids, final Runnable then) {
+        List<QueryProductDetailsParams.Product> list = new ArrayList<>();
+        for (String id : ids) list.add(QueryProductDetailsParams.Product.newBuilder().setProductId(id).setProductType(BillingClient.ProductType.INAPP).build());
+        billing.queryProductDetailsAsync(QueryProductDetailsParams.newBuilder().setProductList(list).build(), (r, details) -> {
+            JSONArray arr = new JSONArray();
+            if (details != null) for (ProductDetails d : details) {
+                products.put(d.getProductId(), d);
+                try { JSONObject o = new JSONObject(); o.put("id", d.getProductId()); ProductDetails.OneTimePurchaseOfferDetails off = d.getOneTimePurchaseOfferDetails(); o.put("price", off == null ? "" : off.getFormattedPrice()); arr.put(o); } catch (Exception ignored) {}
+            }
+            final String code = "window.onStoreProducts&&onStoreProducts(" + arr.toString() + ")";
+            runOnUiThread(() -> { js(code); if (then != null) then.run(); });
+        });
+    }
+    private void launchBuy(String id, String uid) {
+        ProductDetails d = products.get(id);
+        if (d == null) { js("window.onStoreError&&onStoreError('product')"); return; }
+        BillingFlowParams.Builder b = BillingFlowParams.newBuilder().setProductDetailsParamsList(
+                Collections.singletonList(BillingFlowParams.ProductDetailsParams.newBuilder().setProductDetails(d).build()));
+        if (uid != null && !uid.isEmpty()) b.setObfuscatedAccountId(uid.length() > 60 ? uid.substring(0, 60) : uid);
+        BillingResult r = billing.launchBillingFlow(this, b.build());
+        if (r.getResponseCode() != BillingClient.BillingResponseCode.OK) js("window.onStoreError&&onStoreError(" + jsStr(String.valueOf(r.getResponseCode())) + ")");
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode != REQ_NOTIF) return;
@@ -261,6 +425,28 @@ public class MainActivity extends Activity {
                     try { startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.dotswar.app"))); } catch (Exception ignored) {}
                 }
             });
+        }
+        @JavascriptInterface
+        public void showRewarded() {
+            runOnUiThread(MainActivity.this::showRewarded);
+        }
+        @JavascriptInterface
+        public void storeProducts(final String csv) {
+            runOnUiThread(() -> connectBilling(() -> { List<String> ids = new ArrayList<>(); for (String x : csv.split(",")) if (!x.trim().isEmpty()) ids.add(x.trim()); queryProducts(ids, null); }));
+        }
+        @JavascriptInterface
+        public void buy(final String id, final String uid) {
+            runOnUiThread(() -> connectBilling(() -> { if (products.containsKey(id)) launchBuy(id, uid); else queryProducts(Collections.singletonList(id), () -> launchBuy(id, uid)); }));
+        }
+        @JavascriptInterface
+        public void consume(final String token) {
+            runOnUiThread(() -> connectBilling(() -> billing.consumeAsync(ConsumeParams.newBuilder().setPurchaseToken(token).build(), (r, t) -> { })));
+        }
+        @JavascriptInterface
+        public void storeRestore() {
+            runOnUiThread(() -> connectBilling(() -> billing.queryPurchasesAsync(
+                    QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.INAPP).build(),
+                    (r, list) -> { if (list != null) for (Purchase p : list) deliver(p); })));
         }
         @JavascriptInterface
         public void enablePush() {
