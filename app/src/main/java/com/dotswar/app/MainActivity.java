@@ -415,6 +415,12 @@ public class MainActivity extends Activity {
 
     /** Called from the page: window.AndroidBridge.googleSignIn() -> native Google sign-in -> onGoogleIdToken(token) in JS */
     private class Bridge {
+        /** true on Google Play pre-launch / Firebase Test Lab robot devices: the game then writes nothing to the server */
+        @JavascriptInterface
+        public boolean isTestLab() {
+            try { return "true".equals(android.provider.Settings.System.getString(getContentResolver(), "firebase.test.lab")); }
+            catch (Exception e) { return false; }
+        }
         @JavascriptInterface
         public void googleSignIn() {
             runOnUiThread(MainActivity.this::startGoogleSignIn);

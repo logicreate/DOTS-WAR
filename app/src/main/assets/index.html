@@ -1471,6 +1471,40 @@ body[data-theme=world] .mini-lv.sel .mini-lv-n,body[data-theme=world] .mini-lv.s
 #accountModal .acc-ic{display:none}
 .pw-msg{min-height:1.2em;color:var(--sub);line-height:1.4;margin-bottom:8px}.pw-msg.bad{color:#ff9a7a}
 .auth-forgot{margin-top:6px}
+.vol-row{display:flex;align-items:center;gap:8px;flex:1;max-width:210px;justify-content:flex-end}
+.vol-row b{min-width:42px;text-align:right;font-size:.82rem;color:var(--sub)}
+.vol{-webkit-appearance:none;appearance:none;flex:1;height:8px;border-radius:99px;background:linear-gradient(90deg,#ffd76a 0,#e9a53c var(--p,70%),rgba(255,255,255,.15) var(--p,70%));outline:none;margin:0}
+.vol::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff6d8,#ffd76a 55%,#c98a24);border:2px solid #fff0bd;box-shadow:0 2px 6px rgba(0,0,0,.5)}
+.vol::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:#ffd76a;border:2px solid #fff0bd}
+.ol-lbl{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.ol-mapname{font-size:.74rem;color:var(--sub);font-weight:600;text-transform:none;letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ol-maps{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 8px;margin:0 -2px 6px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.ol-maps::-webkit-scrollbar{display:none}
+.ol-map{position:relative;flex:0 0 auto;width:clamp(84px,24vw,104px);padding:5px 5px 6px;border-radius:14px;border:2px solid rgba(255,214,140,.22);background:rgba(30,16,6,.55);cursor:pointer;scroll-snap-align:center;display:flex;flex-direction:column;align-items:center;gap:4px;font:inherit;color:#f3e3c4;transition:transform .15s,border-color .15s}
+.ol-map canvas{width:100%;aspect-ratio:1;border-radius:9px;display:block}
+.ol-map-n{font-size:.7rem;font-weight:700;line-height:1.1;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.ol-map.sel{border-color:#ffd76a;background:rgba(90,52,10,.75);box-shadow:0 0 14px rgba(255,214,106,.45);transform:translateY(-2px)}
+.ol-dice{position:absolute;top:8px;right:8px;font-style:normal;font-size:.8rem;opacity:0;transition:opacity .2s}.ol-map.sel .ol-dice{opacity:.95}
+.ol-map.reroll canvas{animation:mapFlip .45s ease}
+@keyframes mapFlip{0%{transform:rotateY(0)}50%{transform:rotateY(90deg)}100%{transform:rotateY(0)}}
+.ol-lvs{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:12px}
+.ol-lvs .mini-lv{min-width:0;padding:6px 2px}
+.ol-acts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ol-acts .btn{width:100%;margin:0;padding-left:6px;padding-right:6px;white-space:nowrap}
+#btnCreate[style*="none"]+#btnInvite{grid-column:span 2}
+/* online: all 6 maps visible at once (3x2), landscape thumbnails */
+.ol-maps{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;overflow:visible;margin:0 0 8px;padding:2px 0 0}
+.ol-map{width:auto;padding:4px 4px 5px;border-radius:12px;gap:3px}
+.ol-map canvas{aspect-ratio:16/9;object-fit:cover;border-radius:8px}
+.ol-map-n{font-size:.68rem}
+.ol-map.sel{transform:none}
+.ol-dice{top:6px;right:6px;font-size:.72rem}
+#screen-online #olSub{display:none}
+@media (max-height:700px){#screen-online #olSecRoom{display:none}#screen-online .ol-map canvas{aspect-ratio:2/1}
+ #screen-online .ol-lvs .mini-lv{padding:3px 2px}#screen-online .ol-lvs{margin-bottom:8px}#screen-online .ol-sec{margin-top:8px;padding-top:8px}
+ #screen-online .join-inp{padding-top:8px;padding-bottom:8px}#screen-online .ol-me{margin-bottom:2px}}
+#panelC.ol-wait .ol-maps,#panelC.ol-wait .ol-lvs,#panelC.ol-wait #fldSizeLbl,#panelC.ol-wait #olMapLbl{display:none}
+#panelC.ol-wait .ol-lbl{justify-content:center}
 </style>
 </head>
 <body>
@@ -1577,19 +1611,22 @@ body[data-theme=world] .mini-lv.sel .mini-lv-n,body[data-theme=world] .mini-lv.s
   <div class="ssub" id="olSub">Play with a friend over the internet</div>
   <div class="ol-wrap">
     <div class="ol-me" id="olMe"></div>
-    <button class="btn btn-gold" id="btnQuick" onclick="quickMatch()" style="width:100%;margin-bottom:8px">⚡ Quick match</button>
-    <button class="btn btn-blue cta-blue" id="btnInvite" onclick="openInvite()" style="width:100%;margin-bottom:8px">👥 Invite friends</button>
     <div class="ol-sec" id="olSecRoom"></div>
     <div id="panelC">
+      <div class="ol-lbl"><span id="olMapLbl">Map</span><span class="ol-mapname" id="olMapName"></span></div>
+      <div class="ol-maps" id="olMaps"></div>
       <div class="ol-lbl" id="fldSizeLbl">Field size:</div>
-      <div style="display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-bottom:9px" id="olLvs"></div>
+      <div class="ol-lvs" id="olLvs"></div>
       <div class="code-box" id="codeBox" onclick="copyCode()" style="display:none">
         <div style="font-size:.65rem;color:rgba(255,210,140,.34);font-weight:400" id="codeLbl">ROOM CODE — tap to copy</div>
         <div class="code-n" id="codeVal">——</div>
         <div class="code-h" id="codeHint">📋 Share with your friend</div>
         <button class="btn btn-ghost" style="margin-top:8px" onclick="event.stopPropagation();shareRoom()">🔗 <span id="shareLbl">Share link</span></button>
       </div>
-      <button class="btn btn-blue" id="btnCreate" onclick="createRoom()" style="width:100%;font-family:'Exo 2',sans-serif">🌐 Create Room</button>
+      <div class="ol-acts" id="olActs">
+        <button class="btn btn-gold cta" id="btnCreate" onclick="createRoom()">🌐 Create Room</button>
+        <button class="btn btn-blue cta-blue" id="btnInvite" onclick="openInvite()">👥 Invite friends</button>
+      </div>
     </div>
     <div class="ol-sec" id="olSecJoin"></div>
     <div id="panelJ">
@@ -1877,8 +1914,8 @@ body[data-theme=world] .mini-lv.sel .mini-lv-n,body[data-theme=world] .mini-lv.s
 <div class="overlay" id="settingsModal" onclick="if(event.target===this)closeSettings()">
   <div class="modal" style="max-width:420px">
     <h2 id="stTitle">⚙ Settings</h2>
-    <div class="st-row"><span id="stSound">Sound</span><div class="seg" id="segSound"></div></div>
-    <div class="st-row"><span id="stMusic">Music</span><div class="seg" id="segMusic"></div></div>
+    <div class="st-row"><span id="stSound">Sound</span><div class="vol-row"><input type="range" class="vol" id="volSfx" min="0" max="100" step="5" oninput="setVol('sfxV',this.value)" onchange="sfx('pop')"><b id="volSfxN"></b></div></div>
+    <div class="st-row"><span id="stMusic">Music</span><div class="vol-row"><input type="range" class="vol" id="volMus" min="0" max="100" step="5" oninput="setVol('musV',this.value)"><b id="volMusN"></b></div></div>
     <div class="st-row"><span id="stTrack">Melody</span><button class="btn btn-ghost mus-pick" onclick="openMusic()" id="stTrackB">🎵</button></div>
     <div class="st-row"><span id="stVibe">Vibration</span><div class="seg" id="segVibe"></div></div>
     <div class="st-row"><span id="stTimer">Move timer vs AI</span><div class="seg" id="segTimer"></div></div>
@@ -1991,7 +2028,9 @@ function applyImgs(theme){
 }
 applyImgs('world');
 var IMGEL={};
-function imgEl(k){ var im=IMGEL[k]; if(!im){ im=new Image(); im.onload=function(){ spriteCache={}; layerKey=''; if(typeof G!=='undefined'&&G&&typeof canvas!=='undefined'&&canvas) draw(G); }; im.src='data:image/webp;base64,'+IMG[k]; IMGEL[k]=im; } return (im.complete&&im.naturalWidth)?im:null; }
+// a picture finished decoding: windows that showed an empty place for it are redrawn (shop skins/boards)
+var _imgRT=null; function imgLoaded(){ clearTimeout(_imgRT); _imgRT=setTimeout(function(){ try{ var sm=document.getElementById('shopModal'); if(sm&&sm.classList.contains('open')&&shopTab!=='cry') renderShop(); }catch(e){} },40); }
+function imgEl(k){ var im=IMGEL[k]; if(!im){ im=new Image(); im.onload=function(){ spriteCache={}; layerKey=''; if(typeof G!=='undefined'&&G&&typeof canvas!=='undefined'&&canvas) draw(G); imgLoaded(); }; im.src='data:image/webp;base64,'+IMG[k]; IMGEL[k]=im; } return (im.complete&&im.naturalWidth)?im:null; }
 
 // ═══════════════════════
 //  i18n
@@ -2007,7 +2046,7 @@ var lang = (function(){ try{ return localStorage.getItem('dwl')||detectLang(); }
 var TR = {
   en:{
    
-    stMusic:'Music', world1:'Green World', world2:'Blue World', world3:'Gold World', wsub1:'A garden by the sea. 12 battles and a boss.', wsub2:'Islands, rivers, continents. Blue is stronger.', wsub3:'Fog, volcanoes and gold. Legends only.', worldLocked:'First beat the boss of the {w}', btnNextWorld:'New world →', boss1:'Forest Warden', boss2:'Captain Storm', boss3:'Golden Pharaoh', bossIntro:'👑 Boss: {b}. No hints!', bossReward:'👑 Boss defeated! +{n} ◆ and the «{s}» skin', fogIntro:'🌫 Fog! Rival stones hide in it. Play near the fog to clear it.', fogEnemy:'🌫 A rival stone was hiding here!', fogTerrain:'🌫 No way through here', expFog:'Fog', bScout:'Scout', bScoutD:'Clears the fog where the rival hides', bScoutOn:'🔭 Fog cleared', ldRand:'Any', ld_africa:'Africa', ld_europe:'Europe', ld_asia:'Asia', ld_namerica:'North America', ld_samerica:'South America', ld_australia:'Australia', ld_antarctica:'Antarctica', ld_greenland:'Greenland', ld_madagascar:'Madagascar', ld_britain:'Great Britain', ld_iceland:'Iceland', ld_borneo:'Borneo', ld_srilanka:'Sri Lanka', ld_newzealand:'New Zealand', mp_volcano:'Volcano', mpd_volcano:'Lava and ◆ crystals', sk_sunstone:'Sunstone', sk_rose:'Rose quartz', shopBossTip:'Reward for the boss of the {w}', ach_world2:'Wave master|Finish the Blue World', ach_world3:'Golden emperor|Finish the Gold World', ach_fogwin:'Through the fog|Win in the fog', sndOn:'🔊 Sound on', sndOff:'🔇 Sound off', stCoach:'Tutorial', coSkip:'Skip', coNext:'Next ›', coDone:'Got it!', coM1:'Start here: the campaign vs AI — three worlds and bosses.', coM2:'Online: battle friends and climb the rating.', coM3:'Friends: add friends and call them to battle.', coM4:'Daily puzzles: three puzzles and ◆ crystals.', coM5:'Crystals ◆ — for skins, boosters and friend invites.', coM6:'Sound and music on/off. The button is on every screen.', coO1:'Invite friends: the first to accept plays you.', coO2:'Quick match: we find a rival for you.', coO3:'Got a code from a friend? Enter it here.', coS1:'Three worlds: beat the boss to open the next one.', coS2:'Your next battle — tap to start.', coS3:'Expedition: any map, continents and fog.', coBoard:'👆 Tap the glowing point to make your first move!', tBronze:'Bronze', tSilver:'Silver', tGold:'Gold', tPlat:'Platinum', tDiamond:'Diamond', tLegend:'Legend', tierUp:'New league: {t}!', roomFull:'The battle already started — someone was faster.', frH:'👥 Friends', frPh:'Player name', frShareBtn:'🔗 Invite by link', frClose:'Done', frInvites:'Battle invites', frReqs:'Friend requests', frCount:'Friends · {n}', frEmpty:'No friends yet. Type a player name or send your link.', frHint:'⚔ — invite to battle, ✕ — remove. Green dot — online now.', frNeedName:'Set your name in the account first', frNotFound:'No player with that name', frSelf:'That is you :)', frAlready:'Already friends', frSent:'Request sent: {n}', frAdded:'You and {n} are friends now!', frReqNew:'👋 {n} wants to be friends — open Friends', frRemoveT:'Remove friend?', frRemoveTx:'You will disappear from each other\'s lists.', frRemoveYes:'Remove', frShareTxt:'{n} invites you to be friends in DOTS WAR!', frLinkT:'{n} wants to be friends', frLinkTx:'Send a friend request? The player will confirm it.', frLinkYes:'Send', frNoFriends:'Add some friends first', btnInvite:'👥 Invite friends', invH:'⚔ Call to battle', invSub:'Pick friends. The first to accept plays you. {c} ◆ per friend.', invCost:'Friends: {k} · Cost: {c} ◆ (you have {b} ◆)', invMax:'Up to {k} friends at once', invPick:'Pick at least one friend', invNoCry:'You need {c} ◆ — top up in the shop', invRefund:'Could not create the room — crystals refunded', invSentSt:'Invites sent: {k}. Waiting for the first one!', invToastGame:'⚔ {n} calls you to battle — open it after this game', invTitle:'{n} calls you to battle!', invText:'Board {s} · {t}', invGo2:'⚔ Fight!', invGoS:'Fight', invLater:'Later', invGo:'Invite', invClose:'Cancel', topAll:'Top 20', topFr:'Friends', chGood:'Nice move!', chLuck:'Good luck!', chWow:'Wow!', chGG:'Good game!', chWait:'Not so fast :)', pushFail:'Notifications unavailable', pushAskT:'Turn on notifications?', pushAskTx:'We will tell you when a friend calls you to battle or adds you.', pushYes:'Turn on', pushNA:'Notifications are not supported on this device yet', pushDenied:'Notifications are blocked in settings', pushOn:'🔔 Notifications on', pushAsk:'Notifications', frGuest:'Sign in with Google or Apple to keep your rating and game history forever, add friends and call them to battle.', frGuestT2:'Sign in required', topGuest:'Sign in to keep your rating and appear in the table', resLogin:'💾 You are playing as a guest. Sign in to keep your rating and history forever.', frAcc:'Accept', pauseT:'Paused', pauseB:'▶ Continue', resumeT:'Continue the battle?', resumeTx:'{w} · score {a} : {b}. The game was saved — you can finish it.', resumeYes:'▶ Continue', resumeNo:'New game', resumeOk:'Battle restored', updT:'Version {v} is available!', updTx:'Update the game to get new features and fixes.', updYes:'⬆️ Update', pushWhy:'🔔 Allow notifications — we will tell you when a friend calls you to battle', musH:'🎵 Music', musNote:'Famous classical and folk melodies (public domain), arranged for the game.', stTrack:'Melody', mp_waters:'Waters', mpd_waters:'A river and a lake', mp_mountains:'Mountains', mpd_mountains:'Ridges with passes', puzBtn:'Puzzle {n}/12', puzProg:'Pieces collected: {n} of 12. Win a battle to get a piece.', puzDone:'The picture is complete!', puzReward:'🧩 Puzzle complete! +{n} ◆', avLbl:'Profile picture', avHint:'Pick one or tap 📷 to use your own photo.', avSaved:'Photo saved', avBad:'Could not read this image', decayT:'📉 Rating −{n}: {d} day(s) without a battle. Play daily to keep it!', bDoubleAgain:'Once more this battle (pricey)', bBp1:'Black point · small', bBp2:'Black point · medium', bBp3:'Black point · large', bBpD:'Frees the captured area around it, {r} points each way', bBpOn:'● Tap a captured area (radius {r})', bBpNotCap:'Tap a point inside a captured area', bBpBig:'The area is bigger than the black point — nothing happened', bBpDone:'● Freed: {f}', puzNew:'New piece found! {n} of 12.', pzf_ring:'Close the ring in 1 move', pzf_twin:'Only one of the two rings captures', pzf_rescue:'Rescue your captured dot', pzf_rescue2:'Rescue in 2 moves', pzf_maxcap:'Capture 3 at once', pzf_maxcap4:'Capture 4 at once', pzf_fork:'Double threat: capture in 2', pzf_forkRow:'Double threat: capture in 2', pzf_forkBig:'Double threat with traps: 2 moves', pzf_classic:'Capture in 3 moves — mind the traps', musMine:'My songs', musAdd:'Add songs from the phone', musMineAll:'All my songs', musBuilt:'Game melodies', musBig:'Files over 40 MB are skipped', musAdded:'Added: {n}', musFail:'Could not save the song', rotTx:'Turn the phone upright', nmH:'Welcome!', nmT:'Other players will see it in the rating and in battles.', nmOk:'Continue', nmSign:'Sign in with Google or Apple', nmHi:'Welcome, {n}!', world4:'Ice World', wsub4:'Melting glaciers and snowstorms. 12 battles and the Snow Queen.', boss4:'Snow Queen', sk_aurora:'Aurora', ach_world4:'Ice breaker|Finish the Ice World', mp_glacier:'Glacier', mpd_glacier:'Ice melts during the battle', meltT:'🧊 The ice melted — a new path is open!', stormT:'🌨 Snowstorm! The fog is back away from your stones', glacierIntro:'🧊 Glacier: every 6 moves a cracked ice block melts and opens the way.', stormIntro:'🌨 Snowstorm: every 8 moves the fog returns. Keep your stones close!', topLg:'League', topCl:'Clubs', topLgH:'🏆 League of the week', topFrH:'👥 Friends', topClH:'🛡️ Clubs', lgLeftD:'{d} d {h} h left', lgLeftH:'{h} h {m} min left', lgMine:'Your points: {p}', lgRew:'Monday prizes: 🥇 150 ◆ · 🥈 100 · 🥉 70 · top 10 — 40 · 10+ points — 15', lgGuest:'Sign in to play in the weekly league', lgEmpty:'Nobody has points yet — win a battle!', lgPlus:'🏆 +{n} league points (this week: {p})', clGuest:'Sign in to join or create a club', clTop:'Best clubs this week', clNoRank:'No club points yet this week', clRew:'Monday: members of the top-3 clubs get 60 / 40 / 25 ◆', clInfo:'Members {n}/{max} · Points this week {p}', clMembers:'Members (points this week)', clLeave:'Leave the club', clLeaveT:'Leave the club?', clLeaveTx:'You can join another club later.', clIntro:'A club is a team of up to 20 players. Every league point you earn counts for the club; the best clubs get crystals every Monday.', clCreate:'Create a club · {c} ◆', clJoinH:'Join a club', clJoin:'Join', clNone:'No clubs yet — create the first!', clNew:'🛡️ New club', clNamePh:'Club name', clTaken:'This club name is taken', clMade:'Club «{n}» created!', clJoined:'You joined «{n}»', clFull:'The club is full', rwT:'Weekly results', rwLeague:'League {t}: place {p}. Prize: +{c} ◆', rwClub:'Your club took place {p}. Prize: +{c} ◆', shopCry:'Crystals', stBadge:'ONE TIME', stName:'Starter pack', stDesc:'{c} ◆ + «{s}» skin', stLeft:'{h} h left', pk_bonus:'+17%', pk_hit:'POPULAR', pk_best:'BEST VALUE', pkApp:'in the app', pkAppT:'Buy in the app', shopWeb:'Crystals can be bought in the DOTS WAR app for Android (Google Play) and iPhone (App Store). Crystals bought there appear here after you sign in with the same account.', shopPay:'Payment goes through Google Play / App Store. Crystals arrive right after the purchase is confirmed.', pgH:'For grown-ups', pgQ:'Ask an adult: how much is {a} × {b}?', pgOk:'Continue', pgBad:'Not quite — ask an adult', payCheck:'⏳ Checking the purchase…', payOk:'💎 +{c} ◆ — thank you!', payErr:'Purchase failed', payBad:'The purchase could not be confirmed', payPending:'The payment is pending — crystals will arrive when it completes', payWait:'Finishing the previous purchase…', adTitle:'Watch a short video', adLeft:'{n} of {m} left today', adNote:'Videos are shown by Google AdMob. Crystals arrive after the video ends.', adNoteWeb:'Watch videos for crystals in the DOTS WAR app for Android and iPhone.', adNA:'Videos are available in the app', adLimit:'That is all {n} videos for today — come back tomorrow!', adWait:'Next video in {s} s', adLoading:'📺 Loading the video…', adGot:'📺 +{n} ◆ — thank you!', adSkipped:'The video was closed early — no crystals this time', adNone:'No video available right now, try a bit later', adOffer:'Watch a short video and get +{n} ◆?', adWatch:'Watch', adDouble:'×2 reward: +{n} ◆ more for a video', auReg:'New player', auLog:'I have an account', auName:'Name', auPw:'Password (6+ characters)', auPwNew:'New password', auRegBtn:'Create account', auLogBtn:'Sign in', auRegHint:'Remember your name and password. The e-mail is only for recovering a forgotten password.', auLogHint:'Enter the name and password you registered with.', auSkip:'Play without a password (progress stays on this phone)', auWeak:'Password: at least 6 characters', auBad:'Wrong name, e-mail or password', auMany:'Too many attempts — try again in a few minutes', auRegOk:'Account created. Welcome, {n}!', auLogOk:'Welcome back, {n}!', auSigned:'Signed in as {n}', auNameFixed:'The name is your login and cannot be changed', pwChLbl:'Change password', pwChanged:'Password changed', pwRelog:'Sign out and sign in again, then change the password', avChange:'Change photo', olRoom:'Your room', olJoin:'Have a code?', pGot:'Captured!', pCool:'Cool!', pGreat:'Great!', pSuper:'Super!', pMega:'Mega capture!', pStreak:'Streak ×{n}', pWin:'Victory!', pEarly:'Brilliant!', pFlawless:'Flawless!', auEmail:'E-mail', auNameOrEmail:'Name or e-mail', auForgot:'Forgot your password?', auEmailBad:'Check the e-mail address', emailTaken:'This e-mail is already registered — tap “I already play”', rsH:'Recover password', rsBtn:'Send the link', rsHint:'Enter your e-mail or name — we will send a link to set a new password.', rsSent:'Letter sent to {e}. Open the link in it and set a new password.', rsSentE:'If this e-mail is registered, the letter is on its way. Open the link and set a new password (check Spam too).', rsNoEmail:'This account has no e-mail, so the password cannot be recovered.', rsNoName:'No player with this name', addEmail:'Add e-mail', addEmailHint:'With an e-mail you can recover a forgotten password.', addEmailSent:'We sent a letter to {e}. Tap the link in it and the e-mail will be added.', auSignedE:'Signed in as {n} · {e}', mTag:'The art of surrounding',
+    stMusic:'Music', world1:'Green World', world2:'Blue World', world3:'Gold World', wsub1:'A garden by the sea. 12 battles and a boss.', wsub2:'Islands, rivers, continents. Blue is stronger.', wsub3:'Fog, volcanoes and gold. Legends only.', worldLocked:'First beat the boss of the {w}', btnNextWorld:'New world →', boss1:'Forest Warden', boss2:'Captain Storm', boss3:'Golden Pharaoh', bossIntro:'👑 Boss: {b}. No hints!', bossReward:'👑 Boss defeated! +{n} ◆ and the «{s}» skin', fogIntro:'🌫 Fog! Rival stones hide in it. Play near the fog to clear it.', fogEnemy:'🌫 A rival stone was hiding here!', fogTerrain:'🌫 No way through here', expFog:'Fog', bScout:'Scout', bScoutD:'Clears the fog where the rival hides', bScoutOn:'🔭 Fog cleared', ldRand:'Any', ld_africa:'Africa', ld_europe:'Europe', ld_asia:'Asia', ld_namerica:'North America', ld_samerica:'South America', ld_australia:'Australia', ld_antarctica:'Antarctica', ld_greenland:'Greenland', ld_madagascar:'Madagascar', ld_britain:'Great Britain', ld_iceland:'Iceland', ld_borneo:'Borneo', ld_srilanka:'Sri Lanka', ld_newzealand:'New Zealand', mp_volcano:'Volcano', mpd_volcano:'Lava and ◆ crystals', sk_sunstone:'Sunstone', sk_rose:'Rose quartz', shopBossTip:'Reward for the boss of the {w}', ach_world2:'Wave master|Finish the Blue World', ach_world3:'Golden emperor|Finish the Gold World', ach_fogwin:'Through the fog|Win in the fog', sndOn:'🔊 Sound on', sndOff:'🔇 Sound off', stCoach:'Tutorial', coSkip:'Skip', coNext:'Next ›', coDone:'Got it!', coM1:'Start here: the campaign vs AI — three worlds and bosses.', coM2:'Online: battle friends and climb the rating.', coM3:'Friends: add friends and call them to battle.', coM4:'Daily puzzles: three puzzles and ◆ crystals.', coM5:'Crystals ◆ — for skins, boosters and friend invites.', coM6:'Sound and music on/off. The button is on every screen.', coO1:'…or invite friends right away — the first to accept plays you on this map.', coO2:'Choose the map and the board size for your battle.', coO3:'Got a code from a friend? Enter it here.', coS1:'Three worlds: beat the boss to open the next one.', coS2:'Your next battle — tap to start.', coS3:'Expedition: any map, continents and fog.', coBoard:'👆 Tap the glowing point to make your first move!', tBronze:'Bronze', tSilver:'Silver', tGold:'Gold', tPlat:'Platinum', tDiamond:'Diamond', tLegend:'Legend', tierUp:'New league: {t}!', roomFull:'The battle already started — someone was faster.', frH:'👥 Friends', frPh:'Player name', frShareBtn:'🔗 Invite by link', frClose:'Done', frInvites:'Battle invites', frReqs:'Friend requests', frCount:'Friends · {n}', frEmpty:'No friends yet. Type a player name or send your link.', frHint:'⚔ — invite to battle, ✕ — remove. Green dot — online now.', frNeedName:'Set your name in the account first', frNotFound:'No player with that name', frSelf:'That is you :)', frAlready:'Already friends', frSent:'Request sent: {n}', frAdded:'You and {n} are friends now!', frReqNew:'👋 {n} wants to be friends — open Friends', frRemoveT:'Remove friend?', frRemoveTx:'You will disappear from each other\'s lists.', frRemoveYes:'Remove', frShareTxt:'{n} invites you to be friends in DOTS WAR!', frLinkT:'{n} wants to be friends', frLinkTx:'Send a friend request? The player will confirm it.', frLinkYes:'Send', frNoFriends:'Add some friends first', btnInvite:'👥 Invite friends', invH:'⚔ Call to battle', invSub:'Pick friends. The first to accept plays you. {c} ◆ per friend.', invCost:'Friends: {k} · Cost: {c} ◆ (you have {b} ◆)', invMax:'Up to {k} friends at once', invPick:'Pick at least one friend', invNoCry:'You need {c} ◆ — top up in the shop', invRefund:'Could not create the room — crystals refunded', invSentSt:'Invites sent: {k}. Waiting for the first one!', invToastGame:'⚔ {n} calls you to battle — open it after this game', invTitle:'{n} calls you to battle!', invText:'Board {s} · {t}', invGo2:'⚔ Fight!', invGoS:'Fight', invLater:'Later', invGo:'Invite', invClose:'Cancel', topAll:'Top 20', topFr:'Friends', chGood:'Nice move!', chLuck:'Good luck!', chWow:'Wow!', chGG:'Good game!', chWait:'Not so fast :)', pushFail:'Notifications unavailable', pushAskT:'Turn on notifications?', pushAskTx:'We will tell you when a friend calls you to battle or adds you.', pushYes:'Turn on', pushNA:'Notifications are not supported on this device yet', pushDenied:'Notifications are blocked in settings', pushOn:'🔔 Notifications on', pushAsk:'Notifications', frGuest:'Sign in with Google or Apple to keep your rating and game history forever, add friends and call them to battle.', frGuestT2:'Sign in required', topGuest:'Sign in to keep your rating and appear in the table', resLogin:'💾 You are playing as a guest. Sign in to keep your rating and history forever.', frAcc:'Accept', pauseT:'Paused', pauseB:'▶ Continue', resumeT:'Continue the battle?', resumeTx:'{w} · score {a} : {b}. The game was saved — you can finish it.', resumeYes:'▶ Continue', resumeNo:'New game', resumeOk:'Battle restored', updT:'Version {v} is available!', updTx:'Update the game to get new features and fixes.', updYes:'⬆️ Update', pushWhy:'🔔 Allow notifications — we will tell you when a friend calls you to battle', musH:'🎵 Music', musNote:'Famous classical and folk melodies (public domain), arranged for the game.', stTrack:'Melody', mp_waters:'Waters', mpd_waters:'A river and a lake', mp_mountains:'Mountains', mpd_mountains:'Ridges with passes', puzBtn:'Puzzle {n}/12', puzProg:'Pieces collected: {n} of 12. Win a battle to get a piece.', puzDone:'The picture is complete!', puzReward:'🧩 Puzzle complete! +{n} ◆', avLbl:'Profile picture', avHint:'Pick one or tap 📷 to use your own photo.', avSaved:'Photo saved', avBad:'Could not read this image', decayT:'📉 Rating −{n}: {d} day(s) without a battle. Play daily to keep it!', bDoubleAgain:'Once more this battle (pricey)', bBp1:'Black point · small', bBp2:'Black point · medium', bBp3:'Black point · large', bBpD:'Frees the captured area around it, {r} points each way', bBpOn:'● Tap a captured area (radius {r})', bBpNotCap:'Tap a point inside a captured area', bBpBig:'The area is bigger than the black point — nothing happened', bBpDone:'● Freed: {f}', puzNew:'New piece found! {n} of 12.', pzf_ring:'Close the ring in 1 move', pzf_twin:'Only one of the two rings captures', pzf_rescue:'Rescue your captured dot', pzf_rescue2:'Rescue in 2 moves', pzf_maxcap:'Capture 3 at once', pzf_maxcap4:'Capture 4 at once', pzf_fork:'Double threat: capture in 2', pzf_forkRow:'Double threat: capture in 2', pzf_forkBig:'Double threat with traps: 2 moves', pzf_classic:'Capture in 3 moves — mind the traps', musMine:'My songs', musAdd:'Add songs from the phone', musMineAll:'All my songs', musBuilt:'Game melodies', musBig:'Files over 40 MB are skipped', musAdded:'Added: {n}', musFail:'Could not save the song', rotTx:'Turn the phone upright', nmH:'Welcome!', nmT:'Other players will see it in the rating and in battles.', nmOk:'Continue', nmSign:'Sign in with Google or Apple', nmHi:'Welcome, {n}!', world4:'Ice World', wsub4:'Melting glaciers and snowstorms. 12 battles and the Snow Queen.', boss4:'Snow Queen', sk_aurora:'Aurora', ach_world4:'Ice breaker|Finish the Ice World', mp_glacier:'Glacier', mpd_glacier:'Ice melts during the battle', meltT:'🧊 The ice melted — a new path is open!', stormT:'🌨 Snowstorm! The fog is back away from your stones', glacierIntro:'🧊 Glacier: every 6 moves a cracked ice block melts and opens the way.', stormIntro:'🌨 Snowstorm: every 8 moves the fog returns. Keep your stones close!', topLg:'League', topCl:'Clubs', topLgH:'🏆 League of the week', topFrH:'👥 Friends', topClH:'🛡️ Clubs', lgLeftD:'{d} d {h} h left', lgLeftH:'{h} h {m} min left', lgMine:'Your points: {p}', lgRew:'Monday prizes: 🥇 150 ◆ · 🥈 100 · 🥉 70 · top 10 — 40 · 10+ points — 15', lgGuest:'Sign in to play in the weekly league', lgEmpty:'Nobody has points yet — win a battle!', lgPlus:'🏆 +{n} league points (this week: {p})', clGuest:'Sign in to join or create a club', clTop:'Best clubs this week', clNoRank:'No club points yet this week', clRew:'Monday: members of the top-3 clubs get 60 / 40 / 25 ◆', clInfo:'Members {n}/{max} · Points this week {p}', clMembers:'Members (points this week)', clLeave:'Leave the club', clLeaveT:'Leave the club?', clLeaveTx:'You can join another club later.', clIntro:'A club is a team of up to 20 players. Every league point you earn counts for the club; the best clubs get crystals every Monday.', clCreate:'Create a club · {c} ◆', clJoinH:'Join a club', clJoin:'Join', clNone:'No clubs yet — create the first!', clNew:'🛡️ New club', clNamePh:'Club name', clTaken:'This club name is taken', clMade:'Club «{n}» created!', clJoined:'You joined «{n}»', clFull:'The club is full', rwT:'Weekly results', rwLeague:'League {t}: place {p}. Prize: +{c} ◆', rwClub:'Your club took place {p}. Prize: +{c} ◆', shopCry:'Crystals', stBadge:'ONE TIME', stName:'Starter pack', stDesc:'{c} ◆ + «{s}» skin', stLeft:'{h} h left', pk_bonus:'+17%', pk_hit:'POPULAR', pk_best:'BEST VALUE', pkApp:'in the app', pkAppT:'Buy in the app', shopWeb:'Crystals can be bought in the DOTS WAR app for Android (Google Play) and iPhone (App Store). Crystals bought there appear here after you sign in with the same account.', shopPay:'Payment goes through Google Play / App Store. Crystals arrive right after the purchase is confirmed.', pgH:'For grown-ups', pgQ:'Ask an adult: how much is {a} × {b}?', pgOk:'Continue', pgBad:'Not quite — ask an adult', payCheck:'⏳ Checking the purchase…', payOk:'💎 +{c} ◆ — thank you!', payErr:'Purchase failed', payBad:'The purchase could not be confirmed', payPending:'The payment is pending — crystals will arrive when it completes', payWait:'Finishing the previous purchase…', adTitle:'Watch a short video', adLeft:'{n} of {m} left today', adNote:'Videos are shown by Google AdMob. Crystals arrive after the video ends.', adNoteWeb:'Watch videos for crystals in the DOTS WAR app for Android and iPhone.', adNA:'Videos are available in the app', adLimit:'That is all {n} videos for today — come back tomorrow!', adWait:'Next video in {s} s', adLoading:'📺 Loading the video…', adGot:'📺 +{n} ◆ — thank you!', adSkipped:'The video was closed early — no crystals this time', adNone:'No video available right now, try a bit later', adOffer:'Watch a short video and get +{n} ◆?', adWatch:'Watch', adDouble:'×2 reward: +{n} ◆ more for a video', auReg:'New player', auLog:'I have an account', auName:'Name', auPw:'Password (6+ characters)', auPwNew:'New password', auRegBtn:'Create account', auLogBtn:'Sign in', auRegHint:'Remember your name and password. The e-mail is only for recovering a forgotten password.', auLogHint:'Enter the name and password you registered with.', auSkip:'Play without a password (progress stays on this phone)', auWeak:'Password: at least 6 characters', auBad:'Wrong name, e-mail or password', auMany:'Too many attempts — try again in a few minutes', auRegOk:'Account created. Welcome, {n}!', auLogOk:'Welcome back, {n}!', auSigned:'Signed in as {n}', auNameFixed:'The name is your login and cannot be changed', pwChLbl:'Change password', pwChanged:'Password changed', pwRelog:'Sign out and sign in again, then change the password', avChange:'Change photo', olRoom:'Your battle', olJoin:'Have a code?', pGot:'Captured!', pCool:'Cool!', pGreat:'Great!', pSuper:'Super!', pMega:'Mega capture!', pStreak:'Streak ×{n}', pWin:'Victory!', pEarly:'Brilliant!', pFlawless:'Flawless!', auEmail:'E-mail', auNameOrEmail:'Name or e-mail', auForgot:'Forgot your password?', auEmailBad:'Check the e-mail address', emailTaken:'This e-mail is already registered — tap “I already play”', rsH:'Recover password', rsBtn:'Send the link', rsHint:'Enter your e-mail or name — we will send a link to set a new password.', rsSent:'Letter sent to {e}. Open the link in it and set a new password.', rsSentE:'If this e-mail is registered, the letter is on its way. Open the link and set a new password (check Spam too).', rsNoEmail:'This account has no e-mail, so the password cannot be recovered.', rsNoName:'No player with this name', addEmail:'Add e-mail', addEmailHint:'With an e-mail you can recover a forgotten password.', addEmailSent:'We sent a letter to {e}. Tap the link in it and the e-mail will be added.', auSignedE:'Signed in as {n} · {e}', nameDup:'The name “{n}” already belongs to another account. Choose another name — or tap “I already play” and sign in.', olMapLbl:'Map', olReroll:'tap again for a new layout', olInviteBtn:'👥 Invite a friend', coO4:'Create a room and send the code to a friend…', mTag:'The art of surrounding',
     mPveT:'PLAY', mPveS:'Campaign vs AI',
     mPvpT:'DUEL', mPvpS:'Two players, one screen',
     mOnT:'ONLINE', mOnS:'Friends & rating',
@@ -2115,7 +2154,7 @@ var TR = {
   },
   ru:{
    
-    stMusic:'Музыка', world1:'Зелёный мир', world2:'Синий мир', world3:'Золотой мир', wsub1:'Сад над морем. 12 битв и босс.', wsub2:'Острова, реки и материки. Синие сильнее.', wsub3:'Туман, вулканы и золото. Только для легенд.', worldLocked:'Сначала победите босса: {w}', btnNextWorld:'Новый мир →', boss1:'Лесной Страж', boss2:'Капитан Шторм', boss3:'Золотой Фараон', bossIntro:'👑 Босс: {b}. Без подсказок!', bossReward:'👑 Босс повержен! +{n} ◆ и скин «{s}»', fogIntro:'🌫 Туман! В нём прячутся камни соперника. Ходите рядом — туман рассеется.', fogEnemy:'🌫 Здесь прятался соперник!', fogTerrain:'🌫 Здесь не пройти', expFog:'Туман', bScout:'Разведка', bScoutD:'Рассеет туман там, где прячется соперник', bScoutOn:'🔭 Туман рассеян', ldRand:'Любой', ld_africa:'Африка', ld_europe:'Европа', ld_asia:'Азия', ld_namerica:'Северная Америка', ld_samerica:'Южная Америка', ld_australia:'Австралия', ld_antarctica:'Антарктида', ld_greenland:'Гренландия', ld_madagascar:'Мадагаскар', ld_britain:'Великобритания', ld_iceland:'Исландия', ld_borneo:'Калимантан', ld_srilanka:'Шри-Ланка', ld_newzealand:'Новая Зеландия', mp_volcano:'Вулкан', mpd_volcano:'Лава и кристаллы ◆', sk_sunstone:'Солнечный камень', sk_rose:'Розовый кварц', shopBossTip:'Награда за босса: {w}', ach_world2:'Повелитель волн|Пройдите Синий мир', ach_world3:'Золотой император|Пройдите Золотой мир', ach_fogwin:'Сквозь туман|Победа в тумане', sndOn:'🔊 Звук включён', sndOff:'🔇 Звук выключен', stCoach:'Обучение', coSkip:'Пропустить', coNext:'Дальше ›', coDone:'Понятно!', coM1:'Начните здесь: кампания против ИИ — три мира и боссы.', coM2:'Онлайн: бои с друзьями и по рейтингу.', coM3:'Друзья: добавляйте друзей и зовите их в бой.', coM4:'Задания дня: три головоломки и кристаллы ◆.', coM5:'Кристаллы ◆ — на скины, усилители и приглашения друзей.', coM6:'Звук и музыка: включить или выключить. Кнопка есть на каждом экране.', coO1:'Позовите друзей: кто первый примет — с тем и бой.', coO2:'Быстрая игра: найдём соперника сами.', coO3:'Есть код от друга? Введите его здесь.', coS1:'Три мира: пройдите босса, чтобы открыть следующий.', coS2:'Следующая битва — нажмите, чтобы начать.', coS3:'Экспедиция: любые карты, материки и туман.', coBoard:'👆 Коснитесь светящейся точки, чтобы сделать первый ход!', tBronze:'Бронза', tSilver:'Серебро', tGold:'Золото', tPlat:'Платина', tDiamond:'Алмаз', tLegend:'Легенда', tierUp:'Новая лига: {t}!', roomFull:'Игра уже началась — вас опередили.', frH:'👥 Друзья', frPh:'Имя игрока', frShareBtn:'🔗 Пригласить ссылкой', frClose:'Готово', frInvites:'Зовут в бой', frReqs:'Заявки в друзья', frCount:'Друзья · {n}', frEmpty:'Пока нет друзей. Введите имя игрока или отправьте ссылку.', frHint:'⚔ — позвать в бой, ✕ — удалить. Зелёная точка — сейчас в игре.', frNeedName:'Сначала задайте своё имя в аккаунте', frNotFound:'Игрок с таким именем не найден', frSelf:'Это вы :)', frAlready:'Уже в друзьях', frSent:'Заявка отправлена: {n}', frAdded:'Теперь вы друзья с {n}!', frReqNew:'👋 {n} хочет дружить — откройте «Друзья»', frRemoveT:'Удалить из друзей?', frRemoveTx:'Игрок исчезнет из вашего списка, вы — из его.', frRemoveYes:'Удалить', frShareTxt:'{n} зовёт тебя в друзья в DOTS WAR!', frLinkT:'{n} зовёт в друзья', frLinkTx:'Отправить заявку? Игрок увидит её и подтвердит.', frLinkYes:'Отправить', frNoFriends:'Сначала добавьте друзей', btnInvite:'👥 Позвать друзей', invH:'⚔ Позвать в бой', invSub:'Отметьте друзей. Кто первым примет — с тем и бой. {c} ◆ за каждого.', invCost:'Друзей: {k} · Стоимость: {c} ◆ (у вас {b} ◆)', invMax:'Не больше {k} друзей за раз', invPick:'Отметьте хотя бы одного друга', invNoCry:'Нужно {c} ◆ — пополните в магазине', invRefund:'Комнату создать не удалось — кристаллы возвращены', invSentSt:'Приглашения отправлены: {k}. Ждём, кто первый!', invToastGame:'⚔ {n} зовёт в бой — откройте после партии', invTitle:'{n} зовёт в бой!', invText:'Поле {s} · {t}', invGo2:'⚔ В бой!', invGoS:'В бой', invLater:'Позже', invGo:'Позвать', invClose:'Отмена', topAll:'Топ-20', topFr:'Друзья', chGood:'Хороший ход!', chLuck:'Удачи!', chWow:'Ого!', chGG:'Хорошая игра!', chWait:'Не так быстро :)', pushFail:'Уведомления недоступны', pushAskT:'Включить уведомления?', pushAskTx:'Сообщим, когда друг позовёт в бой или добавит в друзья.', pushYes:'Включить', pushNA:'Уведомления на этом устройстве пока не поддерживаются', pushDenied:'Уведомления запрещены в настройках', pushOn:'🔔 Уведомления включены', pushAsk:'Уведомления', frGuest:'Войдите через Google или Apple — тогда рейтинг и история партий сохранятся навсегда, а вы сможете добавлять друзей и звать их в бой.', frGuestT2:'Нужен вход в аккаунт', topGuest:'Войдите, чтобы ваш рейтинг сохранился и попал в таблицу', resLogin:'💾 Вы играете как гость. Войдите, чтобы рейтинг и история партий сохранились навсегда.', frAcc:'Принять', pauseT:'Пауза', pauseB:'▶ Продолжить', resumeT:'Продолжить партию?', resumeTx:'{w} · счёт {a} : {b}. Партия сохранилась, можно доиграть.', resumeYes:'▶ Продолжить', resumeNo:'Новая игра', resumeOk:'Партия восстановлена', updT:'Доступна версия {v}!', updTx:'Обновите игру, чтобы получить новые функции и исправления.', updYes:'⬆️ Обновить', pushWhy:'🔔 Разрешите уведомления — сообщим, когда друг позовёт в бой', musH:'🎵 Музыка', musNote:'Известные мелодии классиков и народные песни (общественное достояние) в обработке для игры.', stTrack:'Мелодия', mp_waters:'Воды', mpd_waters:'Река и озеро', mp_mountains:'Горы', mpd_mountains:'Хребты с перевалами', puzBtn:'Пазл {n}/12', puzProg:'Собрано {n} из 12. Выигрывайте битвы — получайте кусочки.', puzDone:'Картина собрана!', puzReward:'🧩 Пазл собран! +{n} ◆', avLbl:'Фото профиля', avHint:'Выберите картинку или нажмите 📷, чтобы поставить своё фото.', avSaved:'Фото сохранено', avBad:'Не удалось открыть картинку', decayT:'📉 Рейтинг −{n}: {d} дн. без битв. Играйте каждый день, чтобы не терять его!', bDoubleAgain:'Ещё раз в этом бою (дорого)', bBp1:'Чёрная точка · малая', bBp2:'Чёрная точка · средняя', bBp3:'Чёрная точка · большая', bBpD:'Освобождает захваченную область вокруг: {r} клетки в стороны', bBpOn:'● Нажмите на захваченную область (радиус {r})', bBpNotCap:'Нажмите на точку внутри захваченной области', bBpBig:'Область больше чёрной точки — ничего не произошло', bBpDone:'● Освобождено: {f}', puzNew:'Новый кусочек! Собрано {n} из 12.', pzf_ring:'Замкните кольцо за 1 ход', pzf_twin:'Лишь одно из двух колец даст захват', pzf_rescue:'Спасите пленную точку', pzf_rescue2:'Спасение за 2 хода', pzf_maxcap:'Захватите 3 точки за раз', pzf_maxcap4:'Захватите 4 точки за раз', pzf_fork:'Двойная угроза: захват за 2 хода', pzf_forkRow:'Двойная угроза: захват за 2 хода', pzf_forkBig:'Двойная угроза с ловушками: 2 хода', pzf_classic:'Захват за 3 хода — берегитесь ловушек', musMine:'Мои песни', musAdd:'Добавить песни с телефона', musMineAll:'Все мои песни', musBuilt:'Мелодии игры', musBig:'Файлы больше 40 МБ пропущены', musAdded:'Добавлено: {n}', musFail:'Не удалось сохранить песню', rotTx:'Поверните телефон вертикально', nmH:'Добро пожаловать!', nmT:'Это имя увидят другие игроки в рейтинге и в боях.', nmOk:'Продолжить', nmSign:'Войти через Google или Apple', nmHi:'Добро пожаловать, {n}!', world4:'Ледяной мир', wsub4:'Тающие ледники и метели. 12 битв и Снежная Королева.', boss4:'Снежная Королева', sk_aurora:'Северное сияние', ach_world4:'Ледокол|Пройдите Ледяной мир', mp_glacier:'Ледник', mpd_glacier:'Лёд тает во время боя', meltT:'🧊 Лёд растаял — открылся новый путь!', stormT:'🌨 Метель! Туман вернулся везде, кроме ваших камней', glacierIntro:'🧊 Ледник: каждые 6 ходов треснувшая льдина тает и открывает путь.', stormIntro:'🌨 Метель: каждые 8 ходов туман возвращается. Держите камни вместе!', topLg:'Лига', topCl:'Клубы', topLgH:'🏆 Лига недели', topFrH:'👥 Друзья', topClH:'🛡️ Клубы', lgLeftD:'осталось {d} д {h} ч', lgLeftH:'осталось {h} ч {m} мин', lgMine:'Ваши очки: {p}', lgRew:'Призы в понедельник: 🥇 150 ◆ · 🥈 100 · 🥉 70 · топ-10 — 40 · от 10 очков — 15', lgGuest:'Войдите, чтобы участвовать в лиге недели', lgEmpty:'Очков пока ни у кого нет — выиграйте битву!', lgPlus:'🏆 +{n} очк. лиги (за неделю: {p})', clGuest:'Войдите, чтобы вступить в клуб или создать свой', clTop:'Лучшие клубы недели', clNoRank:'На этой неделе у клубов пока нет очков', clRew:'В понедельник участники клубов топ-3 получают 60 / 40 / 25 ◆', clInfo:'Участников {n}/{max} · Очков за неделю {p}', clMembers:'Участники (очки за неделю)', clLeave:'Выйти из клуба', clLeaveT:'Выйти из клуба?', clLeaveTx:'Потом можно вступить в другой клуб.', clIntro:'Клуб — команда до 20 игроков. Каждое ваше очко лиги идёт в копилку клуба; лучшие клубы каждый понедельник получают кристаллы.', clCreate:'Создать клуб · {c} ◆', clJoinH:'Вступить в клуб', clJoin:'Вступить', clNone:'Клубов пока нет — создайте первый!', clNew:'🛡️ Новый клуб', clNamePh:'Название клуба', clTaken:'Такое название уже занято', clMade:'Клуб «{n}» создан!', clJoined:'Вы вступили в «{n}»', clFull:'В клубе нет мест', rwT:'Итоги недели', rwLeague:'Лига {t}: {p} место. Приз: +{c} ◆', rwClub:'Ваш клуб занял {p} место. Приз: +{c} ◆', shopCry:'Кристаллы', stBadge:'ОДИН РАЗ', stName:'Стартовый набор', stDesc:'{c} ◆ + скин «{s}»', stLeft:'осталось {h} ч', pk_bonus:'+17%', pk_hit:'ХИТ', pk_best:'ВЫГОДНО', pkApp:'в приложении', pkAppT:'Покупка в приложении', shopWeb:'Кристаллы покупаются в приложении DOTS WAR для Android (Google Play) и iPhone (App Store). Купленные там кристаллы появятся и здесь, если войти в тот же аккаунт.', shopPay:'Оплата через Google Play / App Store. Кристаллы придут сразу после подтверждения покупки.', pgH:'Для взрослых', pgQ:'Попросите взрослого: сколько будет {a} × {b}?', pgOk:'Продолжить', pgBad:'Неверно — попросите взрослого', payCheck:'⏳ Проверяем покупку…', payOk:'💎 +{c} ◆ — спасибо!', payErr:'Покупка не удалась', payBad:'Покупку не удалось подтвердить', payPending:'Платёж в обработке — кристаллы придут, когда он завершится', payWait:'Завершаем предыдущую покупку…', adTitle:'Посмотреть короткое видео', adLeft:'осталось {n} из {m} сегодня', adNote:'Видео показывает Google AdMob. Кристаллы приходят после окончания ролика.', adNoteWeb:'Смотрите видео за кристаллы в приложении DOTS WAR для Android и iPhone.', adNA:'Видео доступно в приложении', adLimit:'На сегодня все {n} видео просмотрены — приходите завтра!', adWait:'Следующее видео через {s} с', adLoading:'📺 Загружаем видео…', adGot:'📺 +{n} ◆ — спасибо!', adSkipped:'Видео закрыто раньше времени — кристаллов нет', adNone:'Сейчас нет видео, попробуйте чуть позже', adOffer:'Посмотреть короткое видео и получить +{n} ◆?', adWatch:'Смотреть', adDouble:'×2 награда: ещё +{n} ◆ за видео', auReg:'Новый игрок', auLog:'Уже играю', auName:'Имя', auPw:'Пароль (от 6 символов)', auPwNew:'Новый пароль', auRegBtn:'Создать аккаунт', auLogBtn:'Войти', auRegHint:'Запомните имя и пароль. Почта нужна только чтобы восстановить забытый пароль.', auLogHint:'Введите имя и пароль, с которыми регистрировались.', auSkip:'Играть без пароля (прогресс только на этом телефоне)', auWeak:'Пароль: не меньше 6 символов', auBad:'Неверное имя, почта или пароль', auMany:'Слишком много попыток — попробуйте через несколько минут', auRegOk:'Аккаунт создан. Добро пожаловать, {n}!', auLogOk:'С возвращением, {n}!', auSigned:'Вы вошли как {n}', auNameFixed:'Имя — это ваш логин, его нельзя изменить', pwChLbl:'Сменить пароль', pwChanged:'Пароль изменён', pwRelog:'Выйдите и войдите снова, затем смените пароль', avChange:'Изменить фото', olRoom:'Своя комната', olJoin:'Есть код от друга?', pGot:'Есть!', pCool:'Класс!', pGreat:'Отлично!', pSuper:'Супер!', pMega:'Мега-захват!', pStreak:'Серия ×{n}', pWin:'Победа!', pEarly:'Блестяще!', pFlawless:'Безупречно!', auEmail:'Почта', auNameOrEmail:'Имя или почта', auForgot:'Забыли пароль?', auEmailBad:'Проверьте адрес почты', emailTaken:'Эта почта уже зарегистрирована — нажмите «Уже играю»', rsH:'Восстановить пароль', rsBtn:'Прислать ссылку', rsHint:'Введите почту или имя — пришлём ссылку, чтобы задать новый пароль.', rsSent:'Письмо отправлено на {e}. Откройте ссылку в письме и задайте новый пароль.', rsSentE:'Если эта почта зарегистрирована, письмо уже в пути. Откройте ссылку и задайте новый пароль (проверьте и «Спам»).', rsNoEmail:'У этого аккаунта нет почты — пароль восстановить нельзя.', rsNoName:'Игрока с таким именем нет', addEmail:'Добавить почту', addEmailHint:'С почтой можно восстановить забытый пароль.', addEmailSent:'Мы отправили письмо на {e}. Нажмите ссылку в письме — и почта будет добавлена.', auSignedE:'Вы вошли как {n} · {e}', mTag:'Искусство окружать',
+    stMusic:'Музыка', world1:'Зелёный мир', world2:'Синий мир', world3:'Золотой мир', wsub1:'Сад над морем. 12 битв и босс.', wsub2:'Острова, реки и материки. Синие сильнее.', wsub3:'Туман, вулканы и золото. Только для легенд.', worldLocked:'Сначала победите босса: {w}', btnNextWorld:'Новый мир →', boss1:'Лесной Страж', boss2:'Капитан Шторм', boss3:'Золотой Фараон', bossIntro:'👑 Босс: {b}. Без подсказок!', bossReward:'👑 Босс повержен! +{n} ◆ и скин «{s}»', fogIntro:'🌫 Туман! В нём прячутся камни соперника. Ходите рядом — туман рассеется.', fogEnemy:'🌫 Здесь прятался соперник!', fogTerrain:'🌫 Здесь не пройти', expFog:'Туман', bScout:'Разведка', bScoutD:'Рассеет туман там, где прячется соперник', bScoutOn:'🔭 Туман рассеян', ldRand:'Любой', ld_africa:'Африка', ld_europe:'Европа', ld_asia:'Азия', ld_namerica:'Северная Америка', ld_samerica:'Южная Америка', ld_australia:'Австралия', ld_antarctica:'Антарктида', ld_greenland:'Гренландия', ld_madagascar:'Мадагаскар', ld_britain:'Великобритания', ld_iceland:'Исландия', ld_borneo:'Калимантан', ld_srilanka:'Шри-Ланка', ld_newzealand:'Новая Зеландия', mp_volcano:'Вулкан', mpd_volcano:'Лава и кристаллы ◆', sk_sunstone:'Солнечный камень', sk_rose:'Розовый кварц', shopBossTip:'Награда за босса: {w}', ach_world2:'Повелитель волн|Пройдите Синий мир', ach_world3:'Золотой император|Пройдите Золотой мир', ach_fogwin:'Сквозь туман|Победа в тумане', sndOn:'🔊 Звук включён', sndOff:'🔇 Звук выключен', stCoach:'Обучение', coSkip:'Пропустить', coNext:'Дальше ›', coDone:'Понятно!', coM1:'Начните здесь: кампания против ИИ — три мира и боссы.', coM2:'Онлайн: бои с друзьями и по рейтингу.', coM3:'Друзья: добавляйте друзей и зовите их в бой.', coM4:'Задания дня: три головоломки и кристаллы ◆.', coM5:'Кристаллы ◆ — на скины, усилители и приглашения друзей.', coM6:'Звук и музыка: включить или выключить. Кнопка есть на каждом экране.', coO1:'…или сразу позовите друзей: кто первый примет — играет с вами на этой карте.', coO2:'Выберите карту и размер поля для боя.', coO3:'Есть код от друга? Введите его здесь.', coS1:'Три мира: пройдите босса, чтобы открыть следующий.', coS2:'Следующая битва — нажмите, чтобы начать.', coS3:'Экспедиция: любые карты, материки и туман.', coBoard:'👆 Коснитесь светящейся точки, чтобы сделать первый ход!', tBronze:'Бронза', tSilver:'Серебро', tGold:'Золото', tPlat:'Платина', tDiamond:'Алмаз', tLegend:'Легенда', tierUp:'Новая лига: {t}!', roomFull:'Игра уже началась — вас опередили.', frH:'👥 Друзья', frPh:'Имя игрока', frShareBtn:'🔗 Пригласить ссылкой', frClose:'Готово', frInvites:'Зовут в бой', frReqs:'Заявки в друзья', frCount:'Друзья · {n}', frEmpty:'Пока нет друзей. Введите имя игрока или отправьте ссылку.', frHint:'⚔ — позвать в бой, ✕ — удалить. Зелёная точка — сейчас в игре.', frNeedName:'Сначала задайте своё имя в аккаунте', frNotFound:'Игрок с таким именем не найден', frSelf:'Это вы :)', frAlready:'Уже в друзьях', frSent:'Заявка отправлена: {n}', frAdded:'Теперь вы друзья с {n}!', frReqNew:'👋 {n} хочет дружить — откройте «Друзья»', frRemoveT:'Удалить из друзей?', frRemoveTx:'Игрок исчезнет из вашего списка, вы — из его.', frRemoveYes:'Удалить', frShareTxt:'{n} зовёт тебя в друзья в DOTS WAR!', frLinkT:'{n} зовёт в друзья', frLinkTx:'Отправить заявку? Игрок увидит её и подтвердит.', frLinkYes:'Отправить', frNoFriends:'Сначала добавьте друзей', btnInvite:'👥 Позвать друзей', invH:'⚔ Позвать в бой', invSub:'Отметьте друзей. Кто первым примет — с тем и бой. {c} ◆ за каждого.', invCost:'Друзей: {k} · Стоимость: {c} ◆ (у вас {b} ◆)', invMax:'Не больше {k} друзей за раз', invPick:'Отметьте хотя бы одного друга', invNoCry:'Нужно {c} ◆ — пополните в магазине', invRefund:'Комнату создать не удалось — кристаллы возвращены', invSentSt:'Приглашения отправлены: {k}. Ждём, кто первый!', invToastGame:'⚔ {n} зовёт в бой — откройте после партии', invTitle:'{n} зовёт в бой!', invText:'Поле {s} · {t}', invGo2:'⚔ В бой!', invGoS:'В бой', invLater:'Позже', invGo:'Позвать', invClose:'Отмена', topAll:'Топ-20', topFr:'Друзья', chGood:'Хороший ход!', chLuck:'Удачи!', chWow:'Ого!', chGG:'Хорошая игра!', chWait:'Не так быстро :)', pushFail:'Уведомления недоступны', pushAskT:'Включить уведомления?', pushAskTx:'Сообщим, когда друг позовёт в бой или добавит в друзья.', pushYes:'Включить', pushNA:'Уведомления на этом устройстве пока не поддерживаются', pushDenied:'Уведомления запрещены в настройках', pushOn:'🔔 Уведомления включены', pushAsk:'Уведомления', frGuest:'Войдите через Google или Apple — тогда рейтинг и история партий сохранятся навсегда, а вы сможете добавлять друзей и звать их в бой.', frGuestT2:'Нужен вход в аккаунт', topGuest:'Войдите, чтобы ваш рейтинг сохранился и попал в таблицу', resLogin:'💾 Вы играете как гость. Войдите, чтобы рейтинг и история партий сохранились навсегда.', frAcc:'Принять', pauseT:'Пауза', pauseB:'▶ Продолжить', resumeT:'Продолжить партию?', resumeTx:'{w} · счёт {a} : {b}. Партия сохранилась, можно доиграть.', resumeYes:'▶ Продолжить', resumeNo:'Новая игра', resumeOk:'Партия восстановлена', updT:'Доступна версия {v}!', updTx:'Обновите игру, чтобы получить новые функции и исправления.', updYes:'⬆️ Обновить', pushWhy:'🔔 Разрешите уведомления — сообщим, когда друг позовёт в бой', musH:'🎵 Музыка', musNote:'Известные мелодии классиков и народные песни (общественное достояние) в обработке для игры.', stTrack:'Мелодия', mp_waters:'Воды', mpd_waters:'Река и озеро', mp_mountains:'Горы', mpd_mountains:'Хребты с перевалами', puzBtn:'Пазл {n}/12', puzProg:'Собрано {n} из 12. Выигрывайте битвы — получайте кусочки.', puzDone:'Картина собрана!', puzReward:'🧩 Пазл собран! +{n} ◆', avLbl:'Фото профиля', avHint:'Выберите картинку или нажмите 📷, чтобы поставить своё фото.', avSaved:'Фото сохранено', avBad:'Не удалось открыть картинку', decayT:'📉 Рейтинг −{n}: {d} дн. без битв. Играйте каждый день, чтобы не терять его!', bDoubleAgain:'Ещё раз в этом бою (дорого)', bBp1:'Чёрная точка · малая', bBp2:'Чёрная точка · средняя', bBp3:'Чёрная точка · большая', bBpD:'Освобождает захваченную область вокруг: {r} клетки в стороны', bBpOn:'● Нажмите на захваченную область (радиус {r})', bBpNotCap:'Нажмите на точку внутри захваченной области', bBpBig:'Область больше чёрной точки — ничего не произошло', bBpDone:'● Освобождено: {f}', puzNew:'Новый кусочек! Собрано {n} из 12.', pzf_ring:'Замкните кольцо за 1 ход', pzf_twin:'Лишь одно из двух колец даст захват', pzf_rescue:'Спасите пленную точку', pzf_rescue2:'Спасение за 2 хода', pzf_maxcap:'Захватите 3 точки за раз', pzf_maxcap4:'Захватите 4 точки за раз', pzf_fork:'Двойная угроза: захват за 2 хода', pzf_forkRow:'Двойная угроза: захват за 2 хода', pzf_forkBig:'Двойная угроза с ловушками: 2 хода', pzf_classic:'Захват за 3 хода — берегитесь ловушек', musMine:'Мои песни', musAdd:'Добавить песни с телефона', musMineAll:'Все мои песни', musBuilt:'Мелодии игры', musBig:'Файлы больше 40 МБ пропущены', musAdded:'Добавлено: {n}', musFail:'Не удалось сохранить песню', rotTx:'Поверните телефон вертикально', nmH:'Добро пожаловать!', nmT:'Это имя увидят другие игроки в рейтинге и в боях.', nmOk:'Продолжить', nmSign:'Войти через Google или Apple', nmHi:'Добро пожаловать, {n}!', world4:'Ледяной мир', wsub4:'Тающие ледники и метели. 12 битв и Снежная Королева.', boss4:'Снежная Королева', sk_aurora:'Северное сияние', ach_world4:'Ледокол|Пройдите Ледяной мир', mp_glacier:'Ледник', mpd_glacier:'Лёд тает во время боя', meltT:'🧊 Лёд растаял — открылся новый путь!', stormT:'🌨 Метель! Туман вернулся везде, кроме ваших камней', glacierIntro:'🧊 Ледник: каждые 6 ходов треснувшая льдина тает и открывает путь.', stormIntro:'🌨 Метель: каждые 8 ходов туман возвращается. Держите камни вместе!', topLg:'Лига', topCl:'Клубы', topLgH:'🏆 Лига недели', topFrH:'👥 Друзья', topClH:'🛡️ Клубы', lgLeftD:'осталось {d} д {h} ч', lgLeftH:'осталось {h} ч {m} мин', lgMine:'Ваши очки: {p}', lgRew:'Призы в понедельник: 🥇 150 ◆ · 🥈 100 · 🥉 70 · топ-10 — 40 · от 10 очков — 15', lgGuest:'Войдите, чтобы участвовать в лиге недели', lgEmpty:'Очков пока ни у кого нет — выиграйте битву!', lgPlus:'🏆 +{n} очк. лиги (за неделю: {p})', clGuest:'Войдите, чтобы вступить в клуб или создать свой', clTop:'Лучшие клубы недели', clNoRank:'На этой неделе у клубов пока нет очков', clRew:'В понедельник участники клубов топ-3 получают 60 / 40 / 25 ◆', clInfo:'Участников {n}/{max} · Очков за неделю {p}', clMembers:'Участники (очки за неделю)', clLeave:'Выйти из клуба', clLeaveT:'Выйти из клуба?', clLeaveTx:'Потом можно вступить в другой клуб.', clIntro:'Клуб — команда до 20 игроков. Каждое ваше очко лиги идёт в копилку клуба; лучшие клубы каждый понедельник получают кристаллы.', clCreate:'Создать клуб · {c} ◆', clJoinH:'Вступить в клуб', clJoin:'Вступить', clNone:'Клубов пока нет — создайте первый!', clNew:'🛡️ Новый клуб', clNamePh:'Название клуба', clTaken:'Такое название уже занято', clMade:'Клуб «{n}» создан!', clJoined:'Вы вступили в «{n}»', clFull:'В клубе нет мест', rwT:'Итоги недели', rwLeague:'Лига {t}: {p} место. Приз: +{c} ◆', rwClub:'Ваш клуб занял {p} место. Приз: +{c} ◆', shopCry:'Кристаллы', stBadge:'ОДИН РАЗ', stName:'Стартовый набор', stDesc:'{c} ◆ + скин «{s}»', stLeft:'осталось {h} ч', pk_bonus:'+17%', pk_hit:'ХИТ', pk_best:'ВЫГОДНО', pkApp:'в приложении', pkAppT:'Покупка в приложении', shopWeb:'Кристаллы покупаются в приложении DOTS WAR для Android (Google Play) и iPhone (App Store). Купленные там кристаллы появятся и здесь, если войти в тот же аккаунт.', shopPay:'Оплата через Google Play / App Store. Кристаллы придут сразу после подтверждения покупки.', pgH:'Для взрослых', pgQ:'Попросите взрослого: сколько будет {a} × {b}?', pgOk:'Продолжить', pgBad:'Неверно — попросите взрослого', payCheck:'⏳ Проверяем покупку…', payOk:'💎 +{c} ◆ — спасибо!', payErr:'Покупка не удалась', payBad:'Покупку не удалось подтвердить', payPending:'Платёж в обработке — кристаллы придут, когда он завершится', payWait:'Завершаем предыдущую покупку…', adTitle:'Посмотреть короткое видео', adLeft:'осталось {n} из {m} сегодня', adNote:'Видео показывает Google AdMob. Кристаллы приходят после окончания ролика.', adNoteWeb:'Смотрите видео за кристаллы в приложении DOTS WAR для Android и iPhone.', adNA:'Видео доступно в приложении', adLimit:'На сегодня все {n} видео просмотрены — приходите завтра!', adWait:'Следующее видео через {s} с', adLoading:'📺 Загружаем видео…', adGot:'📺 +{n} ◆ — спасибо!', adSkipped:'Видео закрыто раньше времени — кристаллов нет', adNone:'Сейчас нет видео, попробуйте чуть позже', adOffer:'Посмотреть короткое видео и получить +{n} ◆?', adWatch:'Смотреть', adDouble:'×2 награда: ещё +{n} ◆ за видео', auReg:'Новый игрок', auLog:'Уже играю', auName:'Имя', auPw:'Пароль (от 6 символов)', auPwNew:'Новый пароль', auRegBtn:'Создать аккаунт', auLogBtn:'Войти', auRegHint:'Запомните имя и пароль. Почта нужна только чтобы восстановить забытый пароль.', auLogHint:'Введите имя и пароль, с которыми регистрировались.', auSkip:'Играть без пароля (прогресс только на этом телефоне)', auWeak:'Пароль: не меньше 6 символов', auBad:'Неверное имя, почта или пароль', auMany:'Слишком много попыток — попробуйте через несколько минут', auRegOk:'Аккаунт создан. Добро пожаловать, {n}!', auLogOk:'С возвращением, {n}!', auSigned:'Вы вошли как {n}', auNameFixed:'Имя — это ваш логин, его нельзя изменить', pwChLbl:'Сменить пароль', pwChanged:'Пароль изменён', pwRelog:'Выйдите и войдите снова, затем смените пароль', avChange:'Изменить фото', olRoom:'Ваш бой', olJoin:'Есть код от друга?', pGot:'Есть!', pCool:'Класс!', pGreat:'Отлично!', pSuper:'Супер!', pMega:'Мега-захват!', pStreak:'Серия ×{n}', pWin:'Победа!', pEarly:'Блестяще!', pFlawless:'Безупречно!', auEmail:'Почта', auNameOrEmail:'Имя или почта', auForgot:'Забыли пароль?', auEmailBad:'Проверьте адрес почты', emailTaken:'Эта почта уже зарегистрирована — нажмите «Уже играю»', rsH:'Восстановить пароль', rsBtn:'Прислать ссылку', rsHint:'Введите почту или имя — пришлём ссылку, чтобы задать новый пароль.', rsSent:'Письмо отправлено на {e}. Откройте ссылку в письме и задайте новый пароль.', rsSentE:'Если эта почта зарегистрирована, письмо уже в пути. Откройте ссылку и задайте новый пароль (проверьте и «Спам»).', rsNoEmail:'У этого аккаунта нет почты — пароль восстановить нельзя.', rsNoName:'Игрока с таким именем нет', addEmail:'Добавить почту', addEmailHint:'С почтой можно восстановить забытый пароль.', addEmailSent:'Мы отправили письмо на {e}. Нажмите ссылку в письме — и почта будет добавлена.', auSignedE:'Вы вошли как {n} · {e}', nameDup:'Имя «{n}» уже принадлежит другому аккаунту. Выберите другое имя — или нажмите «Уже играю» и войдите.', olMapLbl:'Карта', olReroll:'нажмите ещё раз — новая', olInviteBtn:'👥 Позвать друга', coO4:'Создайте комнату и отправьте код другу…', mTag:'Искусство окружать',
     mPveT:'ИГРАТЬ', mPveS:'Кампания против ИИ',
     mPvpT:'ДУЭЛЬ', mPvpS:'Вдвоём на одном экране',
     mOnT:'ОНЛАЙН', mOnS:'Друзья и рейтинг',
@@ -2309,6 +2348,14 @@ var aiTimer=null, aiLock=false;
 var playerNames=['','Green'];
 var DEFAULT_NAMES={'red dots':1,'red':1,'красные':1,'green pix':1,'green':1,'зелёные':1,'зеленые':1,'?':1,'player':1,'':1};
 function isDefaultName(n){ return !!DEFAULT_NAMES[String(n||'').trim().toLowerCase()]; }
+// names typed by Google Play's automatic test robots (pre-launch report); never shown in ratings
+var BOT_NAMES={ovppyo:1,odvkrk:1,explorer:1};
+function isBotName(n){ return !!BOT_NAMES[String(n||'').trim().toLowerCase()]; }
+// Google Play / Firebase Test Lab robot device: the game works fully offline there and writes nothing to the server
+function isTestRobot(){ try{ return !!(window.AndroidBridge&&AndroidBridge.isTestLab&&AndroidBridge.isTestLab()); }catch(e){ return false; } }
+// rating lists: no robots, no players without a single game, one row per name (the best one)
+function cleanTop(arr){ var best={}; arr.forEach(function(p){ if(!p||!p.name||isDefaultName(p.name)||isBotName(p.name)||!((p.g|0)>0)) return; var k=nameKey(p.name); if(!best[k]||p.r>best[k].r||(p.r===best[k].r&&(p.g|0)>(best[k].g|0))) best[k]=p; });
+  return Object.keys(best).map(function(k){ return best[k]; }).sort(function(a,b){ return b.r-a.r; }).slice(0,20); }
 var curWorld=1;
 var WORLD_PAL={
   2:{p2:'#2a7fd6',p2d:'rgba(42,127,214,',p2l:'rgba(130,195,255,0.98)',s2:{hi:'#e0f0ff',lt:'#80bdf2',mid:'#2a7fd6',dk:'#0b2f5a',glow:'rgba(95,170,255,0.85)',dead:'#2a6fb8'},glow2:['rgba(42,127,214,0.42)','rgba(42,127,214,0.13)']},
@@ -2340,9 +2387,10 @@ function avBg(a){ for(var i=0;i<AVATARS.length;i++) if(AVATARS[i][0]===a) return
 var AVC={};
 function avatarURL(a){   // emoji -> small PNG so it can be used in <img> everywhere
   if(!a) return ''; if(avIsImg(a)) return a; if(AVC[a]) return AVC[a];
-  try{ var cv=document.createElement('canvas'); cv.width=cv.height=96; var c=cv.getContext('2d'); c.fillStyle=avBg(a); c.beginPath(); c.arc(48,48,48,0,Math.PI*2); c.fill();
-    var g=c.createRadialGradient(34,30,4,48,48,52); g.addColorStop(0,'rgba(255,255,255,0.45)'); g.addColorStop(1,'rgba(0,0,0,0.18)'); c.fillStyle=g; c.beginPath(); c.arc(48,48,48,0,Math.PI*2); c.fill();
-    c.font='58px sans-serif'; c.textAlign='center'; c.textBaseline='middle'; c.fillText(a,48,54); AVC[a]=cv.toDataURL('image/png'); return AVC[a]; }catch(e){ return ''; }
+  // 240 px (was 96): sharp on 3x iPhone screens; colour-emoji fonts named explicitly (iPhone drew a blurry fallback)
+  try{ var S=240, H=S/2, cv=document.createElement('canvas'); cv.width=cv.height=S; var c=cv.getContext('2d'); c.fillStyle=avBg(a); c.beginPath(); c.arc(H,H,H,0,Math.PI*2); c.fill();
+    var g=c.createRadialGradient(H*0.7,H*0.62,8,H,H,H*1.08); g.addColorStop(0,'rgba(255,255,255,0.45)'); g.addColorStop(1,'rgba(0,0,0,0.18)'); c.fillStyle=g; c.beginPath(); c.arc(H,H,H,0,Math.PI*2); c.fill();
+    c.font=Math.round(S*0.6)+'px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji","Twemoji Mozilla",sans-serif'; c.textAlign='center'; c.textBaseline='middle'; c.fillText(a,H,H*1.1); AVC[a]=cv.toDataURL('image/png'); return AVC[a]; }catch(e){ return ''; }
 }
 function avHtml(a,cls){ var u=avatarURL(a); return u?'<img class="av-img '+(cls||'')+'" src="'+u+'" alt="">':''; }
 function setAvatar(a){ PROF.av=a||''; sfx('pop'); try{ var av=document.getElementById('accAv'); if(av){ var u0=avatarURL(PROF.av); av.innerHTML=u0?'<img src="'+u0+'" alt="">':'🙂'; } }catch(e){} try{ localStorage.setItem('dwProf',JSON.stringify(PROF)); }catch(e){} applyAvatar(); if(db&&UID&&authUser) try{ db.ref('players/'+UID+'/av').set(PROF.av||null); }catch(e){} renderAvatars(); }
@@ -2462,7 +2510,7 @@ function onSignedIn(u){
 function pushProgress(now){
   if(!authUser||!db) return;
   clearTimeout(progressTimer);
-  var doPush=function(){ try{ var up={progress:collectProgress(),t:firebase.database.ServerValue.TIMESTAMP}; if(myName()&&!isDefaultName(myName())){ up.name=myName().slice(0,18); up.r=RATING.r; up.g=RATING.g; up.w=RATING.w; } db.ref('players/'+authUser.uid).update(up); }catch(e){} };
+  var doPush=function(){ try{ var up={progress:collectProgress(),t:firebase.database.ServerValue.TIMESTAMP}; if(myName()&&!isDefaultName(myName())&&NAMEOK.ok&&NAMEOK.k===nameKey(myName())&&NAMEOK.uid===authUser.uid){ up.name=myName().slice(0,18); up.r=RATING.r; up.g=RATING.g; up.w=RATING.w; } db.ref('players/'+authUser.uid).update(up); }catch(e){} };
   if(now) doPush(); else progressTimer=setTimeout(doPush,1500);
 }
 // Google sign-in: web = popup; Android app = native bridge (Google blocks OAuth inside WebViews)
@@ -2570,7 +2618,8 @@ function syncMyPlayer(){
 function pushMyPlayer(){
   if(!getDB()) return;
   if(!myName()||isDefaultName(myName())) return;   // no rating row until the player has a real name
-  try{ db.ref('players/'+UID).update({name:myName(),r:RATING.r,g:RATING.g,w:RATING.w,av:PROF.av||null,t:firebase.database.ServerValue.TIMESTAMP}); }catch(e){}
+  nameOwned().then(function(ok){ if(!ok) return;   // another account owns this name -> no second row with the same name
+    try{ db.ref('players/'+UID).update({name:myName(),r:RATING.r,g:RATING.g,w:RATING.w,av:PROF.av||null,t:firebase.database.ServerValue.TIMESTAMP}); }catch(e){} });
 }
 // ── Rating (Elo). One number for the player, updated after every finished battle:
 //    online — against the opponent's rating; vs AI — against a fixed strength for
@@ -2613,7 +2662,7 @@ function abandonPenalty(){
 }
 var topTab='lg';
 function topRows(arr){ return (isGuest()?'<div class="top-row guest-note">🔑 '+T('topGuest')+'</div>':'')+arr.map(function(p,i){ return '<div class="top-row'+(p.uid===UID?' me':'')+'"><span class="tp">'+(i+1)+'</span>'+avHtml(p.av,'sm')+'<span class="tn">'+String(p.name).replace(/[<>&]/g,'')+'</span><span class="tg">'+p.g+'</span><span class="tr"><span class="tier-ic">'+tierOf(p.r)[1]+'</span>'+p.r+'</span></div>'; }).join(''); }
-function prefetchTop(){ try{ db.ref('players').orderByChild('r').limitToLast(20).once('value').then(function(snap){ var arr=[], v=snap.val()||{}; Object.keys(v).forEach(function(k){ if(v[k]&&typeof v[k].r==='number'&&v[k].name&&!isDefaultName(v[k].name)) arr.push({uid:k,name:v[k].name,r:v[k].r,g:v[k].g|0,av:v[k].av||''}); }); arr.sort(function(a,b){return b.r-a.r;}); try{ localStorage.setItem('dwTop',JSON.stringify(arr)); }catch(e){} }).catch(function(){}); }catch(e){} }
+function prefetchTop(){ try{ db.ref('players').orderByChild('r').limitToLast(40).once('value').then(function(snap){ var arr=[], v=snap.val()||{}; Object.keys(v).forEach(function(k){ if(v[k]&&typeof v[k].r==='number'&&v[k].name&&!isDefaultName(v[k].name)) arr.push({uid:k,name:v[k].name,r:v[k].r,g:v[k].g|0,av:v[k].av||''}); }); arr=cleanTop(arr); try{ localStorage.setItem('dwTop',JSON.stringify(arr)); }catch(e){} }).catch(function(){}); }catch(e){} }
 function openLeaderboard(tab){
   if(tab) topTab=tab;
   document.getElementById('topTabs').innerHTML=['lg','all','fr','cl'].map(function(t){ return '<button class="'+(topTab===t?'on':'')+'" onclick="openLeaderboard(\''+t+'\')">'+T({lg:'topLg',all:'topAll',fr:'topFr',cl:'topCl'}[t])+'</button>'; }).join('');
@@ -2627,10 +2676,10 @@ function openLeaderboard(tab){
   document.getElementById('topModal').classList.add('open');
   loadFirebase().then(function(){
     if(!getDB()) throw 0;
-    return db.ref('players').orderByChild('r').limitToLast(20).once('value');
+    return db.ref('players').orderByChild('r').limitToLast(40).once('value');
   }).then(function(snap){
     var arr=[]; var v=snap.val()||{}; Object.keys(v).forEach(function(k){ if(v[k]&&typeof v[k].r==='number'&&v[k].name&&!isDefaultName(v[k].name)) arr.push({uid:k,name:v[k].name,r:v[k].r,g:v[k].g|0,av:v[k].av||''}); });
-    arr.sort(function(a,b){return b.r-a.r;});
+    arr=cleanTop(arr);
     try{ localStorage.setItem('dwTop',JSON.stringify(arr)); }catch(e){}
     if(!arr.length){ list.innerHTML='<div class="top-row">'+T('topEmpty')+'</div>'; return; }
     list.innerHTML=topRows(arr);
@@ -2648,15 +2697,15 @@ function openFriendTop(){
 // ── quick match: take a waiting room from the queue, or host one and wait ──
 function quickMatch(){
   leaveRoom(); setOS(T('quickSearch'),'wdots');
-  document.getElementById('btnQuick').disabled=true;
+  (document.getElementById('btnQuick')||{}).disabled=true;
   loadFirebase().then(function(){ if(!getDB()) throw 0; return waitAuth(); }).then(function(ok){
-    if(!ok){ setOS(T('permErr'),'err'); document.getElementById('btnQuick').disabled=false; return; }
+    if(!ok){ setOS(T('permErr'),'err'); (document.getElementById('btnQuick')||{}).disabled=false; return; }
     return db.ref('queue').once('value').then(function(snap){
       var q=snap.val()||{}, pick=null, now=serverNow();
       Object.keys(q).forEach(function(k){ var e=q[k]; if(!e||k===UID||!e.code) return; if(typeof e.t==='number'&&now-e.t>180000) return; if(!pick||(e.t||0)<(pick.t||0)) pick={uid:k,code:e.code,t:e.t}; });
       if(pick){
         db.ref('queue/'+pick.uid).transaction(function(cur){ if(cur===null||cur.code!==pick.code) return; return null; },function(err,committed){
-          document.getElementById('btnQuick').disabled=false;
+          (document.getElementById('btnQuick')||{}).disabled=false;
           if(err||!committed){ quickMatch(); return; }     // someone else took it — try again
           switchTab('j'); document.getElementById('joinIn').value=pick.code; _join(pick.code);
         });
@@ -2668,12 +2717,12 @@ function quickMatch(){
           if(roomRef&&roomCode){ clearInterval(w8);
             queueRef=db.ref('queue/'+UID); queueRef.set({code:roomCode,name:playerNames[0],t:firebase.database.ServerValue.TIMESTAMP});
             try{queueRef.onDisconnect().remove();}catch(e){}
-            setOS(T('quickWait'),'wdots'); document.getElementById('btnQuick').disabled=false;
-          } else if(tries>60){ clearInterval(w8); document.getElementById('btnQuick').disabled=false; }
+            setOS(T('quickWait'),'wdots'); (document.getElementById('btnQuick')||{}).disabled=false;
+          } else if(tries>60){ clearInterval(w8); (document.getElementById('btnQuick')||{}).disabled=false; }
         },250);
       }
     });
-  }).catch(function(){ setOS(T('netErr'),'err'); document.getElementById('btnQuick').disabled=false; });
+  }).catch(function(){ setOS(T('netErr'),'err'); (document.getElementById('btnQuick')||{}).disabled=false; });
 }
 // Press-to-aim input: pointer down shows a preview, holding/moving shows a
 // magnifier, releasing places the dot. Works the same for touch and mouse.
@@ -2681,7 +2730,7 @@ var pressActive=false, pressTimer=null, pressX=0, pressY=0, loupeShow=false, lou
 var HOLD_MS=300, PRESS_SLOP=6;
 var curScreen='screen-menu', _cfCb=null;
 var turnTimerId=null, turnGraceId=null, TURN_SECS=15, TURN_GRACE=5, TURN_WARN=5;
-var APP_VERSION='4.2.1';
+var APP_VERSION='4.2.2';
 // ═══════════════════════
 //  CRYSTALS — soft currency. Earned by playing, spent on boosters (vs AI only) and skins.
 //  Stored locally and in the cloud (progress.wallet); the newest copy wins (t = last change).
@@ -3358,7 +3407,7 @@ function renderExpOpts(){
 }
 function startExpedition(){ gameMode='pve'; curStage=-1; selLv=EXP.lv; curMap=EXP.map; curFog=EXP.fog|0; curMapSeed=EXPSEED[EXP.map]||null; EXPSEED={}; expBuiltKey=''; startGame(); }
 
-var SET={sound:true,music:true,vibe:true,pveTimer:15,theme:'world',assist:true,coach:true,track:'gen'};
+var SET={sound:true,music:true,musV:0.7,sfxV:0.7,vibe:true,pveTimer:15,theme:'world',assist:true,coach:true,track:'gen'};
 (function(){ try{ var v=JSON.parse(localStorage.getItem('dwSet')||'{}'); for(var k in v) if(k in SET) SET[k]=v[k]; if(!localStorage.getItem('dwTheme24')){ SET.theme='world'; localStorage.setItem('dwTheme24','1'); } SET.theme='world'; }catch(e){} })();
 function saveSet(){ try{localStorage.setItem('dwSet',JSON.stringify(SET));}catch(e){} }
 var STATS={g:0,w:0,s:0,b:0};
@@ -3378,6 +3427,22 @@ function myName(){ try{ return (localStorage.getItem('dwName')||'').trim(); }cat
 //    key = lower-case, spaces collapsed, dots/#/$/[/] removed (Firebase key rules).
 function nameKey(n){ return String(n||'').trim().toLowerCase().replace(/\s+/g,' ').replace(/[.#$\[\]\/]/g,'').slice(0,18); }
 function validName(n){ n=String(n||'').trim(); return n.length>=2&&n.length<=18&&/^[\p{L}\p{N} _\-]+$/u.test(n); }
+// Does this account own the name used on this device? Claims it if free. A name owned by another account
+// (old duplicate) -> the player is asked to choose another name or sign in.
+var NAMEOK={k:'',uid:'',ok:null};
+function nameOwned(){
+  var n=myName(), k=nameKey(n); if(!k||!getDB()||!UID) return Promise.resolve(false);
+  if(NAMEOK.k===k&&NAMEOK.uid===UID&&NAMEOK.ok!==null) return Promise.resolve(NAMEOK.ok);
+  return claimName(n).then(function(r){ if(!r.ok&&r.reason!=='taken') return false;
+    NAMEOK={k:k,uid:UID,ok:!!r.ok}; if(!r.ok) nameConflict(n); return !!r.ok; }).catch(function(){ return false; });
+}
+function nameConflict(n){
+  if(nameConflict.shown) return; nameConflict.shown=1;
+  try{ localStorage.removeItem('dwName'); }catch(e){} playerNames[0]=''; try{ refreshProfileChip(); }catch(e){}
+  var go=function(){ if(curScreen!=='screen-menu'||document.querySelector('.overlay.open')){ setTimeout(go,1500); return; }
+    askName(); var i=document.getElementById('nmN'); if(i) i.value=n; var e=document.getElementById('nmE'); if(e){ e.textContent=tpl(T('nameDup'),{n:n}); e.style.color='#ffd76a'; } };
+  setTimeout(go,600);
+}
 function claimName(name){
   // resolves {ok:true} | {ok:false,reason:'taken'|'invalid'|'offline'}
   if(!validName(name)) return Promise.resolve({ok:false,reason:'invalid'});
@@ -3442,14 +3507,16 @@ function refreshProfileChip(){
   if(rn){ rn.textContent=String(Math.round((typeof RATING!=='undefined'&&RATING.r)||1000)).replace(/\B(?=(\d{3})+(?!\d))/g,'\u2009'); document.getElementById('mRateChip').title=lang==='ru'?'Рейтинг · Топ-20':'Rating · Top 20';
     var st=0; try{ for(var i=0;i<STARS.length;i++) st+=STARS[i]|0; }catch(e){} if(!avatarURL(PROF.av)) sn.textContent=st; sn.title=lang==='ru'?'Профиль':'Profile'; }
 }
+function volShow(){ [['volSfx','sfxV','sound'],['volMus','musV','music']].forEach(function(a){ var el=document.getElementById(a[0]); if(!el) return; var v=SET[a[2]]?Math.round(volOf(a[1])*100):0; el.value=v; el.style.setProperty('--p',v+'%'); var n=document.getElementById(a[0]+'N'); if(n) n.textContent=v?v+'%':T('stOff'); }); }
+function setVol(k,v){ v=Math.max(0,Math.min(100,+v||0))/100; var on=v>0; if(k==='musV'){ SET.music=on; if(on) SET.musV=v; } else { SET.sound=on; if(on) SET.sfxV=v; }
+  saveSet(); volShow(); refreshMute(); if(on) getAC(); musicSync(); audioVolApply(); }
 function closeSettings(){ document.getElementById('settingsModal').classList.remove('open'); }
 function segHtml(id,opts,cur,key){
   return opts.map(function(o){ var v=typeof o.v==='string'?"'"+o.v+"'":String(o.v); return '<button class="'+(String(o.v)===String(cur)?'on':'')+'" onclick="setOpt(\''+key+'\','+v+')">'+o.l+'</button>'; }).join('');
 }
 function renderSettings(){
   var onoff=[{v:true,l:T('stOn')},{v:false,l:T('stOff')}];
-  document.getElementById('segSound').innerHTML=segHtml('segSound',onoff,SET.sound,'sound');
-  document.getElementById('segMusic').innerHTML=segHtml('segMusic',onoff,SET.music,'music');
+  volShow();
   document.getElementById('stTrack').textContent=T('stTrack'); document.getElementById('stTrackB').textContent='🎵 '+trackName(curTrack())+' ›';
   document.getElementById('segLang').innerHTML='<button class="'+(lang==='ru'?'on':'')+'" onclick="setLang(\'ru\');renderSettings()">Русский</button><button class="'+(lang==='en'?'on':'')+'" onclick="setLang(\'en\');renderSettings()">English</button>';
   document.getElementById('segVibe').innerHTML=segHtml('segVibe',onoff,SET.vibe,'vibe');
@@ -4399,7 +4466,7 @@ window.addEventListener('resize',function(){ setTimeout(placeFab,60); });
 var COACH=null;
 var COACH_TOURS={
   menu:[['.mcard.pve','coM1'],['.mcard.onl','coM2'],['#mFrBtn','coM3'],['.mcard.dly','coM4'],['#mRateChip .mseg-cry','coM5'],['#mSndBtn','coM6']],
-  online:[['#btnInvite','coO1'],['#btnQuick','coO2'],['#tabJ','coO3']],
+  online:[['#olMaps','coO2'],['#btnCreate','coO4'],['#btnInvite','coO1'],['#joinIn','coO3']],
   stages:[['#wTabs','coS1'],['#stgGrid .stg.next','coS2'],['#btnFree','coS3']]
 };
 function coachReset(){ try{ ['menu','online','stages','board'].forEach(function(k){ localStorage.removeItem('dwCo_'+k); }); }catch(e){} }
@@ -4462,7 +4529,7 @@ function tierLabel(r){ var t=tierOf(r); return t[1]+' '+T(t[2]); }
 // ═══════════════════════
 var _ac = null;
 function getAC(){
-  if(_ac&&_ac.state==='closed'){ _ac=null; MUS.master=null; MUS.bus=null; MUS.noise=null; if(MUS.timer){ clearInterval(MUS.timer); MUS.timer=null; } }
+  if(_ac&&_ac.state==='closed'){ _ac=null; MUS.master=null; MUS.bus=null; MUS.noise=null; MUS.out=null; MUS.sfx=null; if(MUS.timer){ clearInterval(MUS.timer); MUS.timer=null; } }
   if(!_ac) try{ _ac = new (window.AudioContext||window.webkitAudioContext)(); _ac.onstatechange=function(){ if(_ac&&_ac.state==='running') setTimeout(musicSync,0); }; }catch(e){}
   // 'suspended' (no tap yet) and 'interrupted' (iPhone: call, alert, background) both need resume()
   if(_ac&&_ac.state!=='running') try{ var p=_ac.resume(); if(p&&p.catch) p.catch(function(){}); }catch(e){}
@@ -4484,9 +4551,21 @@ var MUS_CH=[[48,60,64,67],[43,59,62,67],[45,60,64,69],[41,60,65,69],[48,60,64,67
 var MUS_PENT=[0,2,4,7,9];   // major pentatonic: always sounds happy, never clashes
 var MUS_RHY=[[1,0,1,0,1,1,1,0],[1,1,0,1,1,0,1,0],[1,0,0,1,1,0,1,1],[1,1,1,0,1,0,0,0],[0,1,1,0,1,1,1,0]];
 function midiF(m){ return 440*Math.pow(2,(m-69)/12); }
-function musicVol(){ var gs=document.getElementById('screen-game'); return (gs&&gs.classList.contains('active'))?0.055:0.08; }
+// Volumes: music and effects go through their own buses into one limiter, so both can be loud without clipping.
+// Before 4.2.2 the music was ~25x quieter than the effects (very noticeable on the iPhone speaker).
+function volOf(k){ var v=SET[k]; return typeof v==='number'?Math.max(0,Math.min(1,v)):0.7; }
+function musicVol(){ var gs=document.getElementById('screen-game'), inGame=gs&&gs.classList.contains('active'); return (inGame?0.17:0.24)*volOf('musV')/0.7*(IS_IOS?1.25:1); }
+var IS_IOS=/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+function audioOut(ac){
+  if(!MUS.out||MUS.outAc!==ac){ var c=ac.createDynamicsCompressor(); try{ c.threshold.value=-12; c.knee.value=8; c.ratio.value=5; c.attack.value=0.003; c.release.value=0.25; }catch(e){}
+    c.connect(ac.destination); MUS.out=c; MUS.outAc=ac; MUS.sfx=null; }
+  return MUS.out; }
+function sfxBus(ac){ if(!MUS.sfx||MUS.outAc!==ac){ var o=audioOut(ac), g=ac.createGain(); g.gain.value=sfxGain(); g.connect(o); MUS.sfx=g; } return MUS.sfx; }
+function sfxGain(){ return 0.62*volOf('sfxV')/0.7*(IS_IOS?0.85:1); }
+function audioVolApply(){ if(MUS.sfx&&_ac) try{ MUS.sfx.gain.setTargetAtTime(sfxGain(),_ac.currentTime,0.05); }catch(e){} if(MUS.master&&_ac&&musicOn()&&!isMyTrack()) try{ MUS.master.gain.setTargetAtTime(musicVol(),_ac.currentTime,0.1); }catch(e){} if(MYS.audio) MYS.audio.volume=myVol(); }
+function audioReset(){ try{ if(_ac) _ac.close(); }catch(e){} _ac=null; MUS.master=null; MUS.bus=null; MUS.noise=null; MUS.out=null; MUS.sfx=null; if(MUS.timer){ clearInterval(MUS.timer); MUS.timer=null; } audioKick(); }
 function musicBuild(ac){
-  var master=ac.createGain(); master.gain.value=0.0001; master.connect(ac.destination);
+  var master=ac.createGain(); master.gain.value=0.0001; master.connect(audioOut(ac));
   var bus=ac.createGain(); bus.gain.value=1; bus.connect(master);
   var dl=ac.createDelay(1.0), fb=ac.createGain(), lp=ac.createBiquadFilter(), wet=ac.createGain();
   dl.delayTime.value=MUS.beat*0.75; fb.gain.value=0.22; lp.type='lowpass'; lp.frequency.value=2600; wet.gain.value=0.25;
@@ -4647,7 +4726,7 @@ function myPlayId(id){
     if(MYS.url) URL.revokeObjectURL(MYS.url); MYS.url=URL.createObjectURL(v.blob); MYS.cur=id; MYS.audio.src=MYS.url; MYS.audio.volume=myVol(); if(musicOn()) MYS.audio.play().catch(function(){}); }; });
 }
 function myNext(){ if(!MYS.list.length) return; var i=0; for(var k=0;k<MYS.list.length;k++) if(MYS.list[k].id===MYS.cur) i=k+1; myPlayId(MYS.list[i%MYS.list.length].id); }
-function myVol(){ var gs=document.getElementById('screen-game'); return (gs&&gs.classList.contains('active'))?0.35:0.55; }
+function myVol(){ var gs=document.getElementById('screen-game'); return Math.min(1,((gs&&gs.classList.contains('active'))?0.45:0.65)*volOf('musV')/0.7); }
 function mySync(){
   if(!isMyTrack()||!musicOn()){ if(MYS.audio&&!MYS.audio.paused) MYS.audio.pause(); return; }
   var want=SET.track==='my'?null:String(SET.track).slice(3);
@@ -4694,6 +4773,14 @@ document.addEventListener('visibilitychange',function(){ if(!document.hidden){ M
 // music may only start after the first tap (browser rule)
 // start right away: in the Android/iPhone app sound needs no tap; in a browser this waits for the first tap
 setTimeout(audioKick,300);
+// watchdog (every 2 s): the iPhone may silently suspend/interrupt the sound after a system window, a call or the photo picker
+setInterval(function(){
+  if(document.hidden||MUS.appP||(!SET.sound&&!SET.music)) return;
+  if(_ac&&_ac.state!=='running'){ getAC(); return; }
+  if(!musicOn()) return;
+  if(isMyTrack()){ if(MYS.audio&&MYS.audio.paused&&MYS.cur) MYS.audio.play().catch(function(){}); }
+  else if(_ac&&!MUS.timer) musicSync();
+},2000);
 
 // ═══════════════════════
 //  SFX — short synthesised sounds for every action (wood, stone, bells, chimes); no files
@@ -4701,9 +4788,9 @@ setTimeout(audioKick,300);
 var sfxLast={};
 function sfxNoise(ac,t,dur,f0,f1,vol,type){ if(!MUS.noise){ try{ var nb=ac.createBuffer(1,Math.floor(ac.sampleRate*0.2),ac.sampleRate), nd=nb.getChannelData(0); for(var i=0;i<nd.length;i++) nd[i]=Math.random()*2-1; MUS.noise=nb; }catch(e){ return; } }
   var sN=ac.createBufferSource(), f=ac.createBiquadFilter(), g=ac.createGain(); sN.buffer=MUS.noise; sN.loop=true; f.type=type||'bandpass'; f.frequency.setValueAtTime(f0,t); if(f1) f.frequency.exponentialRampToValueAtTime(f1,t+dur); f.Q.value=1.2;
-  g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(vol,t+0.01); g.gain.exponentialRampToValueAtTime(0.0001,t+dur); sN.connect(f); f.connect(g); g.connect(ac.destination); sN.start(t); sN.stop(t+dur+0.02); }
+  g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(vol,t+0.01); g.gain.exponentialRampToValueAtTime(0.0001,t+dur); sN.connect(f); f.connect(g); g.connect(sfxBus(ac)); sN.start(t); sN.stop(t+dur+0.02); }
 function sfxTone(ac,t,f,dur,vol,type,f2){ var o=ac.createOscillator(), g=ac.createGain(); o.type=type||'sine'; o.frequency.setValueAtTime(f,t); if(f2) o.frequency.exponentialRampToValueAtTime(f2,t+dur);
-  g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(vol,t+0.008); g.gain.exponentialRampToValueAtTime(0.0001,t+dur); o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t+dur+0.03); }
+  g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(vol,t+0.008); g.gain.exponentialRampToValueAtTime(0.0001,t+dur); o.connect(g); g.connect(sfxBus(ac)); o.start(t); o.stop(t+dur+0.03); }
 function sfxBell(ac,t,f,dur,vol){ sfxTone(ac,t,f,dur,vol,'sine'); sfxTone(ac,t,f*2.76,dur*0.5,vol*0.35,'sine'); sfxTone(ac,t,f*5.4,dur*0.25,vol*0.12,'sine'); }
 function sfx(name){
   if(!SET.sound) return; var now=Date.now(); if(sfxLast[name]&&now-sfxLast[name]<70) return; sfxLast[name]=now;
@@ -4734,7 +4821,7 @@ function _tone(ac,type,f0,f1,t0,dur,vol){
   var o=ac.createOscillator(), g=ac.createGain();
   o.type=type; o.frequency.setValueAtTime(f0,t0); if(f1) o.frequency.exponentialRampToValueAtTime(f1,t0+dur*0.8);
   g.gain.setValueAtTime(0.0001,t0); g.gain.exponentialRampToValueAtTime(vol,t0+0.012); g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
-  o.connect(g); g.connect(ac.destination); o.start(t0); o.stop(t0+dur+0.03);
+  o.connect(g); g.connect(sfxBus(ac)); o.start(t0); o.stop(t0+dur+0.03);
 }
 function playPlaceSound(){
   if(!SET.sound) return; var ac=getAC(); if(!ac) return;
@@ -4761,7 +4848,7 @@ function playCaptureSound(count){
   notes.forEach(function(freq, i){
     var osc = ac.createOscillator();
     var gain = ac.createGain();
-    osc.connect(gain); gain.connect(ac.destination);
+    osc.connect(gain); gain.connect(sfxBus(ac));
     osc.type = 'sine';
     osc.frequency.setValueAtTime(freq, ac.currentTime);
     // Slight pitch rise for bigger captures
@@ -4778,7 +4865,7 @@ function playCaptureSound(count){
   if(count >= 3){
     var osc2 = ac.createOscillator();
     var gain2 = ac.createGain();
-    osc2.connect(gain2); gain2.connect(ac.destination);
+    osc2.connect(gain2); gain2.connect(sfxBus(ac));
     osc2.type = 'triangle';
     osc2.frequency.setValueAtTime(1046.5, ac.currentTime + 0.18); // C6
     gain2.gain.setValueAtTime(0, ac.currentTime + 0.18);
@@ -5394,7 +5481,7 @@ function confirmNames(){
   if(!n1){document.getElementById('ni1').classList.add('bad');document.getElementById('ne1').classList.add('show');document.getElementById('ni1').focus();return;}
   var same=false; try{ same=nameKey(localStorage.getItem('dwName')||'')===nameKey(n1); }catch(e){}
   if(same){ playerNames[0]=n1; buildOlLvs();SS('screen-online');setOS('','');
-    refreshOlMe(); ensureAuth(); document.getElementById('codeBox').style.display='none'; document.getElementById('btnCreate').style.display='block';
+    refreshOlMe(); ensureAuth(); document.getElementById('codeBox').style.display='none'; olWait(false); document.getElementById('btnCreate').style.display='block';
     // invite link / accepted invite: join right away (this branch used to return before it, so links did nothing for players with a saved name)
     if(pendingRoom){ var pc=pendingRoom; pendingRoom=null; switchTab('j'); document.getElementById('joinIn').value=pc; joinRoom(); }
     else setTimeout(function(){ coachTry('online','screen-online'); },700);
@@ -5408,7 +5495,7 @@ function confirmNames(){
     setTimeout(function(){ coachTry('online','screen-online'); },700);
   });
   refreshOlMe(); ensureAuth(); loadFirebase().then(function(){ syncMyPlayer(); }).catch(function(){});
-  document.getElementById('codeBox').style.display='none';
+  document.getElementById('codeBox').style.display='none'; olWait(false);
   document.getElementById('btnCreate').style.display='block';
   if(pendingRoom){ var code=pendingRoom; pendingRoom=null; switchTab('j'); document.getElementById('joinIn').value=code; joinRoom(); }
 }
@@ -5435,6 +5522,7 @@ function startGame(){
   G=mkGame(n,gameMode,selLv);
   HINT=null;
   if(gameMode==='pve'&&!st&&curMap&&curMap!=='plain'){ applyMap(G,curMap,curMapSeed,EXP.land); curMapSeed=null; }
+  if(gameMode==='online'&&olMap&&olMap!=='plain'&&olSeed) applyMap(G,olMap,olSeed,'rand');   // same seed on both phones -> the same map
   if(st&&st.map) applyMap(G,st.map,_resumeSeed||null,'rand');
   G.stats={start:Date.now(),maxCap:0};
   if(st&&st.cond==='handicap'){
@@ -6346,6 +6434,7 @@ function loadScript(src){
   });
 }
 function loadFirebase(){
+  if(isTestRobot()) return Promise.reject(new Error('test device'));
   if(fbReady()) return Promise.resolve();
   if(fbLoading) return fbLoading;
   fbLoading=loadScript(FB_SRC[0]).then(function(){ return Promise.all([loadScript(FB_SRC[1]),loadScript(FB_SRC[2])]); })
@@ -6418,18 +6507,43 @@ function switchTab(t){ return;   // both panels are always visible now
   document.getElementById('panelC').style.display=t==='c'?'':'none';
   document.getElementById('panelJ').style.display=t==='j'?'':'none';
 }
+var OLM=(function(){ try{ var o=JSON.parse(localStorage.getItem('dwOlMap')||'null'); if(o&&MAPS.indexOf(o.map)>=0) return {map:o.map,seed:o.seed>>>0||newMapSeed()}; }catch(e){} return {map:'plain',seed:newMapSeed()}; })();
+var olMap='plain', olSeed=0;   // the map of the current online game (from the room)
+function saveOlMap(){ try{ localStorage.setItem('dwOlMap',JSON.stringify(OLM)); }catch(e){} }
+// while the room waits for the friend, the map and size are fixed: hide the choice, show the code
+function olWait(on){ var p=document.getElementById('panelC'); if(p) p.classList.toggle('ol-wait',!!on); var n=document.getElementById('olMapName'); if(n){ if(on){ var sz=FIELD_SIZES[olFSz]-1; n.textContent=MAP_ICO[OLM.map]+' '+T('mp_'+OLM.map)+' · '+sz+'×'+sz; } else olMapName(); } }
+function buildOlMaps(){
+  var g=document.getElementById('olMaps'); if(!g) return; g.innerHTML='';
+  MAPS.forEach(function(id){
+    var b=document.createElement('button'); b.className='ol-map'+(OLM.map===id?' sel':''); b.setAttribute('data-map',id);
+    var cv=document.createElement('canvas'); cv.width=cv.height=120; b.appendChild(cv);
+    var t=document.createElement('span'); t.className='ol-map-n'; t.textContent=MAP_ICO[id]+' '+T('mp_'+id); b.appendChild(t);
+    if(id!=='plain'){ var d=document.createElement('i'); d.className='ol-dice'; d.textContent='🎲'; b.appendChild(d); }
+    b.onclick=function(){ olPickMap(id); }; g.appendChild(b);
+    try{ drawMapPreview(cv,id,FIELD_SIZES[olFSz],id===OLM.map?OLM.seed:(OLM['s_'+id]||(OLM['s_'+id]=newMapSeed())),'rand'); }catch(e){}
+  });
+  olMapName();
+}
+function olMapName(){ var el=document.getElementById('olMapName'); if(el) el.textContent=MAP_ICO[OLM.map]+' '+T('mp_'+OLM.map)+(OLM.map!=='plain'?' · '+T('olReroll'):''); }
+function olPickMap(id){
+  var g=document.getElementById('olMaps'), card=g&&g.querySelector('.ol-map[data-map="'+id+'"]'); sfx('tap');
+  if(OLM.map===id){ if(id==='plain') return; OLM.seed=newMapSeed(); if(card){ card.classList.remove('reroll'); void card.offsetWidth; card.classList.add('reroll'); } }
+  else { OLM['s_'+OLM.map]=OLM.seed; OLM.map=id; OLM.seed=OLM['s_'+id]||newMapSeed(); if(g) g.querySelectorAll('.ol-map.sel').forEach(function(c){ c.classList.remove('sel'); }); if(card) card.classList.add('sel'); }
+  if(card) try{ drawMapPreview(card.querySelector('canvas'),id,FIELD_SIZES[olFSz],OLM.seed,'rand'); }catch(e){}
+  saveOlMap(); olMapName();
+}
 function buildOlLvs(){
   var g=document.getElementById('olLvs');g.innerHTML='';
   var sz=T('fieldSizes');
   for(var i=0;i<FIELD_SIZES.length;i++){
     var el=document.createElement('div');el.className='mini-lv'+(olFSz===i?' sel':'');
     el.innerHTML='<div class="mini-lv-n">'+(i+1)+'</div><div class="mini-lv-s">'+sz[i]+'</div>';
-    (function(idx,me){me.onclick=function(){olFSz=idx;g.querySelectorAll('.mini-lv').forEach(function(c){c.classList.remove('sel');});me.classList.add('sel');};})(i,el);
+    (function(idx,me){me.onclick=function(){olFSz=idx;g.querySelectorAll('.mini-lv').forEach(function(c){c.classList.remove('sel');});me.classList.add('sel'); sfx('tap'); buildOlMaps();};})(i,el);
     g.appendChild(el);
   }
-  olLabels();
+  olLabels(); buildOlMaps();
 }
-function olLabels(){ var a=document.getElementById('olSecRoom'), b=document.getElementById('olSecJoin'); if(a) a.textContent=T('olRoom'); if(b) b.textContent=T('olJoin'); }
+function olLabels(){ var a=document.getElementById('olSecRoom'), b=document.getElementById('olSecJoin'); if(a) a.textContent=T('olRoom'); if(b) b.textContent=T('olJoin'); var m=document.getElementById('olMapLbl'); if(m) m.textContent=T('olMapLbl'); var bi=document.getElementById('btnInvite'); if(bi) bi.textContent=T('olInviteBtn'); }
 function cancelOnline(){leaveRoom();goMenu();}
 // Apply one remote move if it is exactly the next move of the game. Returns true when applied.
 function applyRemoteMove(d){
@@ -6648,12 +6762,12 @@ function createRoom(){
 function _dc(){
   var code=genCode();setOS(T('creating'),'');
   document.getElementById('btnCreate').style.display='none';
-  document.getElementById('codeBox').style.display='none';
+  document.getElementById('codeBox').style.display='none'; olWait(false);
   var ref=db.ref('rooms/dw'+code);
   var ot=setTimeout(function(){setOS(T('netErr'),'err');document.getElementById('btnCreate').style.display='block';},15000);
   ref.transaction(function(cur){
     if(cur!==null) return;                // code already taken -> abort
-    return{fsz:olFSz,hostName:playerNames[0],hostUid:UID,hostR:RATING.r,hostAv:PROF.av||null,gen:0,created:firebase.database.ServerValue.TIMESTAMP};
+    olMap=OLM.map; olSeed=OLM.map==='plain'?0:OLM.seed; return{fsz:olFSz,map:olMap,mseed:olSeed,hostName:playerNames[0],hostUid:UID,hostR:RATING.r,hostAv:PROF.av||null,gen:0,created:firebase.database.ServerValue.TIMESTAMP};
   },function(err,committed){
     clearTimeout(ot);
     if(err||!committed){
@@ -6667,7 +6781,7 @@ function _dc(){
     if(SOC.invPending){ var _ids=SOC.invPending; SOC.invPending=null; sendInvites(_ids,code); }
     ref.onDisconnect().remove();          // auto-cleanup if host drops
     document.getElementById('codeVal').textContent=code;
-    document.getElementById('codeBox').style.display='block';
+    document.getElementById('codeBox').style.display='block'; olWait(true);
     setOS(T('waiting'),'wdots');
     ref.child('guest').on('value',function(snap){
       var gst=snap.val();
@@ -6723,6 +6837,7 @@ function _join(code){
       roomRef=ref;
       ref.child('guest').onDisconnect().remove();  // free the seat if guest drops
       olFSz=(typeof room.fsz==='number'&&room.fsz>=0&&room.fsz<FIELD_SIZES.length)?room.fsz:1;
+      olMap=(room.map&&MAPS.indexOf(room.map)>=0)?room.map:'plain'; olSeed=(room.mseed>>>0)||0;
       playerNames[1]=myName;
       playerNames[0]=room.hostName; oppAv=room.hostAv||'';
       olReady=true; roomCode=code; olGen=room.gen|0; oppRating=typeof room.hostR==='number'?room.hostR:1000;
@@ -6883,7 +6998,7 @@ function openLeague(){
   if(isGuest()){ list.innerHTML=head+'<div class="top-row guest-note">🔑 '+T('lgGuest')+'</div>'; return; }
   list.innerHTML=head+(LGT.rows?lgRows(LGT.rows,UID):'<div class="top-row">…</div>');
   socialReady().then(function(){ return db.ref('league/'+weekId()).orderByChild('p').limitToLast(300).once('value'); }).then(function(sn){
-    var v=sn.val()||{}, arr=[]; Object.keys(v).forEach(function(k){ var e=v[k]; if(e&&e.tr===tr[2]&&e.n&&!isDefaultName(e.n)) arr.push({uid:k,n:e.n,p:e.p|0,av:e.av||'',ci:e.ci||''}); });
+    var v=sn.val()||{}, arr=[]; Object.keys(v).forEach(function(k){ var e=v[k]; if(e&&e.tr===tr[2]&&e.n&&!isDefaultName(e.n)&&!isBotName(e.n)) arr.push({uid:k,n:e.n,p:e.p|0,av:e.av||'',ci:e.ci||''}); });
     if(leaguePts()&&!arr.some(function(x){ return x.uid===UID; })) arr.push({uid:UID,n:myName(),p:leaguePts(),av:PROF.av&&!avIsImg(PROF.av)?PROF.av:'',ci:CLUB.ico||''});
     arr.sort(function(a,b){ return b.p-a.p; }); var me=-1; arr.forEach(function(x,i){ if(x.uid===UID) me=i; });
     var top=arr.slice(0,30); LGT.rows=top; if(document.getElementById('topModal').classList.contains('open')&&topTab==='lg')
@@ -7320,7 +7435,7 @@ setTimeout(ratingDecay,1500);
 (function(){ function setH(){ document.documentElement.style.setProperty('--app-h',window.innerHeight+'px'); } setH(); window.addEventListener('resize',setH); window.addEventListener('orientationchange',function(){ setTimeout(setH,300); }); })();
 try{ if(screen.orientation&&screen.orientation.lock) screen.orientation.lock('portrait').catch(function(){}); }catch(e){}
 try{ document.getElementById('rotTx').textContent=T('rotTx'); }catch(e){}
-setTimeout(function(){ refreshCry(); applySkinImgs(); checkDailyLogin(); },1500);
+setTimeout(function(){ refreshCry(); applySkinImgs(); checkDailyLogin(); try{ imgEl('tokR'); imgEl('stone'); }catch(e){} },1500);
 // Very first visit: show "How to play" right away
 (function(){ var seen=false; try{seen=!!localStorage.getItem('dwSeen');}catch(e){} if(!seen) setTimeout(openRules,350); })();
 // PWA: offline cache + "Add to Home Screen" (needs sw.js/manifest.json next to this file; silently skipped otherwise)
